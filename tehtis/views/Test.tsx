@@ -5,8 +5,9 @@ export const Test = () => {
   const navigate = useNavigate();
 
   return (
-    <div>
-      Test
+    <div style={{ margin: "auto" }}>
+      <h1>Test</h1>
+
       <button onClick={() => navigate("/login")}>Login</button>
     </div>
   );
