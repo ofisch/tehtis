@@ -1,5 +1,10 @@
 body {
   background-color: var(--lightgreen);
+  margin: 0;
+  display: block;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
 }
 
 .container {
@@ -7,7 +12,7 @@ body {
   display: flex;
   justify-content: center; /* Centers horizontally */
   align-items: flex-start; /* Aligns items at the top */
-  padding-top: 2vh; /* Adjust this value to move it higher */
+  /* Adjust this value to move it higher */
   margin-left: var(--horizontal-margin);
   margin-right: var(--horizontal-margin);
 }
@@ -32,16 +37,21 @@ body {
 }
 
 .course-list {
+  display: grid;
+  /*grid-template-columns: repeat(auto-fill, minmax(25em, 1fr));*/
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
 }
 
 .course {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: start;
   box-sizing: border-box;
   max-width: 25em;
-  max-height: 10em;
+  min-height: 10em;
+  max-height: 15em;
   padding: 10px 20px;
   margin: 10px 0;
   border-radius: 5px;
@@ -56,6 +66,11 @@ body {
   scale: 1.05;
   border: 2px solid black; /* Same thickness to avoid movement */
   box-shadow: black 3px 3px;
+}
+
+.course h3 {
+  margin-top: 0.3em;
+  margin-bottom: 0.3em;
 }
 
 .course p {
