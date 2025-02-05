@@ -2,7 +2,13 @@ import React from "react";
 import "../style/Login.css";
 import { motion } from "framer-motion";
 
-export const Register = ({ handleRegister }) => {
+interface RegisterComponentProps {
+  handleRegister: () => void;
+}
+
+export const RegisterComponent: React.FC<RegisterComponentProps> = ({
+  handleRegister,
+}) => {
   return (
     <>
       <div className="login-box">
@@ -35,15 +41,16 @@ export const Register = ({ handleRegister }) => {
             >
               <input type="password" placeholder="Salasana" name="password" />
             </motion.div>
-            <motion.input
+            <motion.button
               className="btn"
               type="submit"
-              value="Rekisteröidy"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.2, delay: 0.2 }}
-            />
+            >
+              Rekisteröidy
+            </motion.button>
           </form>
           <motion.div
             className="no-account"
