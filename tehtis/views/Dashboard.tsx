@@ -29,6 +29,8 @@ export const Dashboard = () => {
 
   return (
     <>
+      <div className="nav-background"></div>
+
       <div className="container">
         <DashboardComponent courses={courses} />
       </div>

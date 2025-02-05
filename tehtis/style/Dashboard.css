@@ -7,6 +7,81 @@ body {
   min-height: 100vh;
 }
 
+#root {
+  width: 100%;
+}
+
+.nav-background {
+  height: 60px;
+  width: 100%;
+  background: var(--emerald);
+  border-bottom: 2px solid black;
+  position: fixed;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  top: 0%;
+  /* bottom: 50%; */
+  box-sizing: border-box;
+  height: 60px;
+  /* border-bottom: 2px solid black; */
+  color: var(--white);
+  font-family: "Nunito Sans", sans-serif;
+}
+
+nav ul {
+  display: flex;
+  width: 100%;
+  gap: 20px;
+  padding: 0;
+  list-style: none;
+  align-items: center;
+}
+
+nav ul h2 {
+  margin: 0;
+  padding: 0;
+  color: var(--black);
+}
+
+/*kirjaudu ulos -painike*/
+nav ul li:last-child {
+  margin-left: auto;
+}
+
+nav ul li:last-child a {
+  background: var(--lightgreen);
+  border: 2px solid transparent;
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 15px;
+  color: var(--black);
+  box-sizing: border-box;
+  transition: 0.3s;
+}
+
+nav ul li:last-child a:hover {
+  transition: 0.3s;
+  border: 2px solid black; /* Same thickness to avoid movement */
+  box-shadow: black 3px 3px;
+}
+
+nav ul a {
+  color: var(--black);
+  text-decoration: none;
+  transition: 0.3s;
+  font-size: 1.1em;
+}
+
+nav ul a:hover {
+  color: var(--lightgreen);
+}
+
 .container {
   height: auto;
   display: flex;
@@ -29,7 +104,6 @@ body {
   flex-direction: column;
   align-items: start;
   max-width: 1200px;
-  padding: 0 20px;
   color: var(--black);
 }
 
@@ -43,6 +117,12 @@ body {
   gap: 20px;
 }
 
+@media screen and (max-width: 768px) {
+  .course-list {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+}
+
 .course {
   display: flex;
   flex-direction: column;
@@ -53,11 +133,28 @@ body {
   min-height: 10em;
   max-height: 15em;
   padding: 10px 20px;
-  margin: 10px 0;
   border-radius: 5px;
-  background-color: var(--aliceblue);
+  background-color: var(--white);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   transition: 0.3s;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--aliceblue);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--spacecadet);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
 .course:hover {
