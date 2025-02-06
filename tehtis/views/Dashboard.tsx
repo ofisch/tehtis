@@ -1,10 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "../style/Dashboard.css";
 import "../style/root.css";
 import { DashboardComponent } from "../components/DashboardComponent";
 import { NavComponent } from "../components/NavComponent";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export const Dashboard = () => {
+  const { loggedIn, user } = useAuth();
+  const navigate = useNavigate();
+
+  console.log("User:", user);
+  console.log("Logged in:", loggedIn);
+
+  // jos käyttäjä ei ole kirjautunut, ohjataan login-sivulle
+  useEffect(() => {
+    if (!loggedIn) {
+      // navigate("/login");
+      console.log("Not logged in");
+    }
+  }, [loggedIn, navigate]);
+
   // mockup-dataa kurssilistaan
   const courses = {
     course1: {
@@ -33,7 +49,7 @@ export const Dashboard = () => {
       <div className="container">
         <div className="nav-background"></div>
         <NavComponent />
-        <DashboardComponent courses={courses} />
+        <DashboardComponent courses={courses} user={user} />
       </div>
     </>
   );

@@ -10,10 +10,12 @@ interface Course {
 
 interface DashboardComponentProps {
   courses: { [key: string]: Course };
+  user: { id: number; email: string } | null;
 }
 
 export const DashboardComponent: React.FC<DashboardComponentProps> = ({
   courses,
+  user,
 }) => {
   return (
     <>
@@ -26,8 +28,8 @@ export const DashboardComponent: React.FC<DashboardComponentProps> = ({
       >
         <h1>Etusivu</h1>
         <p>
-          Tämä on etusivu. Täältä löydät listan kursseista, joihin olet
-          osallistunut.
+          Hei {user?.email}! Tämä on etusivu. Täältä löydät listan kursseista,
+          joihin olet osallistunut.
         </p>
 
         <div className="courses">

@@ -1,6 +1,34 @@
 import React from "react";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export const NavComponent = () => {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+  const greenColor = "#30c67c";
+
+  const getLinkStyle = (path: string) => {
+    return window.location.pathname === path
+      ? { color: greenColor, fontWeight: "bold" }
+      : {};
+  };
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/logout", {
+        method: "POST",
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        logout(); // Clear the authentication state
+        navigate("/login"); // Redirect to login page
+      }
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
+
   return (
     <nav>
       <ul>
@@ -8,13 +36,17 @@ export const NavComponent = () => {
           <h2>Tehtis</h2>
         </li>
         <li>
-          <a href="/">Etusivu</a>
+          <a href="/dashboard" style={getLinkStyle("/dashboard")}>
+            Etusivu
+          </a>
         </li>
         <li>
-          <a href="/profile">Profiili</a>
+          <a href="/profile" style={getLinkStyle("/profile")}>
+            Profiili
+          </a>
         </li>
         <li>
-          <a href="/logout">Kirjaudu ulos</a>
+          <a onClick={handleLogout}>Kirjaudu ulos</a>
         </li>
       </ul>
     </nav>

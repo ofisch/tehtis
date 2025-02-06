@@ -4,10 +4,20 @@ import "../style/Login.css";
 
 interface LoginComponentProps {
   handleRegister: () => void;
+  handleLogin: (e: React.FormEvent) => void;
+  email: string;
+  password: string;
+  setEmail: (email: string) => void;
+  setPassword: (password: string) => void;
 }
 
 export const LoginComponent: React.FC<LoginComponentProps> = ({
   handleRegister,
+  handleLogin,
+  email,
+  password,
+  setEmail,
+  setPassword,
 }) => {
   return (
     <>
@@ -22,7 +32,7 @@ export const LoginComponent: React.FC<LoginComponentProps> = ({
           >
             Kirjaudu sisään jatkaaksesi
           </motion.h3>
-          <form action="">
+          <form onSubmit={handleLogin}>
             <motion.div
               className="textbox"
               initial={{ opacity: 0, x: -20 }}
@@ -30,7 +40,14 @@ export const LoginComponent: React.FC<LoginComponentProps> = ({
               exit={{ opacity: 0, x: 20 }}
               transition={{ duration: 0.2 }}
             >
-              <input type="text" placeholder="Sähköposti" name="email" />
+              <input
+                type="text"
+                placeholder="Sähköposti"
+                name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
             </motion.div>
             <motion.div
               className="textbox"
@@ -39,7 +56,14 @@ export const LoginComponent: React.FC<LoginComponentProps> = ({
               exit={{ opacity: 0, x: 20 }}
               transition={{ duration: 0.2, delay: 0.1 }}
             >
-              <input type="password" placeholder="Salasana" name="password" />
+              <input
+                type="password"
+                placeholder="Salasana"
+                name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
             </motion.div>
             <motion.button
               className="btn"

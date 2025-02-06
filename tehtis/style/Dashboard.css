@@ -73,7 +73,7 @@ nav ul li:last-child {
   margin-left: auto;
 }
 
-@media screen and (max-width: 12000px) {
+@media screen and (max-width: 1200px) {
   nav ul li:last-child {
     margin-right: 6em;
   }
@@ -104,7 +104,7 @@ nav ul a {
 }
 
 nav ul a:hover {
-  color: var(--lightgreen);
+  color: var(--emerald);
 }
 
 header {
