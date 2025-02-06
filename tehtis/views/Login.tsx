@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import { useNavigate } from "react-router-dom";
 import "../style/Login.css";
 import { AnimatePresence } from "framer-motion";
@@ -56,36 +56,35 @@ export const Login = () => {
     fetchUsers();
   }, []);
 
-  const [isPending, setIsPending] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   // login-funktio, joka lähettää POST-pyynnön backendiin
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      setIsPending(true);
-      const response = await fetch("http://localhost:3000/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({ email, password }),
-      });
+    startTransition(async () => {
+      try {
+        const response = await fetch("http://localhost:3000/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ email, password }),
+        });
 
-      const data = await response.json();
-      if (response.ok) {
-        setIsPending(false);
-        login({ id: data.userId, email });
-        setLoggedIn(true);
-        navigate("/dashboard");
-      } else {
-        alert(data.error || "Invalid credentials");
-        setIsPending(false);
+        const data = await response.json();
+        if (response.ok) {
+          login({ id: data.userId, email });
+          setLoggedIn(true);
+          navigate("/dashboard");
+        } else {
+          alert(data.error || "Invalid credentials");
+        }
+      } catch (error) {
+        alert("An error occurred while logging in");
+        console.error(error);
       }
-    } catch (error) {
-      alert("An error occurred while logging in");
-      console.error(error);
-    }
+    });
   };
 
   const handleRegister = () => {
