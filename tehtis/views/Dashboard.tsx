@@ -2,6 +2,7 @@ import React from "react";
 import "../style/Dashboard.css";
 import "../style/root.css";
 import { DashboardComponent } from "../components/DashboardComponent";
+import { NavComponent } from "../components/NavComponent";
 
 export const Dashboard = () => {
   // mockup-dataa kurssilistaan
@@ -29,9 +30,9 @@ export const Dashboard = () => {
 
   return (
     <>
-      <div className="nav-background"></div>
-
       <div className="container">
+        <div className="nav-background"></div>
+        <NavComponent />
         <DashboardComponent courses={courses} />
       </div>
     </>

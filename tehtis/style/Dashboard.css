@@ -11,27 +11,46 @@ body {
   width: 100%;
 }
 
+.container {
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+@media screen and (max-width: 1200px) {
+  .container {
+    padding-left: 3em;
+    padding-right: 3em;
+  }
+
+  nav {
+    padding-left: 6em;
+  }
+}
+
 .nav-background {
-  height: 60px;
   width: 100%;
-  background: var(--emerald);
-  border-bottom: 2px solid black;
+  max-width: 100%;
+  height: 68px;
   position: fixed;
+  top: 0;
+  background-color: var(--white);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 nav {
+  position: fixed;
+  top: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: relative;
   width: 100%;
-  top: 0%;
-  /* bottom: 50%; */
-  box-sizing: border-box;
-  height: 60px;
-  /* border-bottom: 2px solid black; */
-  color: var(--white);
+  max-width: 1200px;
+  z-index: 10;
+  color: var(--black);
   font-family: "Nunito Sans", sans-serif;
+  background-color: var(--white);
+  margin: auto;
 }
 
 nav ul {
@@ -52,6 +71,12 @@ nav ul h2 {
 /*kirjaudu ulos -painike*/
 nav ul li:last-child {
   margin-left: auto;
+}
+
+@media screen and (max-width: 12000px) {
+  nav ul li:last-child {
+    margin-right: 6em;
+  }
 }
 
 nav ul li:last-child a {
@@ -82,29 +107,31 @@ nav ul a:hover {
   color: var(--lightgreen);
 }
 
-.container {
-  height: auto;
+header {
   display: flex;
-  justify-content: center; /* Centers horizontally */
-  align-items: flex-start; /* Aligns items at the top */
-  /* Adjust this value to move it higher */
-  margin-left: var(--horizontal-margin);
-  margin-right: var(--horizontal-margin);
-}
+  justify-content: center;
+  align-items: start;
 
-@media screen and (max-width: 1200px) {
-  .container {
-    margin-left: 0;
-    margin-right: 0;
-  }
+  color: var(--black);
+  font-family: "Nunito Sans", sans-serif;
+  background-color: var(--lightgreen);
 }
 
 .dashboard-content {
   display: flex;
   flex-direction: column;
   align-items: start;
+  width: 100%;
   max-width: 1200px;
+  padding-top: 4em;
   color: var(--black);
+}
+
+@media screen and (max-width: 768px) {
+  .dashboard-content {
+    padding-left: 2em;
+    padding-right: 2em;
+  }
 }
 
 .courses {
@@ -113,7 +140,7 @@ nav ul a:hover {
 .course-list {
   display: grid;
   /*grid-template-columns: repeat(auto-fill, minmax(25em, 1fr));*/
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
 }
 

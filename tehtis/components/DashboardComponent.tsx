@@ -2,7 +2,6 @@ import React from "react";
 import "../style/Dashboard.css";
 import "../style/root.css";
 import { motion } from "framer-motion";
-import { NavComponent } from "./NavComponent";
 
 interface Course {
   name: string;
@@ -25,12 +24,12 @@ export const DashboardComponent: React.FC<DashboardComponentProps> = ({
         exit={{ opacity: 0, y: -10 }}
         transition={{ duration: 0.2, delay: 0.3 }}
       >
-        <NavComponent />
         <h1>Etusivu</h1>
         <p>
           Tämä on etusivu. Täältä löydät listan kursseista, joihin olet
           osallistunut.
         </p>
+
         <div className="courses">
           <h2>Kurssit</h2>
           <div className="course-list">
