@@ -9,6 +9,7 @@ interface LoginComponentProps {
   password: string;
   setEmail: (email: string) => void;
   setPassword: (password: string) => void;
+  isPending: boolean;
 }
 
 export const LoginComponent: React.FC<LoginComponentProps> = ({
@@ -18,6 +19,7 @@ export const LoginComponent: React.FC<LoginComponentProps> = ({
   password,
   setEmail,
   setPassword,
+  isPending,
 }) => {
   return (
     <>
@@ -65,9 +67,11 @@ export const LoginComponent: React.FC<LoginComponentProps> = ({
                 required
               />
             </motion.div>
+            <p>{email + " " + password}</p>
             <motion.button
               className="btn"
               type="submit"
+              disabled={isPending || email == "" || password == ""}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
