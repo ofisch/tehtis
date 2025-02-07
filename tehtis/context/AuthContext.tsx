@@ -2,8 +2,8 @@ import React, { createContext, useState, useEffect, ReactNode } from "react";
 
 interface AuthContextType {
   loggedIn: boolean;
-  user: { id: number; email: string } | null;
-  login: (user: { id: number; email: string }) => void;
+  user: { id: number; email: string; username?: string } | null;
+  login: (user: { id: number; email: string; username?: string }) => void;
   logout: () => void;
 }
 
@@ -11,7 +11,11 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
-  const [user, setUser] = useState<{ id: number; email: string } | null>(null);
+  const [user, setUser] = useState<{
+    id: number;
+    email: string;
+    username?: string;
+  } | null>(null);
 
   // tarkistetaan sessio, kun komponentti latautuu
   useEffect(() => {
@@ -24,7 +28,11 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
         const data = await response.json();
         if (data.loggedIn) {
           setLoggedIn(true);
-          setUser({ id: data.userId, email: data.email });
+          setUser({
+            id: data.userId,
+            email: data.email,
+            username: data.username,
+          });
         }
       } catch (error) {
         console.error("Error checking session:", error);
@@ -34,7 +42,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     checkSession();
   }, []);
 
-  const login = (user: { id: number; email: string }) => {
+  const login = (user: { id: number; email: string; username?: string }) => {
     setLoggedIn(true);
     setUser(user);
   };

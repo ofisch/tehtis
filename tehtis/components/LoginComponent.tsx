@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import "../style/Login.css";
 
 interface LoginComponentProps {
-  handleRegister: () => void;
+  toggleRegister: () => void;
   handleLogin: (e: React.FormEvent) => void;
   email: string;
   password: string;
@@ -13,7 +13,7 @@ interface LoginComponentProps {
 }
 
 export const LoginComponent: React.FC<LoginComponentProps> = ({
-  handleRegister,
+  toggleRegister,
   handleLogin,
   email,
   password,
@@ -88,7 +88,7 @@ export const LoginComponent: React.FC<LoginComponentProps> = ({
             transition={{ duration: 0.2, delay: 0.3 }}
           >
             <p>Eikö sinulla ole tiliä?</p>
-            <a onClick={handleRegister} className="register-link">
+            <a onClick={toggleRegister} className="register-link">
               Rekisteröidy
             </a>
           </motion.div>

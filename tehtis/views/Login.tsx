@@ -5,12 +5,14 @@ import { AnimatePresence } from "framer-motion";
 import { RegisterComponent } from "../components/RegisterComponent";
 import { LoginComponent } from "../components/LoginComponent";
 import { useAuth } from "../context/AuthContext";
+import { toast, ToastContainer } from "react-toastify";
 
 export const Login = () => {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { login } = useAuth();
-  const [toggleRegister, setToggleRegister] = useState(false);
+  const [register, setRegister] = useState(false);
   const navigate = useNavigate();
 
   const [users, setUsers] = useState([]);
@@ -28,7 +30,11 @@ export const Login = () => {
         console.log("Session:", data);
         if (data.loggedIn) {
           setLoggedIn(true);
-          login({ id: data.userId, email: data.email }); // säilötään käyttäjän sessio
+          login({
+            id: data.userId,
+            email: data.email,
+            username: data.username,
+          }); // säilötään käyttäjän sessio
           navigate("/dashboard");
         }
       } catch (error) {
@@ -56,6 +62,16 @@ export const Login = () => {
     fetchUsers();
   }, []);
 
+  const notify = () =>
+    toast.success("Rekisteröityminen onnistui! Kirjaudutaan sisään...", {
+      position: "top-center",
+      autoClose: 2500,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
   const [isPending, startTransition] = useTransition();
 
   // login-funktio, joka lähettää POST-pyynnön backendiin
@@ -87,8 +103,42 @@ export const Login = () => {
     });
   };
 
-  const handleRegister = () => {
-    setToggleRegister(!toggleRegister);
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    startTransition(async () => {
+      try {
+        const response = await fetch("http://localhost:3000/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ name: username, email, password }),
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          // rekisteröityminen onnistui, kirjaudutaan sisään luoduilla tunnuksilla
+          // näytetään toast-viesti rekisteröitymisen onnistumisesta
+          notify();
+          // odotetaan 2,5 sekuntia ennen kuin kirjaudutaan sisään, jotta toast-viesti ehtii näkyä
+          setTimeout(() => handleLogin(e), 2500);
+        } else {
+          alert(data.error || "Registration failed");
+        }
+      } catch (error) {
+        alert("An error occurred while registering");
+        console.error(error);
+      }
+    });
+  };
+
+  const toggleRegister = () => {
+    setRegister(!register);
+    // tyhjennetään input-kentät
+    setUsername("");
+    setEmail("");
+    setPassword("");
   };
 
   return (
@@ -96,8 +146,18 @@ export const Login = () => {
       <div className="container">
         <div className="login-box">
           <AnimatePresence mode="wait">
-            {toggleRegister ? (
-              <RegisterComponent handleRegister={handleRegister} />
+            {register ? (
+              <RegisterComponent
+                toggleRegister={toggleRegister}
+                username={username}
+                setUsername={setUsername}
+                email={email}
+                setEmail={setEmail}
+                password={password}
+                setPassword={setPassword}
+                handleRegister={handleRegister}
+                isPending={isPending}
+              />
             ) : (
               <LoginComponent
                 email={email}
@@ -105,11 +165,23 @@ export const Login = () => {
                 setEmail={setEmail}
                 setPassword={setPassword}
                 handleLogin={handleLogin}
-                handleRegister={handleRegister}
+                toggleRegister={toggleRegister}
                 isPending={isPending}
               />
             )}
           </AnimatePresence>
+          <ToastContainer
+            position="top-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick={false}
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
         </div>
       </div>
     </>

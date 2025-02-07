@@ -13,13 +13,21 @@ export const Dashboard = () => {
   console.log("User:", user);
   console.log("Logged in:", loggedIn);
 
-  // jos käyttäjä ei ole kirjautunut, ohjataan login-sivulle
+  function timeout(delay: number) {
+    return new Promise((res) => setTimeout(res, delay));
+  }
+
+  // odotetaan sekunti istunnon latautumista, jos käyttäjä ei ole kirjautunut, ohjataan login-sivulle
   useEffect(() => {
-    if (!loggedIn) {
-      // navigate("/login");
-      console.log("Not logged in");
+    let timerId: NodeJS.Timeout;
+
+    if (!user) {
+      timerId = setTimeout(() => {
+        navigate("/login");
+      }, 500);
     }
-  }, [loggedIn, navigate]);
+    return () => clearTimeout(timerId);
+  }, [user]);
 
   // mockup-dataa kurssilistaan
   const courses = {

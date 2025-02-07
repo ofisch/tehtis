@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "../style/root.css";
 import "../style/Profile.css";
 import "../style/Dashboard.css";
@@ -9,7 +9,11 @@ import { useNavigate } from "react-router-dom";
 
 export const Profile = () => {
   const { loggedIn, user } = useAuth();
+  console.log("profile.user:", user);
   const navigate = useNavigate();
+
+  console.log("loggedIn:", loggedIn);
+
   return (
     <>
       <div className="container">

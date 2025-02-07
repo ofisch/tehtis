@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 interface User {
   id: number;
   email: string;
+  username?: string;
 }
 
 interface ProfileComponentProps {
@@ -26,7 +27,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({ user }) => {
         <div className="profile-info">
           <div className="username">
             <label>Käyttäjänimi</label>
-            <h2>matti</h2>
+            <h2>{user?.username}</h2>
           </div>
 
           <div className="email">
@@ -36,7 +37,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({ user }) => {
 
           <div className="student-id">
             <label>Oppilastunnus</label>
-            <h3>038379578312</h3>
+            <h3>tähän oppilastunnus</h3>
           </div>
         </div>
       </motion.div>

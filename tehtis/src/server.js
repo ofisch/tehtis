@@ -72,10 +72,29 @@ app.post("/login", (req, res) => {
 
   // säilötään sessioon käyttäjän id ja sähköposti
   req.session.userId = user.id;
+  req.session.name = user.name;
   req.session.email = user.email;
 
   console.log("Session stored:", req.session);
   return res.json({ message: "Login successful", userId: user.id });
+});
+
+//rekisteröityminen
+app.post("/register", (req, res) => {
+  const { name, email, password } = req.body;
+  const user = db.prepare("SELECT * FROM users WHERE email = ?").get(email);
+
+  // jos sähköposti on jo käytössä, palautetaan virhe
+  if (user) {
+    return res.status(409).json({ error: "User already exists" });
+  }
+
+  // lisätään uusi käyttäjä tietokantaan
+  const stmt = db.prepare(
+    "INSERT INTO users (name, email, password) VALUES (?, ?, ?)"
+  );
+  const info = stmt.run(name, email, password);
+  res.json(info);
 });
 
 // varmistetaan session olemassaolo
@@ -85,6 +104,7 @@ app.get("/session", (req, res) => {
       loggedIn: true,
       userId: req.session.userId,
       email: req.session.email,
+      username: req.session.name,
     });
   } else {
     return res.json({ loggedIn: false });
