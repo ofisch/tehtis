@@ -4,6 +4,7 @@ import { Login } from "../views/Login";
 import { Test } from "../views/Test";
 import { Dashboard } from "../views/Dashboard";
 import { Profile } from "../views/Profile";
+import { Course } from "../views/Course";
 
 export const App = () => {
   return (
@@ -14,6 +15,7 @@ export const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/course/:id" element={<Course />} />
         </Routes>
       </Router>
     </AuthProvider>

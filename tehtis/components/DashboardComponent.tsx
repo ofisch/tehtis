@@ -2,6 +2,7 @@ import React from "react";
 import "../style/Dashboard.css";
 import "../style/root.css";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom"; // Import Link from react-router-dom
 
 interface Course {
   name: string;
@@ -9,7 +10,7 @@ interface Course {
 }
 
 interface DashboardComponentProps {
-  courses: { [key: string]: Course };
+  courses: any[];
   user: { id: number; email: string } | null;
 }
 
@@ -35,12 +36,14 @@ export const DashboardComponent: React.FC<DashboardComponentProps> = ({
         <div className="courses">
           <h2>Kurssit</h2>
           <div className="course-list">
-            {Object.keys(courses).map((key) => {
+            {courses.map((course) => {
               return (
-                <div className="course" key={key}>
-                  <h3>{courses[key].name}</h3>
-                  <p>{courses[key].description}</p>
-                </div>
+                <Link to={`/course/${course.id}`} key={course.id}>
+                  <div className="course">
+                    <h3>{course.name}</h3>
+                    <p>{course.description}</p>
+                  </div>
+                </Link>
               );
             })}
           </div>

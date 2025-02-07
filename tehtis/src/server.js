@@ -34,10 +34,130 @@ app.use(
   })
 );
 
-// varmistetaan, että sessio tallennetaan SQLite-tietokantaan
+// luodaan taulu käyttäjille
 db.prepare(
   "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT, email TEXT, password TEXT)"
 ).run();
+
+// luodaan taulu kursseille
+db.prepare(
+  "CREATE TABLE IF NOT EXISTS courses (id INTEGER PRIMARY KEY, name TEXT, description TEXT, ownerId INTEGER, FOREIGN KEY(ownerId) REFERENCES users(id) ON DELETE CASCADE)"
+).run();
+
+// luodaan testikurssi
+const testCourse = db
+  .prepare("SELECT * FROM courses WHERE name = ?")
+  .get("Testikurssi");
+if (!testCourse) {
+  db.prepare(
+    "INSERT INTO courses (name, description, ownerId) VALUES (?, ?, ?)"
+  ).run("Testikurssi", "Tämä on testikurssi", 1);
+}
+
+// haetaan kaikki kurssit
+app.get("/courses", (req, res) => {
+  const rows = db.prepare("SELECT * FROM courses").all();
+  res.json(rows);
+});
+
+// haetaan yksittäinen kurssi
+app.get("/course-info/:id", (req, res) => {
+  const { id } = req.params;
+  const row = db.prepare("SELECT * FROM courses WHERE id = ?").get(id);
+  res.json(row);
+});
+
+// haetaan kurssin osallistujat
+app.get("/course-members/:id", (req, res) => {
+  const { id } = req.params;
+  const rows = db
+    .prepare(
+      "SELECT users.id, users.name, users.email FROM users JOIN course_members ON users.id = course_members.userId WHERE course_members.courseId = ?"
+    )
+    .all(id);
+  res.json(rows);
+});
+
+// luodaan taulu osallistujille
+db.prepare(
+  `CREATE TABLE IF NOT EXISTS course_members (
+    courseId INTEGER,
+    userId INTEGER,
+    FOREIGN KEY(courseId) REFERENCES courses(id) ON DELETE CASCADE,
+    FOREIGN KEY(userId) REFERENCES users(id) ON DELETE CASCADE,
+    PRIMARY KEY (courseId, userId)
+  )`
+).run();
+
+// käyttäjä liittyy kurssille
+app.post("/join-course", (req, res) => {
+  const { courseId } = req.body;
+  const { userId } = req.session;
+
+  if (!userId) {
+    return res.status(401).json({ error: "User not authenticated" });
+  }
+
+  try {
+    const stmt = db.prepare(
+      "INSERT INTO course_members (courseId, userId) VALUES (?, ?)"
+    );
+    const info = stmt.run(courseId, userId);
+    res.json({ message: "Joined course successfully", info });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Failed to join course", details: error.message });
+  }
+});
+
+// opettaja liittää käyttäjän kurssille
+app.post("/add-member-to-course", (req, res) => {
+  const { courseId, userId } = req.body;
+
+  if (!req.session.userId) {
+    return res.status(401).json({ error: "User not authenticated" });
+  }
+
+  try {
+    const stmt = db.prepare(
+      "INSERT INTO course_members (courseId, userId) VALUES (?, ?)"
+    );
+    const info = stmt.run(courseId, userId);
+    res.json({ message: "Added member to course successfully", info });
+  } catch (error) {
+    res.status(500).json({
+      error: "Failed to add member to course",
+      details: error.message,
+    });
+  }
+});
+
+// haetaan kurssit, joihin käyttäjä osallistuu
+app.get("/my-courses", (req, res) => {
+  if (!req.session.userId) {
+    return res.status(401).json({ error: "User not authenticated" });
+  }
+
+  const rows = db
+    .prepare(
+      "SELECT courses.id, courses.name, courses.description FROM courses JOIN course_members ON courses.id = course_members.courseId WHERE course_members.userId = ?"
+    )
+    .all(req.session.userId);
+
+  res.json(rows);
+});
+
+// haetaan kurssin osallistujat
+app.get("/course/:id/members", (req, res) => {
+  const { id } = req.params;
+  const rows = db
+    .prepare(
+      "SELECT users.id, users.name, users.email FROM users JOIN course_members ON users.id = course_members.userId WHERE course_members.courseId = ?"
+    )
+    .all(id);
+  res.json(rows);
+});
 
 // luodaan testikäyttäjä, jos sitä ei ole olemassa
 const testUser = db

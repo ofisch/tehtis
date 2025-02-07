@@ -5,6 +5,7 @@ import { DashboardComponent } from "../components/DashboardComponent";
 import { NavComponent } from "../components/NavComponent";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { join } from "path";
 
 export const Dashboard = () => {
   const { loggedIn, user } = useAuth();
@@ -13,11 +14,13 @@ export const Dashboard = () => {
   console.log("User:", user);
   console.log("Logged in:", loggedIn);
 
+  const [courses, setCourses] = React.useState<any[]>([]);
+
   function timeout(delay: number) {
     return new Promise((res) => setTimeout(res, delay));
   }
 
-  // odotetaan sekunti istunnon latautumista, jos käyttäjä ei ole kirjautunut, ohjataan login-sivulle
+  // odotetaan istunnon latautumista, jos käyttäjä ei ole kirjautunut, ohjataan login-sivulle
   useEffect(() => {
     let timerId: NodeJS.Timeout;
 
@@ -29,8 +32,48 @@ export const Dashboard = () => {
     return () => clearTimeout(timerId);
   }, [user]);
 
+  const getCourses = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/courses");
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error("Error fetching courses", error);
+    }
+  };
+
+  const getMyCourses = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/my-courses", {
+        credentials: "include", // Important for session-based authentication
+      });
+      const data = await response.json();
+      console.log("My courses:", data);
+      setCourses(data);
+    } catch (error) {
+      console.error("Error fetching my courses", error);
+    }
+  };
+
+  const joinCourse = async (courseId: number) => {
+    try {
+      const response = await fetch("http://localhost:3000/join-course", {
+        credentials: "include",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ courseId }),
+      });
+      const data = await response.json();
+      console.log("join course: ", data);
+    } catch (error) {
+      console.error("Error joining course", error);
+    }
+  };
+
   // mockup-dataa kurssilistaan
-  const courses = {
+  /*const courses = {
     course1: {
       name: "Menetelmäopinnot, suomen kieli ja viestintä, syksy ",
       description:
@@ -50,7 +93,11 @@ export const Dashboard = () => {
       description:
         "Ota haltuusi React, Redux, Node.js, MongoDB, GraphQL ja TypeScript! Kurssilla tutustutaan JavaScriptilla tapahtuvaan moderniin websovelluskehitykseen. Pääpaino on React-kirjaston avulla toteutettavissa single page -sovelluksissa, ja niitä tukevissa Node.js:llä toteutetuissa REST-rajapinnoissa.",
     },
-  };
+  };*/
+
+  useEffect(() => {
+    getMyCourses();
+  }, []);
 
   return (
     <>
