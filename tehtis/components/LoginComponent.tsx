@@ -67,7 +67,7 @@ export const LoginComponent: React.FC<LoginComponentProps> = ({
                 required
               />
             </motion.div>
-            <p>{email + " " + password}</p>
+            {/*<p>{email + " " + password}</p>*/}
             <motion.button
               className="btn"
               type="submit"

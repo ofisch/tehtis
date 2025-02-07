@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import "../style/Dashboard.css";
 import "../style/root.css";
+import "../style/Course.css";
 import { DashboardComponent } from "../components/DashboardComponent";
 import { NavComponent } from "../components/NavComponent";
 import { useAuth } from "../context/AuthContext";
@@ -19,18 +20,6 @@ export const Dashboard = () => {
   function timeout(delay: number) {
     return new Promise((res) => setTimeout(res, delay));
   }
-
-  // odotetaan istunnon latautumista, jos käyttäjä ei ole kirjautunut, ohjataan login-sivulle
-  useEffect(() => {
-    let timerId: NodeJS.Timeout;
-
-    if (!user) {
-      timerId = setTimeout(() => {
-        navigate("/login");
-      }, 500);
-    }
-    return () => clearTimeout(timerId);
-  }, [user]);
 
   const getCourses = async () => {
     try {
@@ -95,9 +84,19 @@ export const Dashboard = () => {
     },
   };*/
 
+  // odotetaan istunnon latautumista, jos käyttäjä ei ole kirjautunut, ohjataan login-sivulle
   useEffect(() => {
-    getMyCourses();
-  }, []);
+    let timerId: NodeJS.Timeout;
+
+    if (!loggedIn) {
+      timerId = setTimeout(() => {
+        navigate("/login");
+      }, 1000);
+    } else {
+      getMyCourses();
+    }
+    return () => clearTimeout(timerId);
+  }, [user]);
 
   return (
     <>

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"; // Import useParams
+import { NavComponent } from "../components/NavComponent";
+import "../style/root.css";
 
 export const Course = () => {
   const { id } = useParams(); // Get the course ID from the URL
@@ -40,17 +42,21 @@ export const Course = () => {
 
   return (
     <>
-      <h1>Kurssin tiedot</h1>
-      <p>Tässä näkymässä näytetään kurssin tiedot.</p>
-      <div className="course">
-        <h3>{course.name}</h3>
-        <p>{course.description}</p>
-        <h3>jäsenet</h3>
-        <ul>
-          {members.map((member: any) => {
-            return <li key={member.id}>{member.name + " " + member.email}</li>;
-          })}
-        </ul>
+      <div className="container">
+        <div className="nav-background"></div>
+        <NavComponent />
+        <div className="course-content">
+          <h1>Kurssin nimi: {course.name}</h1>
+          <p>Kurssin kuvaus: {course.description}</p>
+          <ul>
+            <h3>kurssille osallistuvat</h3>
+            {members.map((member: any) => {
+              return (
+                <li key={member.id}>{member.name + " " + member.email}</li>
+              );
+            })}
+          </ul>
+        </div>
       </div>
     </>
   );

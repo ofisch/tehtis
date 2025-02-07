@@ -87,7 +87,7 @@ export const RegisterComponent: React.FC<RegisterComponentProps> = ({
                 required
               />
             </motion.div>
-            <p>{username + " " + email + " " + password}</p>
+            {/*<p>{username + " " + email + " " + password}</p>*/}
             <motion.button
               className="btn"
               type="submit"
