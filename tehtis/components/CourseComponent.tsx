@@ -1,6 +1,7 @@
 import React from "react";
 import "../style/root.css";
 import "../style/course.css";
+import { motion } from "framer-motion";
 
 export const CourseComponent = ({
   course,
@@ -12,7 +13,13 @@ export const CourseComponent = ({
   assignments: { id: number; name: string; description: string }[];
 }) => {
   return (
-    <div className="course-content">
+    <motion.div
+      className="course-content"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.2, delay: 0.3 }}
+    >
       <h1>{course.name}</h1>
       <p>{course.description}</p>
       <ul className="course-members">
@@ -34,6 +41,6 @@ export const CourseComponent = ({
           </li>
         ))}
       </ul>
-    </div>
+    </motion.div>
   );
 };

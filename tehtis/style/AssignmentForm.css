@@ -1,0 +1,111 @@
+h1,
+h2,
+h3 {
+  color: var(--black);
+}
+
+.back-shadow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.assignmentform {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  align-self: flex-start;
+  padding: 2em;
+  gap: 2em;
+  width: 25em;
+  background: var(--white);
+  border-radius: 10px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+}
+
+.assignmentform h2 {
+  margin: 0;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+}
+
+input {
+  width: 25em;
+  border-radius: 15px;
+  border: 2px solid black;
+  background-color: var(--white);
+  padding: 1em;
+  color: var(--black);
+  font-size: 1em;
+  transition: 0.3s;
+  box-sizing: border-box;
+  max-width: 25em;
+}
+
+textarea {
+  width: 25em;
+  height: 10em;
+  border-radius: 15px;
+  border: 2px solid black;
+  background-color: var(--white);
+  padding: 1em;
+  color: var(--black);
+  font-size: 1em;
+  transition: 0.3s;
+  box-sizing: border-box;
+}
+
+textarea:focus {
+  transition: 0.3s;
+  border: 2px solid black; /* Same thickness as default */
+  box-shadow: black 3px 3px;
+  outline: none;
+}
+
+button {
+  font-size: 1em;
+  background: var(--lightgreen);
+  border: 2px solid transparent; /* Ensure no size change */
+  padding: 1em;
+  cursor: pointer;
+  border-radius: 15px;
+  color: var(--black);
+  box-sizing: border-box; /* Prevent size changes */
+  transition: 0.3s;
+}
+
+button:hover {
+  transition: 0.3s;
+  border: 2px solid black; /* Same thickness to avoid movement */
+  box-shadow: black 3px 3px;
+}
+
+.cancel-button {
+  align-self: flex-start;
+  font-size: 1em;
+  background: var(--bittersweet);
+  border: 2px solid transparent; /* Ensure no size change */
+  padding: 1em;
+  cursor: pointer;
+  border-radius: 15px;
+  color: var(--black);
+  box-sizing: border-box; /* Prevent size changes */
+  transition: 0.3s;
+}
+
+.buttons {
+  display: flex;
+  gap: 1em;
+  width: 100%;
+  justify-content: space-between;
+}

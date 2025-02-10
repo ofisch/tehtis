@@ -56,6 +56,12 @@ export const Course = () => {
     }
   }, [id]); // Fetch course info whenever the id changes
 
+  const [assignmentBox, setAssignmentBox] = useState(false);
+
+  const toggleAssignmentBox = () => {
+    setAssignmentBox(!assignmentBox);
+  };
+
   return (
     <>
       <div className="container">
@@ -66,11 +72,15 @@ export const Course = () => {
           members={members}
           assignments={assignments}
         />
+        <button onClick={toggleAssignmentBox}>lisää tehtävä</button>
 
-        <AssignmentForm
-          courseId={parseInt(id || "0")}
-          onAssignmentAdded={() => getCourseAssignments(id!)}
-        />
+        {assignmentBox && (
+          <AssignmentForm
+            toggleAssignmentBox={toggleAssignmentBox}
+            courseId={parseInt(id || "0")}
+            onAssignmentAdded={() => getCourseAssignments(id!)}
+          />
+        )}
       </div>
     </>
   );
