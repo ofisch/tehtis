@@ -71,8 +71,8 @@ export const Course = () => {
           course={course}
           members={members}
           assignments={assignments}
+          toggleAssignmentBox={toggleAssignmentBox}
         />
-        <button onClick={toggleAssignmentBox}>lisää tehtävä</button>
 
         {assignmentBox && (
           <AssignmentForm

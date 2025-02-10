@@ -83,13 +83,13 @@ form {
   margin-top: 1em;
 }
 
-input,
-.btn {
+.login-input,
+.login-button {
   width: 100%;
   max-width: 14em;
 }
 
-input {
+.login-input {
   border-radius: 15px;
   border: 2px solid black; /* Keep size consistent */
   padding: 1em;
@@ -100,14 +100,14 @@ input {
   box-sizing: border-box; /* Prevent size changes */
 }
 
-input:focus {
+.login-input:focus {
   transition: 0.3s;
   border: 2px solid black; /* Same thickness as default */
   box-shadow: black 3px 3px;
   outline: none;
 }
 
-.btn {
+.login-button {
   font-size: 1em;
   background: var(--lightgreen);
   border: 2px solid transparent; /* Ensure no size change */
@@ -119,7 +119,7 @@ input:focus {
   transition: 0.3s;
 }
 
-.btn:hover {
+.login-button:hover {
   transition: 0.3s;
   border: 2px solid black; /* Same thickness to avoid movement */
   box-shadow: black 3px 3px;

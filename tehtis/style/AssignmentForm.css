@@ -39,7 +39,7 @@ label {
   flex-direction: column;
 }
 
-input {
+.assignment-input {
   width: 25em;
   border-radius: 15px;
   border: 2px solid black;
@@ -50,6 +50,13 @@ input {
   transition: 0.3s;
   box-sizing: border-box;
   max-width: 25em;
+}
+
+.assignment-input:focus {
+  transition: 0.3s;
+  border: 2px solid black; /* Same thickness as default */
+  box-shadow: black 3px 3px;
+  outline: none;
 }
 
 textarea {

@@ -7,10 +7,12 @@ export const CourseComponent = ({
   course,
   members,
   assignments,
+  toggleAssignmentBox,
 }: {
   course: { name: string; description: string };
   members: { id: number; name: string; email: string }[];
-  assignments: { id: number; name: string; description: string }[];
+  assignments: { id: number; title: string; description: string }[];
+  toggleAssignmentBox: () => void;
 }) => {
   return (
     <motion.div
@@ -20,8 +22,17 @@ export const CourseComponent = ({
       exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.2, delay: 0.3 }}
     >
-      <h1>{course.name}</h1>
-      <p>{course.description}</p>
+      <header className="course-header">
+        <h1>{course.name}</h1>
+        <p>{course.description}</p>
+        <div className="course-actions">
+          <button className="add-course-button" onClick={toggleAssignmentBox}>
+            lisää tehtävä
+          </button>
+          <button>lisää osallistujia</button>
+        </div>
+      </header>
+
       <ul className="course-members">
         <h3>osallistujat</h3>
         {members.map((member: any) => {
@@ -37,7 +48,7 @@ export const CourseComponent = ({
       <ul>
         {assignments.map((assignment) => (
           <li key={assignment.id}>
-            <strong>{assignment.name}</strong> - {assignment.description}{" "}
+            <strong>{assignment.title}</strong> - {assignment.description}{" "}
           </li>
         ))}
       </ul>

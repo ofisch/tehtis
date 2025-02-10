@@ -43,6 +43,7 @@ export const LoginComponent: React.FC<LoginComponentProps> = ({
               transition={{ duration: 0.2 }}
             >
               <input
+                className="login-input"
                 type="text"
                 placeholder="Sähköposti"
                 name="email"
@@ -59,6 +60,7 @@ export const LoginComponent: React.FC<LoginComponentProps> = ({
               transition={{ duration: 0.2, delay: 0.1 }}
             >
               <input
+                className="login-input"
                 type="password"
                 placeholder="Salasana"
                 name="password"
@@ -69,7 +71,7 @@ export const LoginComponent: React.FC<LoginComponentProps> = ({
             </motion.div>
             {/*<p>{email + " " + password}</p>*/}
             <motion.button
-              className="btn"
+              className="login-button"
               type="submit"
               disabled={isPending || email == "" || password == ""}
               initial={{ opacity: 0, scale: 0.9 }}

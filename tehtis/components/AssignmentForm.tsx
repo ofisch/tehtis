@@ -72,11 +72,13 @@ export const AssignmentForm: React.FC<AssignmentFormProps> = ({
             <span>Otsikko:</span>
 
             <input
+              className="assignment-input"
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               disabled={title !== optimisticTitle}
               required
+              spellCheck="false"
             />
           </label>
 
@@ -86,6 +88,7 @@ export const AssignmentForm: React.FC<AssignmentFormProps> = ({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               required
+              spellCheck="false"
             />
           </label>
           <label>

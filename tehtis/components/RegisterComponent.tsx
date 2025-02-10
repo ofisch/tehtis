@@ -47,6 +47,7 @@ export const RegisterComponent: React.FC<RegisterComponentProps> = ({
               transition={{ duration: 0.2 }}
             >
               <input
+                className="login-input"
                 type="text"
                 placeholder="Käyttäjänimi"
                 name="username"
@@ -63,6 +64,7 @@ export const RegisterComponent: React.FC<RegisterComponentProps> = ({
               transition={{ duration: 0.2 }}
             >
               <input
+                className="login-input"
                 type="text"
                 placeholder="Sähköposti"
                 name="email"
@@ -79,6 +81,7 @@ export const RegisterComponent: React.FC<RegisterComponentProps> = ({
               transition={{ duration: 0.2, delay: 0.1 }}
             >
               <input
+                className="login-input"
                 type="password"
                 placeholder="Salasana"
                 name="password"
@@ -89,7 +92,7 @@ export const RegisterComponent: React.FC<RegisterComponentProps> = ({
             </motion.div>
             {/*<p>{username + " " + email + " " + password}</p>*/}
             <motion.button
-              className="btn"
+              className="login-button"
               type="submit"
               disabled={
                 isPending || username == "" || email == "" || password == ""
