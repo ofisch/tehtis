@@ -44,3 +44,26 @@ body {
     padding-right: 2em;
   }
 }
+
+.course-members {
+  padding: 0;
+  list-style-type: none;
+  padding-top: 1em;
+}
+
+.member {
+  display: flex;
+  gap: 1em;
+  border-bottom: 1px solid var(--black);
+}
+
+.member-name {
+  padding: 0;
+  margin: 0;
+}
+
+.member-email {
+  padding: 0;
+  margin: 0;
+  font-style: italic;
+}

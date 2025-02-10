@@ -2,11 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"; // Import useParams
 import { NavComponent } from "../components/NavComponent";
 import "../style/root.css";
+import { CourseComponent } from "../components/CourseComponent";
+import { AssignmentForm } from "../components/AssignmentForm";
 
 export const Course = () => {
   const { id } = useParams(); // Get the course ID from the URL
   const [course, setCourse] = useState<any>({});
   const [members, setMembers] = useState<any[]>([]);
+  const [assignments, setAssignments] = useState<any[]>([]);
 
   const getCourseInfo = async (id: string) => {
     try {
@@ -33,10 +36,23 @@ export const Course = () => {
     }
   };
 
+  const getCourseAssignments = async (id: string) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/course-assignments/${id}`
+      );
+      const data = await response.json();
+      setAssignments(data);
+    } catch (error) {
+      console.error("Error fetching course assignments", error);
+    }
+  };
+
   useEffect(() => {
     if (id) {
       getCourseInfo(id);
       getCourseMembers(id);
+      getCourseAssignments(id);
     }
   }, [id]); // Fetch course info whenever the id changes
 
@@ -45,18 +61,16 @@ export const Course = () => {
       <div className="container">
         <div className="nav-background"></div>
         <NavComponent />
-        <div className="course-content">
-          <h1>Kurssin nimi: {course.name}</h1>
-          <p>Kurssin kuvaus: {course.description}</p>
-          <ul>
-            <h3>kurssille osallistuvat</h3>
-            {members.map((member: any) => {
-              return (
-                <li key={member.id}>{member.name + " " + member.email}</li>
-              );
-            })}
-          </ul>
-        </div>
+        <CourseComponent
+          course={course}
+          members={members}
+          assignments={assignments}
+        />
+
+        <AssignmentForm
+          courseId={parseInt(id || "0")}
+          onAssignmentAdded={() => getCourseAssignments(id!)}
+        />
       </div>
     </>
   );

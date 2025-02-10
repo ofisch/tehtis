@@ -44,6 +44,53 @@ db.prepare(
   "CREATE TABLE IF NOT EXISTS courses (id INTEGER PRIMARY KEY, name TEXT, description TEXT, ownerId INTEGER, FOREIGN KEY(ownerId) REFERENCES users(id) ON DELETE CASCADE)"
 ).run();
 
+// luodaan taulu tehtäville
+// Create assignments table
+db.prepare(
+  `CREATE TABLE IF NOT EXISTS assignments (
+    id INTEGER PRIMARY KEY, 
+    title TEXT, 
+    description TEXT, 
+    courseId INTEGER, 
+    FOREIGN KEY(courseId) REFERENCES courses(id) ON DELETE CASCADE
+  )`
+).run();
+
+// luodaan testitehtävät
+const testAssignment = db
+  .prepare("SELECT * FROM assignments WHERE title = ?")
+  .get("Testitehtävä");
+
+if (!testAssignment) {
+  db.prepare(
+    "INSERT INTO assignments (title, description, courseId) VALUES (?, ?, ?)"
+  ).run("Testitehtävä", "Tämä on testitehtävä", 1); // id 1 on testikurssi
+}
+
+// haetaan kurssin tehtävät
+app.get("/course-assignments/:courseId", (req, res) => {
+  const { courseId } = req.params;
+
+  const assignments = db
+    .prepare("SELECT * FROM assignments WHERE courseId = ?")
+    .all(courseId);
+
+  res.json(assignments);
+});
+
+// luodaan uusi tehtävä
+app.post("/add-assignment", (req, res) => {
+  const { title, description, courseId } = req.body;
+
+  const result = db
+    .prepare(
+      "INSERT INTO assignments (title, description, courseId) VALUES (?, ?, ?)"
+    )
+    .run(title, description, courseId);
+
+  res.json({ success: result.changes > 0 });
+});
+
 // luodaan testikurssi
 const testCourse = db
   .prepare("SELECT * FROM courses WHERE name = ?")
