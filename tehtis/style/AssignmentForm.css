@@ -30,11 +30,57 @@ h3 {
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
 }
 
+.add-members-form {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  align-self: flex-start;
+  padding: 2em;
+  gap: 2em;
+  width: 25em;
+  height: 35em;
+  background: var(--white);
+  border-radius: 10px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+}
+
+.search-results {
+  width: 100%;
+  height: 15em;
+  overflow-y: auto;
+
+  border-radius: 15px;
+  border: 2px solid var(--black);
+}
+
+.search-results ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.search-results ul li {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+.users-to-add {
+  width: 100%;
+  height: 4em;
+  overflow-y: auto;
+}
+
 .assignmentform h2 {
   margin: 0;
 }
 
 label {
+  color: var(--black);
   display: flex;
   flex-direction: column;
 }

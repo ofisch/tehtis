@@ -76,7 +76,6 @@ export const AssignmentForm: React.FC<AssignmentFormProps> = ({
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              disabled={title !== optimisticTitle}
               required
               spellCheck="false"
             />

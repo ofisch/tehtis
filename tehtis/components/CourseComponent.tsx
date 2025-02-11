@@ -2,17 +2,21 @@ import React from "react";
 import "../style/root.css";
 import "../style/course.css";
 import { motion } from "framer-motion";
+import { FaPlus } from "react-icons/fa";
+import { FaUserPlus } from "react-icons/fa6";
 
 export const CourseComponent = ({
   course,
   members,
   assignments,
   toggleAssignmentBox,
+  toggleAddMembersBox,
 }: {
   course: { name: string; description: string };
   members: { id: number; name: string; email: string }[];
   assignments: { id: number; title: string; description: string }[];
   toggleAssignmentBox: () => void;
+  toggleAddMembersBox: () => void;
 }) => {
   return (
     <motion.div
@@ -27,9 +31,13 @@ export const CourseComponent = ({
         <p>{course.description}</p>
         <div className="course-actions">
           <button className="add-course-button" onClick={toggleAssignmentBox}>
-            lisää tehtävä
+            <FaPlus />
+            <span>Lisää tehtävä</span>
           </button>
-          <button>lisää osallistujia</button>
+          <button className="add-members-button" onClick={toggleAddMembersBox}>
+            <FaUserPlus />
+            <span>Lisää osallistujia</span>
+          </button>
         </div>
       </header>
 

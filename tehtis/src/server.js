@@ -125,6 +125,18 @@ app.get("/course-members/:id", (req, res) => {
   res.json(rows);
 });
 
+// haetaan käyttäjiä hakusanalla
+app.get("/search-users/:user", (req, res) => {
+  const { user } = req.params; // Fix destructuring
+  const searchQuery = `%${user}%`; // Add wildcard % for LIKE query
+
+  const rows = db
+    .prepare("SELECT * FROM users WHERE name LIKE ?")
+    .all(searchQuery);
+
+  res.json(rows);
+});
+
 // luodaan taulu osallistujille
 db.prepare(
   `CREATE TABLE IF NOT EXISTS course_members (

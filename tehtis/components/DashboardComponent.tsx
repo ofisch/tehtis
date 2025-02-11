@@ -36,16 +36,20 @@ export const DashboardComponent: React.FC<DashboardComponentProps> = ({
         <div className="courses">
           <h2>Kurssit</h2>
           <div className="course-list">
-            {courses.map((course) => {
-              return (
-                <Link to={`/course/${course.id}`} key={course.id}>
-                  <div className="course">
-                    <h3>{course.name}</h3>
-                    <p>{course.description}</p>
-                  </div>
-                </Link>
-              );
-            })}
+            {courses.length > 0 ? (
+              courses.map((course) => {
+                return (
+                  <Link to={`/course/${course.id}`} key={course.id}>
+                    <div className="course">
+                      <h3>{course.name}</h3>
+                      <p>{course.description}</p>
+                    </div>
+                  </Link>
+                );
+              })
+            ) : (
+              <p>Ei kursseja tällä hetkellä.</p>
+            )}
           </div>
         </div>
       </motion.div>

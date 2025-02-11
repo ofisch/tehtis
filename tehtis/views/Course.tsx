@@ -4,6 +4,7 @@ import { NavComponent } from "../components/NavComponent";
 import "../style/root.css";
 import { CourseComponent } from "../components/CourseComponent";
 import { AssignmentForm } from "../components/AssignmentForm";
+import { AddMembersForm } from "../components/AddMembersForm";
 
 export const Course = () => {
   const { id } = useParams(); // Get the course ID from the URL
@@ -62,6 +63,12 @@ export const Course = () => {
     setAssignmentBox(!assignmentBox);
   };
 
+  const [addMembersBox, setAddMembersBox] = useState(false);
+
+  const toggleAddMembersBox = () => {
+    setAddMembersBox(!addMembersBox);
+  };
+
   return (
     <>
       <div className="container">
@@ -72,6 +79,7 @@ export const Course = () => {
           members={members}
           assignments={assignments}
           toggleAssignmentBox={toggleAssignmentBox}
+          toggleAddMembersBox={toggleAddMembersBox}
         />
 
         {assignmentBox && (
@@ -79,6 +87,13 @@ export const Course = () => {
             toggleAssignmentBox={toggleAssignmentBox}
             courseId={parseInt(id || "0")}
             onAssignmentAdded={() => getCourseAssignments(id!)}
+          />
+        )}
+
+        {addMembersBox && (
+          <AddMembersForm
+            toggleAddMembersBox={toggleAddMembersBox}
+            course={course}
           />
         )}
       </div>

@@ -25,6 +25,9 @@ body {
 }
 
 .course-actions button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-size: 1em;
   background: var(--white);
   border: 2px solid transparent;
@@ -38,6 +41,7 @@ body {
 .course-actions button:hover {
   background: var(--lightgreen);
   cursor: pointer;
+  transition: 0.3s;
 }
 
 .container {
