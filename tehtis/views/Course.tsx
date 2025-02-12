@@ -94,6 +94,7 @@ export const Course = () => {
           <AddMembersForm
             toggleAddMembersBox={toggleAddMembersBox}
             course={course}
+            onMembersAdded={() => getCourseMembers(id!)}
           />
         )}
       </div>

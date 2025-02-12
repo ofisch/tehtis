@@ -4,6 +4,7 @@ import "../style/course.css";
 import { motion } from "framer-motion";
 import { FaPlus } from "react-icons/fa";
 import { FaUserPlus } from "react-icons/fa6";
+import { TiUserDelete } from "react-icons/ti";
 
 export const CourseComponent = ({
   course,
@@ -37,6 +38,9 @@ export const CourseComponent = ({
           <button className="add-members-button" onClick={toggleAddMembersBox}>
             <FaUserPlus />
             <span>Lisää osallistujia</span>
+          </button>
+          <button className="delete-members-button">
+            <TiUserDelete /> <span>Poista osallistujia</span>
           </button>
         </div>
       </header>

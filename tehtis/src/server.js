@@ -170,23 +170,27 @@ app.post("/join-course", (req, res) => {
   }
 });
 
-// opettaja liittää käyttäjän kurssille
+// opettaja liittää käyttäjän tai käyttäjiä kurssille
 app.post("/add-member-to-course", (req, res) => {
-  const { courseId, userId } = req.body;
-
-  if (!req.session.userId) {
-    return res.status(401).json({ error: "User not authenticated" });
-  }
+  const { courseId, userIds } = req.body; // Expecting an array of userIds
 
   try {
-    const stmt = db.prepare(
+    const insertStmt = db.prepare(
       "INSERT INTO course_members (courseId, userId) VALUES (?, ?)"
     );
-    const info = stmt.run(courseId, userId);
-    res.json({ message: "Added member to course successfully", info });
+
+    const insertMany = db.transaction((userIds) => {
+      userIds.forEach((userId) => {
+        insertStmt.run(courseId, userId);
+      });
+    });
+
+    insertMany(userIds);
+
+    res.json({ message: "Added members to course successfully" });
   } catch (error) {
     res.status(500).json({
-      error: "Failed to add member to course",
+      error: "Failed to add members to course",
       details: error.message,
     });
   }

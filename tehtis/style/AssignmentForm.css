@@ -40,39 +40,174 @@ h3 {
   transform: translate(-50%, -50%);
   align-self: flex-start;
   padding: 2em;
-  gap: 2em;
-  width: 25em;
-  height: 35em;
+  width: 40em;
+  height: 40em;
   background: var(--white);
   border-radius: 10px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  transition: height 0.3s;
+}
+
+.add-members-form h2 {
+  margin: 0;
+}
+
+.add-members-form-content {
+  display: flex;
+  flex-direction: row;
+  gap: 2em;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.search {
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+}
+
+.add-members-input {
+  width: 100%;
+  border-top: 2px solid black;
+  border-bottom: 2px solid black;
+  border-left: 2px solid black;
+  border-right: 2px solid black;
+  background-color: var(--white);
+  padding: 1em;
+  color: var(--black);
+  font-size: 1em;
+  transition: 0.3s;
+  box-sizing: border-box;
+}
+
+.add-members-input:focus {
+  transition: 0.3s;
+  outline: none;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
 }
 
 .search-results {
-  width: 100%;
-  height: 15em;
+  max-height: 25em;
   overflow-y: auto;
-
-  border-radius: 15px;
-  border: 2px solid var(--black);
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  border-left: 2px solid var(--black);
+  border-right: 2px solid black;
+  border-bottom: 2px solid black;
 }
 
 .search-results ul {
   list-style-type: none;
   padding: 0;
+  margin: 0;
 }
 
 .search-results ul li {
   display: flex;
   justify-content: space-between;
-  padding-top: 1em;
-  padding-bottom: 1em;
+  align-items: center;
+  padding-left: 1em;
+  padding-right: 1em;
+  border-top: 2px solid var(--black);
+  color: var(--black);
+  background-color: var(--lightgreen);
+}
+
+.search-results ul li:first-child {
+  border-top: none;
+}
+
+.search-results ul li:last-child {
+  border-bottom: none;
+}
+
+.search-results ul li button {
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+  background: var(--emerald);
+  border: 2px solid transparent; /* Ensure no size change */
+  padding: 0.5em;
+  cursor: pointer;
+  border-radius: 15px;
+  width: 5em;
+  height: 3em;
+  color: var(--black);
+  box-sizing: border-box; /* Prevent size changes */
+  transition: 0.3s;
+}
+
+.search-results ul li button:hover {
+  transition: 0.3s;
+  border: 2px solid black; /* Same thickness to avoid movement */
+  box-shadow: black 3px 3px;
+}
+
+.added-button {
+  width: 6em !important;
+  background: var(--lightgreen) !important;
+  font-style: bold !important;
 }
 
 .users-to-add {
-  width: 100%;
-  height: 4em;
+  color: var(--black);
+  width: 40%;
+  align-self: start;
+}
+
+.users-to-add ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-height: 25em;
   overflow-y: auto;
+}
+
+.users-to-add ul li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1em;
+  padding-left: 1em;
+  padding-right: 1em;
+  border-top: 2px solid var(--black);
+  border-left: 2px solid var(--black);
+  border-right: 2px solid var(--black);
+  color: var(--black);
+  background-color: var(--lightgreen);
+}
+
+.users-to-add ul li:first-child {
+  border-top: 2px solid black;
+}
+
+.users-to-add ul li:last-child {
+  border-bottom: 2px solid black;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+
+.users-to-add ul li button {
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+  background: var(--bittersweet);
+  border: 2px solid transparent; /* Ensure no size change */
+  padding: 0.5em;
+  cursor: pointer;
+  border-radius: 15px;
+  width: 5em;
+  height: 3em;
+  color: var(--black);
+  box-sizing: border-box; /* Prevent size changes */
+  transition: 0.3s;
+}
+
+.users-to-add ul li button:hover {
+  transition: 0.3s;
+  border: 2px solid black; /* Same thickness to avoid movement */
+  box-shadow: black 3px 3px;
 }
 
 .assignmentform h2 {
@@ -161,4 +296,5 @@ button:hover {
   gap: 1em;
   width: 100%;
   justify-content: space-between;
+  margin-top: auto;
 }
