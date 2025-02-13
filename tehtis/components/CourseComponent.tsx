@@ -12,12 +12,14 @@ export const CourseComponent = ({
   assignments,
   toggleAssignmentBox,
   toggleAddMembersBox,
+  toggleRemoveMembersBox,
 }: {
   course: { name: string; description: string };
   members: { id: number; name: string; email: string }[];
   assignments: { id: number; title: string; description: string }[];
   toggleAssignmentBox: () => void;
   toggleAddMembersBox: () => void;
+  toggleRemoveMembersBox: () => void;
 }) => {
   return (
     <motion.div
@@ -39,7 +41,10 @@ export const CourseComponent = ({
             <FaUserPlus />
             <span>Lisää osallistujia</span>
           </button>
-          <button className="delete-members-button">
+          <button
+            className="delete-members-button"
+            onClick={toggleRemoveMembersBox}
+          >
             <TiUserDelete /> <span>Poista osallistujia</span>
           </button>
         </div>

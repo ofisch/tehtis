@@ -5,9 +5,10 @@ import "../style/root.css";
 import { CourseComponent } from "../components/CourseComponent";
 import { AssignmentForm } from "../components/AssignmentForm";
 import { AddMembersForm } from "../components/AddMembersForm";
+import { RemoveMembersForm } from "../components/RemoveMembersForm";
 
 export const Course = () => {
-  const { id } = useParams(); // Get the course ID from the URL
+  const { id } = useParams(); // haetaan kurssin ID osoitteesta
   const [course, setCourse] = useState<any>({});
   const [members, setMembers] = useState<any[]>([]);
   const [assignments, setAssignments] = useState<any[]>([]);
@@ -69,6 +70,12 @@ export const Course = () => {
     setAddMembersBox(!addMembersBox);
   };
 
+  const [removeMembersBox, setRemoveMembersBox] = useState(false);
+
+  const toggleRemoveMembersBox = () => {
+    setRemoveMembersBox(!removeMembersBox);
+  };
+
   return (
     <>
       <div className="container">
@@ -80,6 +87,7 @@ export const Course = () => {
           assignments={assignments}
           toggleAssignmentBox={toggleAssignmentBox}
           toggleAddMembersBox={toggleAddMembersBox}
+          toggleRemoveMembersBox={toggleRemoveMembersBox}
         />
 
         {assignmentBox && (
@@ -95,6 +103,14 @@ export const Course = () => {
             toggleAddMembersBox={toggleAddMembersBox}
             course={course}
             onMembersAdded={() => getCourseMembers(id!)}
+          />
+        )}
+
+        {removeMembersBox && (
+          <RemoveMembersForm
+            toggleRemoveMembersBox={toggleRemoveMembersBox}
+            course={course}
+            onMembersRemoved={() => getCourseMembers(id!)}
           />
         )}
       </div>

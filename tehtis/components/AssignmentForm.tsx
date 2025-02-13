@@ -63,7 +63,7 @@ export const AssignmentForm: React.FC<AssignmentFormProps> = ({
       <div className="back-shadow">
         <form className="assignmentform" onSubmit={handleSubmit}>
           {optimisticTitle.length > 0 ? (
-            <h2>Lisää uusi tehtävä - {optimisticTitle}</h2>
+            <h2>Lisää uusi tehtävä: {optimisticTitle}</h2>
           ) : (
             <h2>Lisää uusi tehtävä</h2>
           )}

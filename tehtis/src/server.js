@@ -223,6 +223,32 @@ app.post("/add-member-to-course", (req, res) => {
   }
 });
 
+// opettaja poistaa käyttäjän tai käyttäjiä kurssilta
+app.post("/remove-member-from-course", (req, res) => {
+  const { courseId, userIds } = req.body; // Expecting an array of userIds
+
+  try {
+    const deleteStmt = db.prepare(
+      "DELETE FROM course_members WHERE courseId = ? AND userId = ?"
+    );
+
+    const deleteMany = db.transaction((userIds) => {
+      userIds.forEach((userId) => {
+        deleteStmt.run(courseId, userId);
+      });
+    });
+
+    deleteMany(userIds);
+
+    res.json({ message: "Removed members from course successfully" });
+  } catch (error) {
+    res.status(500).json({
+      error: "Failed to remove members from course",
+      details: error.message,
+    });
+  }
+});
+
 // haetaan kurssit, joihin käyttäjä osallistuu
 app.get("/my-courses", (req, res) => {
   if (!req.session.userId) {

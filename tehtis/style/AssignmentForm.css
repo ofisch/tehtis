@@ -319,3 +319,90 @@ button:hover {
   justify-content: space-between;
   margin-top: auto;
 }
+
+.remove-members-form {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  align-self: flex-start;
+  padding: 2em;
+  width: 25em;
+  height: 40em;
+  background: var(--white);
+  border-radius: 10px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  transition: height 0.3s;
+}
+
+.remove-members-form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.remove-members-form h2 {
+  margin: 0;
+}
+
+.remove-members-list {
+  color: var(--black);
+  align-self: start;
+  padding: 0;
+  max-height: 25em;
+  overflow-y: auto;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  border-left: 2px solid var(--black);
+  border-right: 2px solid black;
+  border-bottom: 2px solid black;
+}
+
+.remove-members-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  padding-left: 1em;
+  padding-right: 1em;
+  border-top: 2px solid var(--black);
+  color: var(--black);
+  background-color: var(--lightgreen);
+}
+
+.remove-members-list li:first-child {
+  border-top: none;
+}
+
+.remove-members-list li:last-child {
+  border-bottom: none;
+}
+
+.remove-member-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3em;
+  background: var(--bittersweet);
+  border: 2px solid transparent; /* Ensure no size change */
+  padding: 0.5em;
+  cursor: pointer;
+  border-radius: 15px;
+  width: 5em;
+  height: 3em;
+  color: var(--black);
+  box-sizing: border-box; /* Prevent size changes */
+  transition: 0.3s;
+}
+
+.removed-button {
+  width: 6em !important;
+  background: var(--lightgreen) !important;
+  font-style: bold !important;
+}
