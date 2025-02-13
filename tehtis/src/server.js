@@ -56,6 +56,49 @@ db.prepare(
   )`
 ).run();
 
+// luodaan testikäyttäjä, jos sitä ei ole olemassa
+const testUser = db
+  .prepare("SELECT * FROM users WHERE email = ?")
+  .get("matti@posti");
+if (!testUser) {
+  db.prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)").run(
+    "matti",
+    "matti@posti",
+    "matti"
+  );
+}
+
+let courseId;
+
+// luodaan testikurssi
+const testCourse = db
+  .prepare("SELECT * FROM courses WHERE name = ?")
+  .get("Testikurssi");
+
+if (!testCourse) {
+  // Insert the course and get the last inserted ID
+  const result = db
+    .prepare(
+      "INSERT INTO courses (name, description, ownerId) VALUES (?, ?, ?)"
+    )
+    .run("Testikurssi", "Tämä on testikurssi", 1);
+  courseId = result.lastInsertRowid;
+} else {
+  courseId = testCourse.id; // If it exists, use its actual ID
+}
+
+// liitetään testikäyttäjä testikurssille
+const testEnrollment = db
+  .prepare("SELECT * FROM course_members WHERE courseId = ? AND userId = ?")
+  .get(courseId, 1);
+
+if (!testEnrollment) {
+  db.prepare("INSERT INTO course_members (courseId, userId) VALUES (?, ?)").run(
+    courseId,
+    1
+  );
+}
+
 // luodaan testitehtävät
 const testAssignment = db
   .prepare("SELECT * FROM assignments WHERE title = ?")
@@ -64,7 +107,7 @@ const testAssignment = db
 if (!testAssignment) {
   db.prepare(
     "INSERT INTO assignments (title, description, courseId) VALUES (?, ?, ?)"
-  ).run("Testitehtävä", "Tämä on testitehtävä", 1); // id 1 on testikurssi
+  ).run("Testitehtävä", "Tämä on testitehtävä", courseId); // Use the correct course ID
 }
 
 // haetaan kurssin tehtävät
@@ -89,22 +132,6 @@ app.post("/add-assignment", (req, res) => {
     .run(title, description, courseId);
 
   res.json({ success: result.changes > 0 });
-});
-
-// luodaan testikurssi
-const testCourse = db
-  .prepare("SELECT * FROM courses WHERE name = ?")
-  .get("Testikurssi");
-if (!testCourse) {
-  db.prepare(
-    "INSERT INTO courses (name, description, ownerId) VALUES (?, ?, ?)"
-  ).run("Testikurssi", "Tämä on testikurssi", 1);
-}
-
-// haetaan kaikki kurssit
-app.get("/courses", (req, res) => {
-  const rows = db.prepare("SELECT * FROM courses").all();
-  res.json(rows);
 });
 
 // haetaan yksittäinen kurssi
@@ -221,18 +248,6 @@ app.get("/course/:id/members", (req, res) => {
     .all(id);
   res.json(rows);
 });
-
-// luodaan testikäyttäjä, jos sitä ei ole olemassa
-const testUser = db
-  .prepare("SELECT * FROM users WHERE email = ?")
-  .get("matti@posti");
-if (!testUser) {
-  db.prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)").run(
-    "matti",
-    "matti@posti",
-    "matti"
-  );
-}
 
 // käyttäjän lisääminen
 app.post("/add", (req, res) => {
