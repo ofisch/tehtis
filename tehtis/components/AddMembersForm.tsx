@@ -6,6 +6,7 @@ import { ImCross } from "react-icons/im";
 import { FaQuestion } from "react-icons/fa";
 import { FaQuestionCircle } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
+import { motion } from "framer-motion";
 
 interface Course {
   name: string;
@@ -209,19 +210,33 @@ export const AddMembersForm: React.FC<AddMembersFormProps> = ({
           </div>
 
           {usersToAdd.length > 0 && (
-            <div className="users-to-add">
-              <h2>Lisättävät käyttäjät:</h2>
+            <motion.div
+              className="users-to-add"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.2 }}
+            >
               <ul>
+                <li>
+                  <h3>Lisättävät käyttäjät</h3>
+                </li>
                 {usersToAdd.map((user) => (
-                  <li key={user.id}>
+                  <motion.li
+                    key={user.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    transition={{ duration: 0.2 }}
+                  >
                     <h4>{user.name}</h4>
                     <button onClick={() => handleDeleteUser(user)}>
                       <ImCross /> Poista
                     </button>
-                  </li>
+                  </motion.li>
                 ))}
               </ul>
-            </div>
+            </motion.div>
           )}
         </div>
 

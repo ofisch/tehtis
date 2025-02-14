@@ -84,6 +84,10 @@ export const RemoveMembersForm: React.FC<RemoveMembersFormProps> = ({
     }
   };
 
+  const handleRestoreMember = (member: any) => {
+    setMembersToRemove(membersToRemove.filter((m) => m.id !== member.id));
+  };
+
   return (
     <>
       <div className="back-shadow">
@@ -92,35 +96,63 @@ export const RemoveMembersForm: React.FC<RemoveMembersFormProps> = ({
             Poista osallistujia kurssilta <span>{course.name}</span>
           </h2>
           <div className="remove-members-form-content">
-            <h3>Osallistujat</h3>
-            <ul className="remove-members-list">
-              {members.map((member: any) => {
-                return (
-                  <li className="member" key={member.id}>
-                    <h4 className="member-name">{member.name}</h4>
-                    <p className="member-email">{member.email}</p>
-                    {membersToRemove.some((m) => m.id === member.id) ? (
-                      <button
-                        type="button"
-                        className="removed-button"
-                        disabled
-                        onClick={() => handleRemoveMember(member)}
-                      >
-                        Poistettu
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        className="remove-member-button"
-                        onClick={() => handleRemoveMember(member)}
-                      >
-                        Poista
-                      </button>
-                    )}
+            <div>
+              <ul className="remove-members-list">
+                <li>
+                  <h3>Osallistujat</h3>
+                </li>
+                {members.map((member: any) => {
+                  return (
+                    <li className="member" key={member.id}>
+                      <h4 className="member-name">{member.name}</h4>
+
+                      {membersToRemove.some((m) => m.id === member.id) ? (
+                        <button
+                          type="button"
+                          className="removed-button"
+                          disabled
+                          onClick={() => handleRemoveMember(member)}
+                        >
+                          Poistettu
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          className="remove-member-button"
+                          onClick={() => handleRemoveMember(member)}
+                        >
+                          Poista
+                        </button>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+            <div>
+              {membersToRemove.length > 0 && (
+                <ul className="selected-members-list">
+                  <li>
+                    <h3>Poistettavat osallistujat</h3>
                   </li>
-                );
-              })}
-            </ul>
+                  {membersToRemove.map((member: any) => {
+                    return (
+                      <li className="member" key={member.id}>
+                        <h4 className="member-name">{member.name}</h4>
+
+                        <button
+                          type="button"
+                          className="restore-button"
+                          onClick={() => handleRestoreMember(member)}
+                        >
+                          <span>Palauta</span>
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </div>
           </div>
           <div className="buttons">
             <button className="cancel-button" onClick={toggleRemoveMembersBox}>

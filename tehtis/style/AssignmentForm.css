@@ -40,8 +40,8 @@ h3 {
   transform: translate(-50%, -50%);
   align-self: flex-start;
   padding: 2em;
-  width: 40em;
-  height: 40em;
+  width: fit-content;
+  height: fit-content;
   background: var(--white);
   border-radius: 10px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
@@ -57,7 +57,7 @@ h3 {
   flex-direction: row;
   gap: 2em;
   width: 100%;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .search {
@@ -132,7 +132,6 @@ h3 {
   padding-right: 1em;
   border-top: 2px solid var(--black);
   color: var(--black);
-  background-color: var(--lightgreen);
 }
 
 .search-results ul li:first-child {
@@ -147,7 +146,7 @@ h3 {
   display: flex;
   align-items: center;
   gap: 0.3em;
-  background: var(--emerald);
+  background: var(--lightgreen);
   border: 2px solid transparent; /* Ensure no size change */
   padding: 0.5em;
   cursor: pointer;
@@ -167,14 +166,18 @@ h3 {
 
 .added-button {
   width: 6em !important;
-  background: var(--lightgreen) !important;
+  background: transparent !important;
+  color: var(--black) !important;
   font-style: bold !important;
+}
+
+.added-button svg {
+  fill: var(--emerald);
 }
 
 .users-to-add {
   color: var(--black);
-  width: 40%;
-  align-self: start;
+  padding-top: 26px;
 }
 
 .users-to-add ul {
@@ -201,6 +204,8 @@ h3 {
 
 .users-to-add ul li:first-child {
   border-top: 2px solid black;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
 }
 
 .users-to-add ul li:last-child {
@@ -330,20 +335,20 @@ button:hover {
   transform: translate(-50%, -50%);
   align-self: flex-start;
   padding: 2em;
-  width: 25em;
-  height: 40em;
+  max-width: fit-content;
+  max-height: fit-content;
   background: var(--white);
   border-radius: 10px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
-  transition: height 0.3s;
+  transition: height, width 0.3s;
 }
 
 .remove-members-form-content {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 2em;
   width: 100%;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .remove-members-form h2 {
@@ -373,11 +378,10 @@ button:hover {
   padding-right: 1em;
   border-top: 2px solid var(--black);
   color: var(--black);
-  background-color: var(--lightgreen);
 }
 
-.remove-members-list li:first-child {
-  border-top: none;
+.remove-members-list li:nth-child(2) {
+  border-bottom: none;
 }
 
 .remove-members-list li:last-child {
@@ -401,8 +405,48 @@ button:hover {
   transition: 0.3s;
 }
 
+.selected-members-list {
+  color: var(--black);
+  align-self: start;
+  padding: 0;
+  max-height: 25em;
+  overflow-y: auto;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  border-left: 2px solid var(--black);
+  border-right: 2px solid black;
+  border-bottom: 2px solid black;
+}
+
+.selected-members-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  padding-left: 1em;
+  padding-right: 1em;
+  border-top: 2px solid var(--black);
+  color: var(--black);
+  background-color: var(--bittersweet);
+}
+
+.selected-members-list li:nth-child(2) {
+  border-bottom: none;
+}
+
+.selected-members-list li:last-child {
+  border-bottom: none;
+}
+
 .removed-button {
   width: 6em !important;
-  background: var(--lightgreen) !important;
+  background: transparent !important;
+  font-style: bold !important;
+}
+
+.restore-button {
+  width: 6em !important;
+  background: var(--emerald) !important;
   font-style: bold !important;
 }
