@@ -76,6 +76,53 @@ export const Course = () => {
     setRemoveMembersBox(!removeMembersBox);
   };
 
+  const onFileSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/upload/course/${id}`,
+        {
+          method: "POST",
+          body: formData,
+          credentials: "include", // Ensures session cookies are sent
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      alert("Tiedosto lähetetty onnistuneesti!");
+      console.log(data);
+    } catch (error) {
+      console.error("Error uploading file", error);
+      alert("Tiedoston lähetys epäonnistui!");
+    }
+  };
+
+  const [courseFiles, setCourseFiles] = useState<any[]>([]);
+
+  const getCourseFiles = async (id: string) => {
+    try {
+      const response = await fetch(`http://localhost:3000/files/course/${id}`);
+      const data = await response.json();
+      setCourseFiles(data);
+      console.log(data);
+    } catch (error) {
+      console.error("Error fetching course files", error);
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      getCourseFiles(id);
+    }
+  }, [id]); // Fetch course info whenever the id changes
+
   return (
     <>
       <div className="container">
@@ -88,6 +135,8 @@ export const Course = () => {
           toggleAssignmentBox={toggleAssignmentBox}
           toggleAddMembersBox={toggleAddMembersBox}
           toggleRemoveMembersBox={toggleRemoveMembersBox}
+          onFileSubmit={onFileSubmit}
+          courseFiles={courseFiles}
         />
 
         {assignmentBox && (

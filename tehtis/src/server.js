@@ -5,6 +5,11 @@ const cors = require("cors");
 const session = require("express-session");
 const SQLiteStore = require("connect-sqlite3")(session); // Store sessions in SQLite
 
+const multer = require("multer");
+const path = require("path");
+
+const fs = require("fs");
+
 const app = express();
 const db = new Database("database.db");
 
@@ -34,6 +39,25 @@ app.use(
   })
 );
 
+// Ensure the "uploads" folder exists
+const uploadDir = path.join(__dirname, "uploads");
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir);
+}
+
+// storage engine tiedostoille
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // Files will be stored in the 'uploads' folder
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
+  },
+});
+
+// alustetaan multer
+const upload = multer({ storage });
+
 // luodaan taulu käyttäjille
 db.prepare(
   "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT, email TEXT, password TEXT)"
@@ -54,6 +78,23 @@ db.prepare(
     courseId INTEGER, 
     FOREIGN KEY(courseId) REFERENCES courses(id) ON DELETE CASCADE
   )`
+).run();
+
+// luodaan taulu tiedostoille
+db.prepare(
+  `
+  CREATE TABLE IF NOT EXISTS files (
+    id INTEGER PRIMARY KEY, 
+    filename TEXT, 
+    path TEXT, 
+    uploadedBy INTEGER, 
+    courseId INTEGER NULL,
+    assignmentId INTEGER NULL,
+    FOREIGN KEY(uploadedBy) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY(courseId) REFERENCES courses(id) ON DELETE CASCADE,
+    FOREIGN KEY(assignmentId) REFERENCES assignments(id) ON DELETE CASCADE
+  )
+`
 ).run();
 
 // luodaan testikäyttäjä, jos sitä ei ole olemassa
@@ -109,6 +150,34 @@ if (!testAssignment) {
     "INSERT INTO assignments (title, description, courseId) VALUES (?, ?, ?)"
   ).run("Testitehtävä", "Tämä on testitehtävä", courseId); // Use the correct course ID
 }
+
+// ladataan tiedosto kurssille
+app.post("/upload/course/:courseId", upload.single("file"), (req, res) => {
+  const { courseId } = req.params;
+  const userId = req.session.userId; // haetaan käyttäjän id sessiosta
+  const filename = req.file.filename;
+  const filepath = req.file.path;
+
+  if (!userId) {
+    return res.status(401).json({ error: "User not authenticated" });
+  }
+
+  db.prepare(
+    "INSERT INTO files (filename, path, uploadedBy, courseId) VALUES (?, ?, ?, ?)"
+  ).run(filename, filepath, userId, courseId);
+
+  res.json({ message: "File uploaded successfully", filename });
+});
+
+// haetaan kurssin tiedostot
+app.get("/files/course/:courseId", (req, res) => {
+  const { courseId } = req.params;
+  const files = db
+    .prepare("SELECT * FROM files WHERE courseId = ?")
+    .all(courseId);
+
+  res.json(files);
+});
 
 // haetaan kurssin tehtävät
 app.get("/course-assignments/:courseId", (req, res) => {
@@ -352,6 +421,8 @@ app.get("/users", (req, res) => {
   console.log("All users:", rows);
   res.json(rows);
 });
+
+app.use("/uploads", express.static("uploads"));
 
 app.listen(3000, () => {
   console.log("Server is running on port 3000");

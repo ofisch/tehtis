@@ -13,6 +13,8 @@ export const CourseComponent = ({
   toggleAssignmentBox,
   toggleAddMembersBox,
   toggleRemoveMembersBox,
+  onFileSubmit,
+  courseFiles,
 }: {
   course: { name: string; description: string };
   members: { id: number; name: string; email: string }[];
@@ -20,6 +22,8 @@ export const CourseComponent = ({
   toggleAssignmentBox: () => void;
   toggleAddMembersBox: () => void;
   toggleRemoveMembersBox: () => void;
+  onFileSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+  courseFiles: { id: number; filename: string; path: string }[];
 }) => {
   return (
     <motion.div
@@ -32,6 +36,23 @@ export const CourseComponent = ({
       <header className="course-header">
         <h1>{course.name}</h1>
         <p>{course.description}</p>
+        <h4>tiedostot</h4>
+        <ul>
+          {courseFiles.map((file) => (
+            <li key={file.id}>
+              <a href={`http://localhost:3000/${file.path}`} download>
+                {file.filename}
+              </a>
+            </li>
+          ))}
+        </ul>
+        <form onSubmit={onFileSubmit}>
+          <label>
+            <h3>Lisää tiedosto</h3>
+            <input type="file" name="file" required />
+            <button type="submit">Lähetä</button>
+          </label>
+        </form>
         <div className="course-actions">
           <button className="add-course-button" onClick={toggleAssignmentBox}>
             <FaPlus />
