@@ -1,0 +1,90 @@
+import React from "react";
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Heading from "@tiptap/extension-heading";
+import "../style/TextEditor.css";
+
+interface TextEditorProps {
+  content: string;
+  setContent: (value: string) => void;
+}
+
+export const TextEditorComponent: React.FC<TextEditorProps> = ({
+  content,
+  setContent,
+}) => {
+  const editor = useEditor({
+    extensions: [StarterKit, Heading.configure({ levels: [1, 2, 3] })],
+    content: content, // Initialize with saved content
+    onUpdate: ({ editor }) => {
+      setContent(editor.getHTML()); // Save content in state
+    },
+  });
+
+  if (!editor) return null;
+
+  // Function to check if a button is active
+  const isActive = (type: string, options = {}) =>
+    editor.isActive(type, options) ? "active" : "";
+
+  return (
+    <div className="editor-container">
+      {/* Toolbar */}
+      <div className="toolbar">
+        <button
+          className={isActive("bold")}
+          onClick={() => editor.chain().focus().toggleBold().run()}
+        >
+          <b>B</b>
+        </button>
+        <button
+          className={isActive("italic")}
+          onClick={() => editor.chain().focus().toggleItalic().run()}
+        >
+          <i>I</i>
+        </button>
+        <button
+          className={isActive("strike")}
+          onClick={() => editor.chain().focus().toggleStrike().run()}
+        >
+          <s>S</s>
+        </button>
+        <button
+          className={isActive("bulletList")}
+          onClick={() => editor.chain().focus().toggleBulletList().run()}
+        >
+          •
+        </button>
+        <button
+          className={isActive("orderedList")}
+          onClick={() => editor.chain().focus().toggleOrderedList().run()}
+        >
+          1.
+        </button>
+        <button
+          className={isActive("heading", { level: 2 })}
+          onClick={() => editor.chain().focus().setHeading({ level: 2 }).run()}
+        >
+          H1
+        </button>
+        <button
+          className={isActive("heading", { level: 3 })}
+          onClick={() => editor.chain().focus().setHeading({ level: 3 }).run()}
+        >
+          H2
+        </button>
+        <button onClick={() => editor.chain().focus().undo().run()}>
+          ↩ Undo
+        </button>
+        <button onClick={() => editor.chain().focus().redo().run()}>
+          ↪ Redo
+        </button>
+      </div>
+
+      {/* Editor Content */}
+      <div className="editor-box">
+        <EditorContent editor={editor} />
+      </div>
+    </div>
+  );
+};

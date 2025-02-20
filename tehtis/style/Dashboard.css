@@ -166,6 +166,7 @@ header {
   color: var(--black);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   transition: 0.3s;
+  overflow: auto;
 }
 
 ::-webkit-scrollbar {

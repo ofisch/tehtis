@@ -48,10 +48,16 @@ if (!fs.existsSync(uploadDir)) {
 // storage engine tiedostoille
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/"); // Files will be stored in the 'uploads' folder
+    const uploadPath = path.join(__dirname, "uploads");
+    cb(null, uploadPath);
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
+    const originalName = file.originalname.replace(/\s+/g, "_"); // Replace spaces with underscores
+    const extension = path.extname(originalName); // Extract file extension
+    const baseName = path.basename(originalName, extension); // Remove extension from original name
+    const uniqueSuffix = Date.now(); // Unique number to prevent overwriting
+
+    cb(null, `${baseName}_${uniqueSuffix}${extension}`); // Example: "cv_onniF_1739952857027.pdf"
   },
 });
 
@@ -77,6 +83,17 @@ db.prepare(
     description TEXT, 
     courseId INTEGER, 
     FOREIGN KEY(courseId) REFERENCES courses(id) ON DELETE CASCADE
+  )`
+).run();
+
+// luodaan taulu osallistujille
+db.prepare(
+  `CREATE TABLE IF NOT EXISTS course_members (
+    courseId INTEGER,
+    userId INTEGER,
+    FOREIGN KEY(courseId) REFERENCES courses(id) ON DELETE CASCADE,
+    FOREIGN KEY(userId) REFERENCES users(id) ON DELETE CASCADE,
+    PRIMARY KEY (courseId, userId)
   )`
 ).run();
 
@@ -151,22 +168,54 @@ if (!testAssignment) {
   ).run("Testitehtävä", "Tämä on testitehtävä", courseId); // Use the correct course ID
 }
 
+// päivitetään kurssin tiedot
+app.post("/update-course/:id", (req, res) => {
+  const { id } = req.params;
+  const { name, description } = req.body;
+
+  const result = db
+    .prepare("UPDATE courses SET name = ?, description = ? WHERE id = ?")
+    .run(name, description, id);
+
+  res.json({ success: result.changes > 0 });
+});
+
 // ladataan tiedosto kurssille
 app.post("/upload/course/:courseId", upload.single("file"), (req, res) => {
   const { courseId } = req.params;
-  const userId = req.session.userId; // haetaan käyttäjän id sessiosta
-  const filename = req.file.filename;
-  const filepath = req.file.path;
+  const userId = req.session.userId; // Ensure user is logged in
 
-  if (!userId) {
-    return res.status(401).json({ error: "User not authenticated" });
+  if (!req.file) {
+    return res.status(400).json({ error: "No file uploaded" });
   }
+
+  const filename = req.file.filename;
+  const filepath = `uploads/${filename}`;
 
   db.prepare(
     "INSERT INTO files (filename, path, uploadedBy, courseId) VALUES (?, ?, ?, ?)"
   ).run(filename, filepath, userId, courseId);
 
-  res.json({ message: "File uploaded successfully", filename });
+  res.json({ message: "File uploaded successfully", filepath });
+});
+
+// poistetaan kurssin tiedostot
+app.delete("/delete-file/:fileId", (req, res) => {
+  const { fileId } = req.params;
+  const file = db.prepare("SELECT * FROM files WHERE id = ?").get(fileId);
+
+  if (!file) {
+    return res.status(404).json({ error: "File not found" });
+  }
+
+  fs.unlink(file.path, (err) => {
+    if (err) {
+      return res.status(500).json({ error: "Failed to delete file" });
+    }
+
+    db.prepare("DELETE FROM files WHERE id = ?").run(fileId);
+    res.json({ message: "File deleted successfully" });
+  });
 });
 
 // haetaan kurssin tiedostot
@@ -232,17 +281,6 @@ app.get("/search-users/:user", (req, res) => {
 
   res.json(rows);
 });
-
-// luodaan taulu osallistujille
-db.prepare(
-  `CREATE TABLE IF NOT EXISTS course_members (
-    courseId INTEGER,
-    userId INTEGER,
-    FOREIGN KEY(courseId) REFERENCES courses(id) ON DELETE CASCADE,
-    FOREIGN KEY(userId) REFERENCES users(id) ON DELETE CASCADE,
-    PRIMARY KEY (courseId, userId)
-  )`
-).run();
 
 // käyttäjä liittyy kurssille
 app.post("/join-course", (req, res) => {
@@ -422,7 +460,7 @@ app.get("/users", (req, res) => {
   res.json(rows);
 });
 
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.listen(3000, () => {
   console.log("Server is running on port 3000");

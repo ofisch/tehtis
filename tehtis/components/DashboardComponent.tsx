@@ -41,8 +41,16 @@ export const DashboardComponent: React.FC<DashboardComponentProps> = ({
                 return (
                   <Link to={`/course/${course.id}`} key={course.id}>
                     <div className="course">
-                      <h3>{course.name}</h3>
-                      <p>{course.description}</p>
+                      <h2>{course.name}</h2>
+                      <div
+                        style={{
+                          whiteSpace: "pre-wrap",
+                          backgroundColor: "aliceblue",
+                          borderRadius: "5px",
+                          padding: "5px",
+                        }}
+                        dangerouslySetInnerHTML={{ __html: course.description }}
+                      />
                     </div>
                   </Link>
                 );

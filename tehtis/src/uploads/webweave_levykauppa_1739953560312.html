@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-900">
+  <header class="bg-gray-800 text-white">
+    <nav class="container mx-auto flex items-center justify-between py-4">
+        <h1 class="text-3xl font-bold">Helsinki Vinyl Haven</h1>
+        <ul class="flex">
+            <li><a href="#home" class="px-4 py-2 hover:bg-gray-700 rounded">Koti</a></li>
+            <li><a href="#about" class="px-4 py-2 hover:bg-gray-700 rounded">Meistä</a></li>
+            <li><a href="#shop" class="px-4 py-2 hover:bg-gray-700 rounded">Kauppa</a></li>
+            <li><a href="#contact" class="px-4 py-2 hover:bg-gray-700 rounded">Ota Yhteyttä</a></li>
+        </ul>
+    </nav>
+  </header>
+  <div id="banner" class="bg-red-600 text-white text-center py-20">
+    <h1 class="text-4xl mb-4">Tervetuloa Levykauppamme Kotisivuille!</h1>
+    <p class="mb-2">Löydä kaikki suosikki genresi kasetteina, CD:nä tai vinyylilevyinä!</p>
+    <p class="mb-2">Olemme auki:</p>
+    <p class="mb-2">Ma-Pe: 8-18<br>La: 10-17</p>
+    <p class="mb-4">Sijaintimme: Helsinki</p>
+    <a href="/sijainti" class="inline-block">
+        <button class="bg-white text-red-600 font-bold py-2 px-4 rounded hover:bg-gray-200">Katso Sijaintimme</button>
+    </a>
+  </div>
+  <main class="container mx-auto px-4">
+    <!-- About Section -->
+    <section class="max-w-5xl mx-auto py-10">
+        <h2 class="text-2xl font-bold mb-4">Tervetuloa Musiikin Aarreaittaan!</h2>
+        <p>Olemme Helsingin sydämessä sijaitseva levykauppa, joka tarjoaa laajan valikoiman musiikkia kaikissa formaateissa – kaseteista CD-levyihin ja vinyyleihin. Etsitpä sitten harvinaisuutta tai uusinta hittiä, meiltä löydät sen. Tule selailmaan rauhassa kollektioitamme ja löydä oma aarteesi.</p>
+    </section>
+
+    <!-- Featured Products Section -->
+    <section class="max-w-5xl mx-auto py-10">
+        <h3 class="text-xl font-semibold mb-6">Suosittelemme</h3>
+        <div class="flex flex-wrap justify-center">
+            <!-- Product Cards -->
+            <div class="w-full sm:w-1/2 md:w-1/4 p-2">
+                <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition duration-300">
+                    <img src="/images/featured-album-1.jpg" alt="Featured Album 1" class="w-full h-auto mb-4">
+                    <h4 class="font-bold">Albumin Nimi</h4>
+                    <p class="mb-2">Artisti</p>
+                </div>
+            </div>
+            <div class="w-full sm:w-1/2 md:w-1/4 p-2">
+                <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition duration-300">
+                    <img src="/images/featured-album-2.jpg" alt="Featured Album 2" class="w-full h-auto mb-4">
+                    <h4 class="font-bold">Albumin Nimi</h4>
+                    <p class="mb-2">Artisti</p>
+                </div>
+            </div>
+            <div class="w-full sm:w-1/2 md:w-1/4 p-2">
+                <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition duration-300">
+                    <img src="/images/featured-album-3.jpg" alt="Featured Album 3" class="w-full h-auto mb-4">
+                    <h4 class="font-bold">Albumin Nimi</h4>
+                    <p class="mb-2">Artisti</p>
+                </div>
+            </div>
+            <div class="w-full sm:w-1/2 md:w-1/4 p-2">
+                <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition duration-300">
+                    <img src="/images/featured-album-4.jpg" alt="Featured Album 4" class="w-full h-auto mb-4">
+                    <h4 class="font-bold">Albumin Nimi</h4>
+                    <p class="mb-2">Artisti</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Store Hours Section -->
+    <section class="max-w-5xl mx-auto py-10">
+        <h3 class="text-xl font-semibold mb-6">Aukioloajat</h3>
+        <table class="table-auto mx-auto mb-4">
+            <thead>
+                <tr>
+                    <th class="px-4 py-2">Päivä</th>
+                    <th class="px-4 py-2">Aika</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white">
+                <tr>
+                    <td class="border px-4 py-2">Maanantai - Perjantai</td>
+                    <td class="border px-4 py-2">8:00 - 18:00</td>
+                </tr>
+                <tr class="bg-gray-100">
+                    <td class="border px-4 py-2">Lauantai</td>
+                    <td class="border px-4 py-2">10:00 - 17:00</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Genres Section -->
+    <section class="max-w-5xl mx-auto py-10">
+        <h3 class="text-xl font-semibold mb-6">Selaa Genreittäin</h3>
+        <div class="flex flex-wrap justify-center">
+            <button class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded m-2">Rock</button>
+            <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded m-2">Jazz</button>
+            <button class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded m-2">Hip-Hop</button>
+            <button class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded m-2">Elektroninen</button>
+            <button class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded m-2">Klassinen</button>
+            <button class="bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded m-2">Pop</button>
+        </div>
+    </section>
+
+    <!-- Location Section -->
+    <section class="max-w-5xl mx-auto py-10">
+        <h3 class="text-xl font-semibold mb-6">Löydät meidät täältä</h3>
+        <p>Katuosoite, 00100 Helsinki</p>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1983.3631530430165!2d24.941428316112336!3d60.17154448369962!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46920bc796210691%3A0xcd4ebd843be2f763!2sHelsinki!5e0!3m2!1sen!2sfi!4v1616669587694!5m2!1sen!2sfi" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" class="w-full h-96 my-4"></iframe>
+    </section>
+</main>
+<footer class="bg-gray-900 text-white text-sm py-8">
+    <div class="container mx-auto px-4">
+        <p>Rento Levykauppa Oy</p>
+        <p>Sijaintimme: Helsinki, Suomi</p>
+        <p>Aukioloajat:</p>
+        <ul>
+            <li>Ma–Pe: 8:00–18:00</li>
+            <li>Lauantai: 10:00–17:00</li>
+        </ul>
+        <p>Seuraa meitä sosiaalisessa mediassa:</p>
+        <ul>
+            <li><a href="https://facebook.com/rentolevykauppa" class="hover:text-gray-300">Facebook</a></li>
+            <li><a href="https://instagram.com/rentolevykauppa" class="hover:text-gray-300">Instagram</a></li>
+            <li><a href="https://twitter.com/rentolevykauppa" class="hover:text-gray-300">Twitter</a></li>
+        </ul>
+        <p>Yhteydenotot: info@rentolevykauppa.fi</p>
+        <p>&copy; 2023 Rento Levykauppa Oy</p>
+    </div>
+</footer>
+</body>
+</html>

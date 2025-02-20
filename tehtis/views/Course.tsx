@@ -97,6 +97,7 @@ export const Course = () => {
 
       const data = await response.json();
       alert("Tiedosto lähetetty onnistuneesti!");
+      getCourseFiles(id!);
       console.log(data);
     } catch (error) {
       console.error("Error uploading file", error);
@@ -123,6 +124,27 @@ export const Course = () => {
     }
   }, [id]); // Fetch course info whenever the id changes
 
+  const deleteCourseFile = async (fileId: number) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/delete-file/${fileId}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+      alert("Tiedosto poistettu onnistuneesti!");
+      getCourseFiles(id!);
+    } catch (error) {
+      console.error("Error deleting file", error);
+      alert("Tiedoston poisto epäonnistui!");
+    }
+  };
+
   return (
     <>
       <div className="container">
@@ -137,6 +159,7 @@ export const Course = () => {
           toggleRemoveMembersBox={toggleRemoveMembersBox}
           onFileSubmit={onFileSubmit}
           courseFiles={courseFiles}
+          deleteCourseFile={deleteCourseFile}
         />
 
         {assignmentBox && (
