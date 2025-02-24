@@ -66,7 +66,7 @@ const upload = multer({ storage });
 
 // luodaan taulu käyttäjille
 db.prepare(
-  "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT, email TEXT, password TEXT)"
+  "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, role TEXT, name TEXT, email TEXT, password TEXT)"
 ).run();
 
 // luodaan taulu kursseille
@@ -119,11 +119,9 @@ const testUser = db
   .prepare("SELECT * FROM users WHERE email = ?")
   .get("matti@posti");
 if (!testUser) {
-  db.prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)").run(
-    "matti",
-    "matti@posti",
-    "matti"
-  );
+  db.prepare(
+    "INSERT INTO users (role, name, email, password) VALUES (?,?, ?, ?)"
+  ).run("teacher", "matti", "matti@posti", "matti");
 }
 
 let courseId;
@@ -403,6 +401,7 @@ app.post("/login", (req, res) => {
 
   // säilötään sessioon käyttäjän id ja sähköposti
   req.session.userId = user.id;
+  req.session.role = user.role;
   req.session.name = user.name;
   req.session.email = user.email;
 
@@ -434,6 +433,7 @@ app.get("/session", (req, res) => {
     return res.json({
       loggedIn: true,
       userId: req.session.userId,
+      role: req.session.role,
       email: req.session.email,
       username: req.session.name,
     });

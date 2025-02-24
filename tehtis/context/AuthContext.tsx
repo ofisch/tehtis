@@ -2,8 +2,13 @@ import React, { createContext, useState, useEffect, ReactNode } from "react";
 
 interface AuthContextType {
   loggedIn: boolean;
-  user: { id: number; email: string; username?: string } | null;
-  login: (user: { id: number; email: string; username?: string }) => void;
+  user: { id: number; role: string; email: string; username?: string } | null;
+  login: (user: {
+    id: number;
+    role: string;
+    email: string;
+    username?: string;
+  }) => void;
   logout: () => void;
 }
 
@@ -13,6 +18,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [user, setUser] = useState<{
     id: number;
+    role: string;
     email: string;
     username?: string;
   } | null>(null);
@@ -30,6 +36,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
           setLoggedIn(true);
           setUser({
             id: data.userId,
+            role: data.role,
             email: data.email,
             username: data.username,
           });
@@ -42,7 +49,12 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     checkSession();
   }, []);
 
-  const login = (user: { id: number; email: string; username?: string }) => {
+  const login = (user: {
+    id: number;
+    role: string;
+    email: string;
+    username?: string;
+  }) => {
     setLoggedIn(true);
     setUser(user);
   };

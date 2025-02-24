@@ -13,6 +13,7 @@ export const Dashboard = () => {
   const navigate = useNavigate();
 
   console.log("User:", user);
+  console.log("role:", user?.role);
   console.log("Logged in:", loggedIn);
 
   const [courses, setCourses] = React.useState<any[]>([]);

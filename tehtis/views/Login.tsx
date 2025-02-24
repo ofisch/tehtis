@@ -34,6 +34,7 @@ export const Login = () => {
             id: data.userId,
             email: data.email,
             username: data.username,
+            role: data.role,
           }); // säilötään käyttäjän sessio
           navigate("/dashboard");
         }
@@ -90,7 +91,8 @@ export const Login = () => {
 
         const data = await response.json();
         if (response.ok) {
-          login({ id: data.userId, email });
+          login({ id: data.userId, email, role: data.role });
+
           setLoggedIn(true);
           navigate("/dashboard");
         } else {

@@ -6,6 +6,7 @@ import { FaPlus } from "react-icons/fa";
 import { FaUserPlus } from "react-icons/fa6";
 import { TiUserDelete } from "react-icons/ti";
 import { TextEditorComponent } from "./TextEditorComponent";
+import { useAuth } from "../context/AuthContext";
 
 export const CourseComponent = ({
   course,
@@ -28,6 +29,8 @@ export const CourseComponent = ({
   courseFiles: { id: number; filename: string; path: string }[];
   deleteCourseFile: (id: number) => void;
 }) => {
+  const { user } = useAuth();
+
   const [editorContent, setEditorContent] = useState(course.description);
 
   // odotetaan vähän aikaa, että saadaan data haettua
@@ -80,23 +83,27 @@ export const CourseComponent = ({
     >
       <header className="course-header">
         <h1>{course.name}</h1>
-
-        <div className="course-actions">
-          <button className="add-course-button" onClick={toggleAssignmentBox}>
-            <FaPlus />
-            <span>Lisää tehtävä</span>
-          </button>
-          <button className="add-members-button" onClick={toggleAddMembersBox}>
-            <FaUserPlus />
-            <span>Lisää osallistujia</span>
-          </button>
-          <button
-            className="delete-members-button"
-            onClick={toggleRemoveMembersBox}
-          >
-            <TiUserDelete /> <span>Poista osallistujia</span>
-          </button>
-        </div>
+        {user?.role === "teacher" && (
+          <div className="course-actions">
+            <button className="add-course-button" onClick={toggleAssignmentBox}>
+              <FaPlus />
+              <span>Lisää tehtävä</span>
+            </button>
+            <button
+              className="add-members-button"
+              onClick={toggleAddMembersBox}
+            >
+              <FaUserPlus />
+              <span>Lisää osallistujia</span>
+            </button>
+            <button
+              className="delete-members-button"
+              onClick={toggleRemoveMembersBox}
+            >
+              <TiUserDelete /> <span>Poista osallistujia</span>
+            </button>
+          </div>
+        )}
 
         <div className="course-subheader">
           <div className="course-description">
@@ -114,22 +121,22 @@ export const CourseComponent = ({
                 <div dangerouslySetInnerHTML={{ __html: editorContent }} />
               </div>
             )}
-
-            {toggleEdit ? (
-              <button
-                onClick={() => {
-                  handleEdit();
-                  saveNewDescription();
-                }}
-                type="button"
-              >
-                Tallenna
-              </button>
-            ) : (
-              <button onClick={handleEdit} type="button">
-                Muokkaa
-              </button>
-            )}
+            {user?.role === "teacher" &&
+              (toggleEdit ? (
+                <button
+                  onClick={() => {
+                    handleEdit();
+                    saveNewDescription();
+                  }}
+                  type="button"
+                >
+                  Tallenna
+                </button>
+              ) : (
+                <button onClick={handleEdit} type="button">
+                  Muokkaa
+                </button>
+              ))}
           </div>
 
           <div className="file-section">
@@ -152,13 +159,15 @@ export const CourseComponent = ({
                 <p>Ei tiedostoja</p>
               )}
             </div>
-            <form className="file-form" onSubmit={onFileSubmit}>
-              <label className="file-label">
-                <h3>Lisää tiedosto kursille</h3>
-                <input type="file" name="file" required />
-                <button type="submit">Lähetä</button>
-              </label>
-            </form>
+            {user?.role === "teacher" && (
+              <form className="file-form" onSubmit={onFileSubmit}>
+                <label className="file-label">
+                  <h3>Lisää tiedosto kursille</h3>
+                  <input type="file" name="file" required />
+                  <button type="submit">Lähetä</button>
+                </label>
+              </form>
+            )}
           </div>
         </div>
       </header>

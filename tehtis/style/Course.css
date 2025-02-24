@@ -30,7 +30,7 @@ body {
 }
 
 .course-description {
-  max-width: 50%;
+  width: 50%;
   font-size: 1.1em;
   background-color: var(--white);
   border-radius: 15px;

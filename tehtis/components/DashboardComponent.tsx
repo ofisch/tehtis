@@ -11,7 +11,7 @@ interface Course {
 
 interface DashboardComponentProps {
   courses: any[];
-  user: { id: number; email: string } | null;
+  user: { id: number; role: string; email: string } | null;
 }
 
 export const DashboardComponent: React.FC<DashboardComponentProps> = ({
@@ -35,6 +35,9 @@ export const DashboardComponent: React.FC<DashboardComponentProps> = ({
 
         <div className="courses">
           <h2>Kurssit</h2>
+          {user?.role === "teacher" && (
+            <button type="button">Lisää kurssi</button>
+          )}
           <div className="course-list">
             {courses.length > 0 ? (
               courses.map((course) => {
