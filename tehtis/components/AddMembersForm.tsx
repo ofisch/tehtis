@@ -15,7 +15,8 @@ interface Course {
 
 interface User {
   id: string;
-  name: string;
+  firstname: string;
+  lastname: string;
 }
 
 interface AddMembersFormProps {
@@ -189,7 +190,7 @@ export const AddMembersForm: React.FC<AddMembersFormProps> = ({
                 <ul>
                   {searchResults.map((user) => (
                     <li key={user.id}>
-                      <h4>{user.name}</h4>
+                      <h4>{`${user.firstname} ${user.lastname}`}</h4>
                       {usersToAdd.some((u) => u.id === user.id) ? (
                         <button type="button" className="added-button" disabled>
                           <FaCheck /> Lisätty
@@ -229,7 +230,7 @@ export const AddMembersForm: React.FC<AddMembersFormProps> = ({
                     exit={{ opacity: 0, x: 20 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <h4>{user.name}</h4>
+                    <h4>{`${user.firstname} ${user.lastname}`}</h4>
                     <button onClick={() => handleDeleteUser(user)}>
                       <ImCross /> Poista
                     </button>

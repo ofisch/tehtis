@@ -2,12 +2,19 @@ import React, { createContext, useState, useEffect, ReactNode } from "react";
 
 interface AuthContextType {
   loggedIn: boolean;
-  user: { id: number; role: string; email: string; username?: string } | null;
+  user: {
+    id: number;
+    role: string;
+    email: string;
+    firstname: string;
+    lastname: string;
+  } | null;
   login: (user: {
     id: number;
     role: string;
     email: string;
-    username?: string;
+    firstname: string;
+    lastname: string;
   }) => void;
   logout: () => void;
 }
@@ -20,7 +27,8 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     id: number;
     role: string;
     email: string;
-    username?: string;
+    firstname: string;
+    lastname: string;
   } | null>(null);
 
   // tarkistetaan sessio, kun komponentti latautuu
@@ -38,7 +46,8 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
             id: data.userId,
             role: data.role,
             email: data.email,
-            username: data.username,
+            firstname: data.firstname,
+            lastname: data.lastname,
           });
         }
       } catch (error) {
@@ -53,7 +62,8 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     id: number;
     role: string;
     email: string;
-    username?: string;
+    firstname: string;
+    lastname: string;
   }) => {
     setLoggedIn(true);
     setUser(user);

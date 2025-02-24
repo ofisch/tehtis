@@ -66,7 +66,7 @@ const upload = multer({ storage });
 
 // luodaan taulu käyttäjille
 db.prepare(
-  "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, role TEXT, name TEXT, email TEXT, password TEXT)"
+  "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, role TEXT, firstname TEXT, lastname TEXT, email TEXT, password TEXT)"
 ).run();
 
 // luodaan taulu kursseille
@@ -120,8 +120,8 @@ const testUser = db
   .get("matti@posti");
 if (!testUser) {
   db.prepare(
-    "INSERT INTO users (role, name, email, password) VALUES (?,?, ?, ?)"
-  ).run("teacher", "matti", "matti@posti", "matti");
+    "INSERT INTO users (role, firstname, lastname, email, password) VALUES (?, ?, ?, ?, ?)"
+  ).run("teacher", "matti", "meikäläinen", "matti@posti", "matti");
 }
 
 let courseId;
@@ -262,7 +262,7 @@ app.get("/course-members/:id", (req, res) => {
   const { id } = req.params;
   const rows = db
     .prepare(
-      "SELECT users.id, users.name, users.email FROM users JOIN course_members ON users.id = course_members.userId WHERE course_members.courseId = ?"
+      "SELECT users.id, users.firstname, users.lastname, users.email FROM users JOIN course_members ON users.id = course_members.userId WHERE course_members.courseId = ?"
     )
     .all(id);
   res.json(rows);
@@ -274,8 +274,8 @@ app.get("/search-users/:user", (req, res) => {
   const searchQuery = `%${user}%`; // Add wildcard % for LIKE query
 
   const rows = db
-    .prepare("SELECT * FROM users WHERE name LIKE ?")
-    .all(searchQuery);
+    .prepare("SELECT * FROM users WHERE firstname LIKE ? OR lastname LIKE ?")
+    .all(searchQuery, searchQuery);
 
   res.json(rows);
 });
@@ -374,7 +374,7 @@ app.get("/course/:id/members", (req, res) => {
   const { id } = req.params;
   const rows = db
     .prepare(
-      "SELECT users.id, users.name, users.email FROM users JOIN course_members ON users.id = course_members.userId WHERE course_members.courseId = ?"
+      "SELECT users.id, users.firstname, users.lastname users.email FROM users JOIN course_members ON users.id = course_members.userId WHERE course_members.courseId = ?"
     )
     .all(id);
   res.json(rows);
@@ -384,9 +384,9 @@ app.get("/course/:id/members", (req, res) => {
 app.post("/add", (req, res) => {
   const { name, email, password } = req.body;
   const stmt = db.prepare(
-    "INSERT INTO users (name, email, password) VALUES (?, ?, ?)"
+    "INSERT INTO users (firstname, lastname, email, password) VALUES (?, ?, ?)"
   );
-  const info = stmt.run(name, email, password);
+  const info = stmt.run(firstname, lastname, email, password);
   res.json(info);
 });
 
@@ -402,7 +402,8 @@ app.post("/login", (req, res) => {
   // säilötään sessioon käyttäjän id ja sähköposti
   req.session.userId = user.id;
   req.session.role = user.role;
-  req.session.name = user.name;
+  req.session.firstname = user.firstname;
+  req.session.lastname = user.lastname;
   req.session.email = user.email;
 
   console.log("Session stored:", req.session);
@@ -411,7 +412,7 @@ app.post("/login", (req, res) => {
 
 //rekisteröityminen
 app.post("/register", (req, res) => {
-  const { name, email, password } = req.body;
+  const { firstname, lastname, email, password } = req.body;
   const user = db.prepare("SELECT * FROM users WHERE email = ?").get(email);
 
   // jos sähköposti on jo käytössä, palautetaan virhe
@@ -421,9 +422,9 @@ app.post("/register", (req, res) => {
 
   // lisätään uusi käyttäjä tietokantaan
   const stmt = db.prepare(
-    "INSERT INTO users (name, email, password) VALUES (?, ?, ?)"
+    "INSERT INTO users (firstname, lastname, email, password) VALUES (?, ?, ?, ?)"
   );
-  const info = stmt.run(name, email, password);
+  const info = stmt.run(firstname, lastname, email, password);
   res.json(info);
 });
 
@@ -435,7 +436,8 @@ app.get("/session", (req, res) => {
       userId: req.session.userId,
       role: req.session.role,
       email: req.session.email,
-      username: req.session.name,
+      firstname: req.session.firstname,
+      lastname: req.session.lastname,
     });
   } else {
     return res.json({ loggedIn: false });

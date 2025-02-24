@@ -19,8 +19,13 @@ export const CourseComponent = ({
   courseFiles,
   deleteCourseFile,
 }: {
-  course: { name: string; description: string };
-  members: { id: number; name: string; email: string }[];
+  course: { id: number; name: string; description: string };
+  members: {
+    id: number;
+    firstname: string;
+    lastname: string;
+    email: string;
+  }[];
   assignments: { id: number; title: string; description: string }[];
   toggleAssignmentBox: () => void;
   toggleAddMembersBox: () => void;
@@ -149,9 +154,11 @@ export const CourseComponent = ({
                       <a href={`http://localhost:3000/${file.path}`} download>
                         {file.filename}
                       </a>
-                      <button onClick={() => deleteCourseFile(file.id)}>
-                        Poista
-                      </button>
+                      {user?.role === "teacher" && (
+                        <button onClick={() => deleteCourseFile(file.id)}>
+                          Poista
+                        </button>
+                      )}
                     </li>
                   ))}
                 </ul>
@@ -172,15 +179,19 @@ export const CourseComponent = ({
         </div>
       </header>
 
-      <ul className="course-members">
-        <h3>Osallistujat</h3>
-        {members.map((member) => (
-          <li className="member" key={member.id}>
-            <h4 className="member-name">{member.name}</h4>
-            <p className="member-email">{member.email}</p>
-          </li>
-        ))}
-      </ul>
+      {user?.role === "teacher" && (
+        <ul className="course-members">
+          <h3>Osallistujat</h3>
+          {members.map((member) => (
+            <li className="member" key={member.id}>
+              <h4 className="member-name">{`${member.firstname} ${member.lastname}`}</h4>
+
+              <p className="member-email">{member.email}</p>
+            </li>
+          ))}
+        </ul>
+      )}
+
       <h3>Tehtävät</h3>
       <ul>
         {assignments.map((assignment) => (

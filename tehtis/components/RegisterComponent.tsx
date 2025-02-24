@@ -4,10 +4,12 @@ import { motion } from "framer-motion";
 
 interface RegisterComponentProps {
   toggleRegister: () => void;
-  username: string;
+  firstname: string;
+  lastname: string;
   email: string;
   password: string;
-  setUsername: (username: string) => void;
+  setFirstname: (firstname: string) => void;
+  setLastname: (lastname: string) => void;
   setEmail: (email: string) => void;
   setPassword: (password: string) => void;
   handleRegister: (e: React.FormEvent) => void;
@@ -16,10 +18,12 @@ interface RegisterComponentProps {
 
 export const RegisterComponent: React.FC<RegisterComponentProps> = ({
   toggleRegister,
-  username,
+  firstname,
+  lastname,
   email,
   password,
-  setUsername,
+  setFirstname,
+  setLastname,
   setEmail,
   setPassword,
   handleRegister,
@@ -49,10 +53,27 @@ export const RegisterComponent: React.FC<RegisterComponentProps> = ({
               <input
                 className="login-input"
                 type="text"
-                placeholder="Käyttäjänimi"
-                name="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Etunimi"
+                name="firstname"
+                value={firstname}
+                onChange={(e) => setFirstname(e.target.value)}
+                required
+              />
+            </motion.div>
+            <motion.div
+              className="textbox"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.2 }}
+            >
+              <input
+                className="login-input"
+                type="text"
+                placeholder="Sukunimi"
+                name="lastname"
+                value={lastname}
+                onChange={(e) => setLastname(e.target.value)}
                 required
               />
             </motion.div>
@@ -95,7 +116,11 @@ export const RegisterComponent: React.FC<RegisterComponentProps> = ({
               className="login-button"
               type="submit"
               disabled={
-                isPending || username == "" || email == "" || password == ""
+                isPending ||
+                firstname == "" ||
+                lastname == "" ||
+                email == "" ||
+                password == ""
               }
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}

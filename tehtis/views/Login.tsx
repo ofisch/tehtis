@@ -8,7 +8,8 @@ import { useAuth } from "../context/AuthContext";
 import { toast, ToastContainer } from "react-toastify";
 
 export const Login = () => {
-  const [username, setUsername] = useState("");
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { login } = useAuth();
@@ -33,7 +34,8 @@ export const Login = () => {
           login({
             id: data.userId,
             email: data.email,
-            username: data.username,
+            firstname: data.firstname,
+            lastname: data.lastname,
             role: data.role,
           }); // säilötään käyttäjän sessio
           navigate("/dashboard");
@@ -91,7 +93,13 @@ export const Login = () => {
 
         const data = await response.json();
         if (response.ok) {
-          login({ id: data.userId, email, role: data.role });
+          login({
+            id: data.userId,
+            email,
+            role: data.role,
+            firstname: data.firstname,
+            lastname: data.lastname,
+          });
 
           setLoggedIn(true);
           navigate("/dashboard");
@@ -115,7 +123,12 @@ export const Login = () => {
             "Content-Type": "application/json",
           },
           credentials: "include",
-          body: JSON.stringify({ name: username, email, password }),
+          body: JSON.stringify({
+            firstname: firstname,
+            lastname: lastname,
+            email,
+            password,
+          }),
         });
 
         const data = await response.json();
@@ -138,7 +151,8 @@ export const Login = () => {
   const toggleRegister = () => {
     setRegister(!register);
     // tyhjennetään input-kentät
-    setUsername("");
+    setFirstname("");
+    setLastname("");
     setEmail("");
     setPassword("");
   };
@@ -151,8 +165,10 @@ export const Login = () => {
             {register ? (
               <RegisterComponent
                 toggleRegister={toggleRegister}
-                username={username}
-                setUsername={setUsername}
+                firstname={firstname}
+                setFirstname={setFirstname}
+                lastname={lastname}
+                setLastname={setLastname}
                 email={email}
                 setEmail={setEmail}
                 password={password}

@@ -13,6 +13,8 @@ export const Dashboard = () => {
   const navigate = useNavigate();
 
   console.log("User:", user);
+  console.log("firstname: ", user?.firstname);
+  console.log("lastname: ", user?.lastname);
   console.log("role:", user?.role);
   console.log("Logged in:", loggedIn);
 
