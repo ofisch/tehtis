@@ -88,7 +88,7 @@ export const Login = () => {
             "Content-Type": "application/json",
           },
           credentials: "include",
-          body: JSON.stringify({ email, password }),
+          body: JSON.stringify({ email: email.toLowerCase(), password }),
         });
 
         const data = await response.json();
@@ -117,6 +117,10 @@ export const Login = () => {
     e.preventDefault();
     startTransition(async () => {
       try {
+        // tehdään etu- ja sukunimen ensimmäinen kirjain isoksi ja loput pieniksi
+        const capitalize = (s: string) =>
+          s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+
         const response = await fetch("http://localhost:3000/register", {
           method: "POST",
           headers: {
@@ -124,9 +128,9 @@ export const Login = () => {
           },
           credentials: "include",
           body: JSON.stringify({
-            firstname: firstname,
-            lastname: lastname,
-            email,
+            firstname: capitalize(firstname),
+            lastname: capitalize(lastname),
+            email: email.toLowerCase(),
             password,
           }),
         });

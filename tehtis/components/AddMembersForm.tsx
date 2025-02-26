@@ -15,6 +15,7 @@ interface Course {
 
 interface User {
   id: string;
+  role: string;
   firstname: string;
   lastname: string;
 }
@@ -188,23 +189,29 @@ export const AddMembersForm: React.FC<AddMembersFormProps> = ({
             {searchResults.length > 0 && (
               <div className="search-results">
                 <ul>
-                  {searchResults.map((user) => (
-                    <li key={user.id}>
-                      <h4>{`${user.firstname} ${user.lastname}`}</h4>
-                      {usersToAdd.some((u) => u.id === user.id) ? (
-                        <button type="button" className="added-button" disabled>
-                          <FaCheck /> Lisätty
-                        </button>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => handleAddUser(user)}
-                        >
-                          <FaPlus /> Lisää
-                        </button>
-                      )}
-                    </li>
-                  ))}
+                  {searchResults
+                    .filter((user) => user.role !== "admin")
+                    .map((user) => (
+                      <li key={user.id}>
+                        <h4>{`${user.firstname} ${user.lastname}`}</h4>
+                        {usersToAdd.some((u) => u.id === user.id) ? (
+                          <button
+                            type="button"
+                            className="added-button"
+                            disabled
+                          >
+                            <FaCheck /> Lisätty
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => handleAddUser(user)}
+                          >
+                            <FaPlus /> Lisää
+                          </button>
+                        )}
+                      </li>
+                    ))}
                 </ul>
               </div>
             )}

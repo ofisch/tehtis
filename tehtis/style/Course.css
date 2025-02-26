@@ -208,3 +208,30 @@ h4 {
 .editor-box {
   margin-bottom: 1em;
 }
+
+#assignments-title {
+  font-size: 2em;
+  margin: 0;
+}
+
+.assignment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+  list-style: none;
+  padding: 0;
+}
+
+.assignment {
+  display: flex;
+  flex-direction: column;
+  max-height: 10em;
+
+  overflow: auto;
+  gap: 1em;
+  padding-top: 1em;
+  background-color: var(--white);
+  border-radius: 15px;
+  padding: 1em;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}

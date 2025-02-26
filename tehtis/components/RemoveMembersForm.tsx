@@ -104,7 +104,9 @@ export const RemoveMembersForm: React.FC<RemoveMembersFormProps> = ({
                 {members.map((member: any) => {
                   return (
                     <li className="member" key={member.id}>
-                      <h4 className="member-name">{member.name}</h4>
+                      <h4 className="member-name">
+                        {`${member.firstname} ${member.lastname}`}
+                      </h4>
 
                       {membersToRemove.some((m) => m.id === member.id) ? (
                         <button
@@ -138,7 +140,7 @@ export const RemoveMembersForm: React.FC<RemoveMembersFormProps> = ({
                   {membersToRemove.map((member: any) => {
                     return (
                       <li className="member" key={member.id}>
-                        <h4 className="member-name">{member.name}</h4>
+                        <h4 className="member-name">{`${member.firstname} ${member.lastname}`}</h4>
 
                         <button
                           type="button"
@@ -158,7 +160,11 @@ export const RemoveMembersForm: React.FC<RemoveMembersFormProps> = ({
             <button className="cancel-button" onClick={toggleRemoveMembersBox}>
               Peruuta
             </button>
-            <button type="submit">Poista osallistuja</button>
+            {membersToRemove.length > 1 ? (
+              <button type="submit">Poista osallistujat</button>
+            ) : (
+              <button type="submit">Poista osallistuja</button>
+            )}
           </div>
         </form>
         <ToastContainer

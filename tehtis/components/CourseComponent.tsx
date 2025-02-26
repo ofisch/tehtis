@@ -192,11 +192,18 @@ export const CourseComponent = ({
         </ul>
       )}
 
-      <h3>Tehtävät</h3>
-      <ul>
+      <h2 id="assignments-title">Tehtävät</h2>
+      <ul className="assignment-list">
         {assignments.map((assignment) => (
           <li key={assignment.id}>
-            <strong>{assignment.title}</strong> - {assignment.description}{" "}
+            <div className="assignment">
+              <h3>
+                <strong>{assignment.title}</strong>
+              </h3>
+              <p>
+                <strong>{assignment.description}</strong>
+              </p>
+            </div>
           </li>
         ))}
       </ul>

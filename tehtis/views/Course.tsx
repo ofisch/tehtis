@@ -1,17 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom"; // Import useParams
+import { useNavigate, useParams } from "react-router-dom"; // Import useParams
 import { NavComponent } from "../components/NavComponent";
 import "../style/root.css";
 import { CourseComponent } from "../components/CourseComponent";
 import { AssignmentForm } from "../components/AssignmentForm";
 import { AddMembersForm } from "../components/AddMembersForm";
 import { RemoveMembersForm } from "../components/RemoveMembersForm";
+import { useAuth } from "../context/AuthContext";
 
 export const Course = () => {
   const { id } = useParams(); // haetaan kurssin ID osoitteesta
+  const { user } = useAuth();
   const [course, setCourse] = useState<any>({});
   const [members, setMembers] = useState<any[]>([]);
   const [assignments, setAssignments] = useState<any[]>([]);
+
+  const navigate = useNavigate();
 
   const getCourseInfo = async (id: string) => {
     try {
@@ -144,6 +148,13 @@ export const Course = () => {
       alert("Tiedoston poisto epäonnistui!");
     }
   };
+
+  // tarkistetaan, onko käyttäjä kurssin osallistuja
+  const isMember = members.some((member) => member.id === user?.id);
+
+  if (!isMember) {
+    navigate("/dashboard");
+  }
 
   return (
     <>
