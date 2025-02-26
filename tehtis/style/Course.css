@@ -25,6 +25,7 @@ body {
 
 .course-subheader {
   display: flex;
+  gap: 1em;
   width: 100%;
   justify-content: space-between;
 }
@@ -100,8 +101,36 @@ body {
 
 .course-members {
   padding: 0;
+  margin: 0;
+  max-height: 19em;
+  overflow: auto;
   list-style-type: none;
   padding-top: 1em;
+  background-color: var(--white);
+  border-radius: 15px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.course-members h3 {
+  padding: 0;
+  padding-left: 5px;
+  margin: 0;
+  border-bottom: 1px solid black;
+}
+
+.course-members li {
+  display: flex;
+  flex-direction: column;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.member:first-child {
+  border-top: 1px solid var(--black);
+}
+
+.member:last-child {
+  border-bottom: transparent;
 }
 
 .member {
@@ -122,8 +151,10 @@ body {
 }
 
 .file-section {
-  max-height: 20em;
   max-width: 40%;
+  background-color: var(--white);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
 }
 
 .course-files {
@@ -132,11 +163,10 @@ body {
   align-items: start;
   gap: 1em;
   padding-top: 1em;
-  background-color: var(--white);
+
   border-radius: 15px;
   padding: 1em;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-  max-height: 20em;
+  max-height: 9em;
 }
 
 .course-files h3,
@@ -149,9 +179,9 @@ h4 {
   padding: 0;
   margin: 0;
   list-style-type: none;
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: 1em;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   width: 100%;
   overflow-y: auto;
 }
@@ -160,11 +190,17 @@ h4 {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-direction: column;
+}
+
+.course-files ul li svg {
+  width: 45px;
+  height: 45px;
 }
 
 .course-files ul li a {
   color: var(--bleudefrance);
-  max-width: 70%;
+  max-width: 80%;
   overflow-x: hidden;
   transition: 0.3s;
 }
@@ -197,12 +233,10 @@ h4 {
 }
 
 .file-label {
-  background-color: var(--white);
   border-radius: 15px;
   padding: 1em;
   width: 100%;
   display: inline-block;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .editor-box {

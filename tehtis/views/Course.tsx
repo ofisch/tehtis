@@ -149,13 +149,6 @@ export const Course = () => {
     }
   };
 
-  // tarkistetaan, onko käyttäjä kurssin osallistuja
-  const isMember = members.some((member) => member.id === user?.id);
-
-  if (!isMember) {
-    navigate("/dashboard");
-  }
-
   return (
     <>
       <div className="container">

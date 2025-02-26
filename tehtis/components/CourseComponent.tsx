@@ -7,6 +7,7 @@ import { FaUserPlus } from "react-icons/fa6";
 import { TiUserDelete } from "react-icons/ti";
 import { TextEditorComponent } from "./TextEditorComponent";
 import { useAuth } from "../context/AuthContext";
+import { FileIcon, defaultStyles } from "react-file-icon";
 
 export const CourseComponent = ({
   course,
@@ -151,8 +152,14 @@ export const CourseComponent = ({
                 <ul>
                   {courseFiles.map((file) => (
                     <li key={file.id}>
+                      <FileIcon
+                        style={{ scale: "0.5" }}
+                        extension={file.filename.split(".").pop()}
+                      />
                       <a href={`http://localhost:3000/${file.path}`} download>
-                        {file.filename}
+                        {file.filename.length > 5
+                          ? `${file.filename.substring(0, 5)}...`
+                          : file.filename}
                       </a>
                       {user?.role === "teacher" && (
                         <button onClick={() => deleteCourseFile(file.id)}>
@@ -176,21 +183,20 @@ export const CourseComponent = ({
               </form>
             )}
           </div>
+          {user?.role === "teacher" && (
+            <ul className="course-members">
+              <h3>Osallistujat</h3>
+              {members.map((member) => (
+                <li className="member" key={member.id}>
+                  <h4 className="member-name">{`${member.firstname} ${member.lastname}`}</h4>
+
+                  <p className="member-email">{member.email}</p>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </header>
-
-      {user?.role === "teacher" && (
-        <ul className="course-members">
-          <h3>Osallistujat</h3>
-          {members.map((member) => (
-            <li className="member" key={member.id}>
-              <h4 className="member-name">{`${member.firstname} ${member.lastname}`}</h4>
-
-              <p className="member-email">{member.email}</p>
-            </li>
-          ))}
-        </ul>
-      )}
 
       <h2 id="assignments-title">Tehtävät</h2>
       <ul className="assignment-list">
