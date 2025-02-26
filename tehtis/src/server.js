@@ -124,6 +124,16 @@ if (!testUser) {
   ).run("teacher", "matti", "meikäläinen", "matti@posti", "matti");
 }
 
+// luodaan admin-käyttäjä, jos sitä ei ole olemassa
+const adminUser = db
+  .prepare("SELECT * FROM users WHERE email = ?")
+  .get("admin");
+if (!adminUser) {
+  db.prepare(
+    "INSERT INTO users (role, firstname, lastname, email, password) VALUES (?, ?, ?, ?, ?)"
+  ).run("admin", "admin", "admin", "admin", "admin");
+}
+
 let courseId;
 
 // luodaan testikurssi
@@ -302,6 +312,18 @@ app.post("/join-course", (req, res) => {
   }
 });
 
+// vaihdetaan käyttäjän rooli
+app.post("/update-role/:userid", (req, res) => {
+  const { role } = req.body; // Get only the role from body
+  const userId = req.params.userid; // Get userId from URL param
+
+  const result = db
+    .prepare("UPDATE users SET role = ? WHERE id = ?")
+    .run(role, userId);
+
+  res.json({ success: result.changes > 0 });
+});
+
 // opettaja liittää käyttäjän tai käyttäjiä kurssille
 app.post("/add-member-to-course", (req, res) => {
   const { courseId, userIds } = req.body; // Expecting an array of userIds
@@ -422,9 +444,9 @@ app.post("/register", (req, res) => {
 
   // lisätään uusi käyttäjä tietokantaan
   const stmt = db.prepare(
-    "INSERT INTO users (firstname, lastname, email, password) VALUES (?, ?, ?, ?)"
+    "INSERT INTO users (role, firstname, lastname, email, password) VALUES (?, ?, ?, ?, ?)"
   );
-  const info = stmt.run(firstname, lastname, email, password);
+  const info = stmt.run("student", firstname, lastname, email, password);
   res.json(info);
 });
 

@@ -5,6 +5,7 @@ import { Test } from "../views/Test";
 import { Dashboard } from "../views/Dashboard";
 import { Profile } from "../views/Profile";
 import { Course } from "../views/Course";
+import { AdminPanel } from "../views/AdminPanel";
 
 export const App = () => {
   return (
@@ -16,6 +17,7 @@ export const App = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/course/:id" element={<Course />} />
+          <Route path="/adminpanel" element={<AdminPanel />} />
         </Routes>
       </Router>
     </AuthProvider>
