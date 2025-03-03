@@ -165,6 +165,27 @@ if (!testEnrollment) {
   );
 }
 
+// luodaan uusi kurssi ja lisätään omistaja kurssin jäseneksi
+app.post("/add-course", (req, res) => {
+  const { name, description, ownerId } = req.body;
+
+  const result = db
+    .prepare(
+      "INSERT INTO courses (name, description, ownerId) VALUES (?, ?, ?)"
+    )
+    .run(name, description, ownerId);
+
+  // lisätään omistaja kurssin jäseneksi
+  db.prepare("INSERT INTO course_members (courseId, userId) VALUES (?, ?)").run(
+    result.lastInsertRowid,
+    ownerId
+  );
+
+  console.log("New course ID:", result.lastInsertRowid);
+
+  res.json({ success: result.changes > 0 });
+});
+
 // luodaan testitehtävät
 const testAssignment = db
   .prepare("SELECT * FROM assignments WHERE title = ?")

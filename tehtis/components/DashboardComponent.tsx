@@ -12,11 +12,13 @@ interface Course {
 interface DashboardComponentProps {
   courses: any[];
   user: { id: number; role: string; firstname: string; email: string } | null;
+  toggleAddCourseBox: () => void;
 }
 
 export const DashboardComponent: React.FC<DashboardComponentProps> = ({
   courses,
   user,
+  toggleAddCourseBox,
 }) => {
   return (
     <>
@@ -36,7 +38,9 @@ export const DashboardComponent: React.FC<DashboardComponentProps> = ({
         <div className="courses">
           <h2>Kurssit</h2>
           {user?.role === "teacher" && (
-            <button type="button">Lisää kurssi</button>
+            <button type="button" onClick={toggleAddCourseBox}>
+              Luo uusi kurssi
+            </button>
           )}
           <div className="course-list">
             {courses.length > 0 ? (

@@ -4,6 +4,7 @@ import "../style/root.css";
 import "../style/Course.css";
 import { DashboardComponent } from "../components/DashboardComponent";
 import { NavComponent } from "../components/NavComponent";
+import { AddCourseForm } from "../components/AddCourseForm";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { join } from "path";
@@ -101,12 +102,25 @@ export const Dashboard = () => {
     return () => clearTimeout(timerId);
   }, [user]);
 
+  const [AddCourseBox, setAddCourseBox] = React.useState(false);
+
+  const toggleAddCourseBox = () => {
+    setAddCourseBox(!AddCourseBox);
+  };
+
   return (
     <>
       <div className="container">
         <div className="nav-background"></div>
         <NavComponent />
-        <DashboardComponent courses={courses} user={user} />
+        <DashboardComponent
+          courses={courses}
+          user={user}
+          toggleAddCourseBox={toggleAddCourseBox}
+        />
+        {AddCourseBox ? (
+          <AddCourseForm user={user} toggleAddCourseBox={toggleAddCourseBox} />
+        ) : null}
       </div>
     </>
   );

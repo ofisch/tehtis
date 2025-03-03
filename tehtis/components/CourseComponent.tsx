@@ -7,7 +7,7 @@ import { FaUserPlus } from "react-icons/fa6";
 import { TiUserDelete } from "react-icons/ti";
 import { TextEditorComponent } from "./TextEditorComponent";
 import { useAuth } from "../context/AuthContext";
-import { FileIcon, defaultStyles } from "react-file-icon";
+import { FileIcon } from "react-file-icon";
 
 export const CourseComponent = ({
   course,
