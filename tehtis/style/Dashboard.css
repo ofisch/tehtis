@@ -205,3 +205,16 @@ header {
   margin-top: 0.5em;
   margin-bottom: 0.5em;
 }
+
+.new-course-button {
+  background-color: var(--white);
+  margin-bottom: 1em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.new-course-button:hover {
+  background: var(--lightgreen);
+  cursor: pointer;
+}

@@ -186,6 +186,19 @@ app.post("/add-course", (req, res) => {
   res.json({ success: result.changes > 0 });
 });
 
+// poistetaan kurssi ja kaikki sen osallistujat
+app.delete("/delete-course/:id", (req, res) => {
+  const { id } = req.params;
+
+  // poistetaan osallistujat kurssilta
+  db.prepare("DELETE FROM course_members WHERE courseId = ?").run(id);
+
+  // poistetaan kurssi
+  const result = db.prepare("DELETE FROM courses WHERE id = ?").run(id);
+
+  res.json({ success: result.changes > 0 });
+});
+
 // luodaan testitehtävät
 const testAssignment = db
   .prepare("SELECT * FROM assignments WHERE title = ?")

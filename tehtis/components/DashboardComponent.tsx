@@ -3,6 +3,7 @@ import "../style/Dashboard.css";
 import "../style/root.css";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import { FaPlusCircle } from "react-icons/fa";
 
 interface Course {
   name: string;
@@ -38,14 +39,20 @@ export const DashboardComponent: React.FC<DashboardComponentProps> = ({
         <div className="courses">
           <h2>Kurssit</h2>
           {user?.role === "teacher" && (
-            <button type="button" onClick={toggleAddCourseBox}>
-              Luo uusi kurssi
+            <button
+              type="button"
+              className="new-course-button"
+              onClick={toggleAddCourseBox}
+            >
+              <FaPlusCircle /> Luo uusi kurssi
             </button>
           )}
           <div className="course-list">
             {courses.length > 0 ? (
-              courses.map((course) => {
-                return (
+              courses
+                .filter((course) => course && course.name) // Remove null/undefined items
+                .sort((a, b) => a.name.localeCompare(b.name)) // Sort safely
+                .map((course) => (
                   <Link to={`/course/${course.id}`} key={course.id}>
                     <div className="course">
                       <h2>{course.name}</h2>
@@ -56,12 +63,13 @@ export const DashboardComponent: React.FC<DashboardComponentProps> = ({
                           borderRadius: "5px",
                           padding: "5px",
                         }}
-                        dangerouslySetInnerHTML={{ __html: course.description }}
+                        dangerouslySetInnerHTML={{
+                          __html: course.description,
+                        }}
                       />
                     </div>
                   </Link>
-                );
-              })
+                ))
             ) : (
               <p>Ei kursseja tällä hetkellä.</p>
             )}

@@ -9,6 +9,9 @@ import { TextEditorComponent } from "./TextEditorComponent";
 import { useAuth } from "../context/AuthContext";
 import { FileIcon } from "react-file-icon";
 
+import { MdDeleteForever } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+
 export const CourseComponent = ({
   course,
   members,
@@ -79,6 +82,27 @@ export const CourseComponent = ({
     }
   };
 
+  const navigate = useNavigate();
+
+  const deleteCourse = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/delete-course/${course.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+      console.log("data: ", data);
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Error deleting course", error);
+    }
+  };
+
   return (
     <motion.div
       className="course-content"
@@ -107,6 +131,9 @@ export const CourseComponent = ({
               onClick={toggleRemoveMembersBox}
             >
               <TiUserDelete /> <span>Poista osallistujia</span>
+            </button>
+            <button className="delete-course-button" onClick={deleteCourse}>
+              <MdDeleteForever /> <span>Poista kurssi</span>
             </button>
           </div>
         )}

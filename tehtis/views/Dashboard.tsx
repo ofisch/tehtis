@@ -119,7 +119,11 @@ export const Dashboard = () => {
           toggleAddCourseBox={toggleAddCourseBox}
         />
         {AddCourseBox ? (
-          <AddCourseForm user={user} toggleAddCourseBox={toggleAddCourseBox} />
+          <AddCourseForm
+            user={user}
+            getMyCourses={getMyCourses}
+            toggleAddCourseBox={toggleAddCourseBox}
+          />
         ) : null}
       </div>
     </>

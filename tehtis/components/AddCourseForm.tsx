@@ -2,15 +2,18 @@ import React, { useEffect, useState } from "react";
 import "../style/root.css";
 import "../style/courseform.css";
 import { desc } from "framer-motion/client";
+import { toast, ToastContainer } from "react-toastify";
 
 interface AddCourseFormProps {
   toggleAddCourseBox: () => void;
   user: { id: number; role: string; firstname: string; email: string } | null;
+  getMyCourses: () => void;
 }
 
 export const AddCourseForm: React.FC<AddCourseFormProps> = ({
   toggleAddCourseBox,
   user,
+  getMyCourses,
 }) => {
   const [name, setName] = useState("");
 
@@ -33,8 +36,25 @@ export const AddCourseForm: React.FC<AddCourseFormProps> = ({
       if (result.success) {
         console.log("Kurssi luotu:", result);
         console.log("kurssin data: ", result.data);
-        setName("");
-        toggleAddCourseBox();
+
+        const notify = () =>
+          toast.success("Kurssi luotu onnistuneesti!", {
+            position: "bottom-center",
+            autoClose: 2500,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+
+        notify();
+
+        setTimeout(() => {
+          setName("");
+          getMyCourses();
+          toggleAddCourseBox();
+        }, 2000);
       } else {
         alert("Kurssin luonti epäonnistui.");
       }
@@ -71,6 +91,18 @@ export const AddCourseForm: React.FC<AddCourseFormProps> = ({
           </div>
         </div>
       </form>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 };
