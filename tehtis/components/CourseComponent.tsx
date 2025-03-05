@@ -85,6 +85,10 @@ export const CourseComponent = ({
   const navigate = useNavigate();
 
   const deleteCourse = async () => {
+    if (!window.confirm("Haluatko varmasti poistaa kurssin?")) {
+      return;
+    }
+
     try {
       const response = await fetch(
         `http://localhost:3000/delete-course/${course.id}`,
@@ -147,13 +151,14 @@ export const CourseComponent = ({
                 setContent={setEditorContent}
               />
             )}
-
-            {/* näytetään editorilla kirjoitettu sisältö */}
-            {!toggleEdit && (
-              <div className="saved-content">
-                <div dangerouslySetInnerHTML={{ __html: editorContent }} />
-              </div>
-            )}
+            <div className="description-content">
+              {/* näytetään editorilla kirjoitettu sisältö */}
+              {!toggleEdit && (
+                <div className="saved-content">
+                  <div dangerouslySetInnerHTML={{ __html: editorContent }} />
+                </div>
+              )}
+            </div>
             {user?.role === "teacher" &&
               (toggleEdit ? (
                 <button
@@ -173,8 +178,8 @@ export const CourseComponent = ({
           </div>
 
           <div className="file-section">
+            <h3>Tiedostot</h3>
             <div className="course-files">
-              <h3>Tiedostot</h3>
               {courseFiles.length > 0 ? (
                 <ul>
                   {courseFiles.map((file) => (
@@ -185,7 +190,7 @@ export const CourseComponent = ({
                       />
                       <a href={`http://localhost:3000/${file.path}`} download>
                         {file.filename.length > 5
-                          ? `${file.filename.substring(0, 5)}...`
+                          ? `${file.filename.substring(0, 7)}...`
                           : file.filename}
                       </a>
                       {user?.role === "teacher" && (
