@@ -7,8 +7,7 @@ import { FaUserPlus } from "react-icons/fa6";
 import { TiUserDelete } from "react-icons/ti";
 import { TextEditorComponent } from "./TextEditorComponent";
 import { useAuth } from "../context/AuthContext";
-import { FileIcon } from "react-file-icon";
-
+import { defaultStyles, FileIcon } from "react-file-icon";
 import { MdDeleteForever } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
@@ -22,6 +21,9 @@ export const CourseComponent = ({
   onFileSubmit,
   courseFiles,
   deleteCourseFile,
+  addFileToAssignment,
+  assignmentFiles,
+  deleteAssignmentFile,
 }: {
   course: { id: number; name: string; description: string };
   members: {
@@ -37,7 +39,22 @@ export const CourseComponent = ({
   onFileSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   courseFiles: { id: number; filename: string; path: string }[];
   deleteCourseFile: (id: number) => void;
+  addFileToAssignment: (
+    id: number,
+    event: React.FormEvent<HTMLFormElement>
+  ) => void;
+  assignmentFiles: { [key: number]: any[] };
+  deleteAssignmentFile: (id: number) => void;
 }) => {
+  interface ImportMetaEnv {
+    readonly VITE_API_URL: string;
+    // add more env variables here if needed
+  }
+
+  interface ImportMeta {
+    readonly env: ImportMetaEnv;
+  }
+
   const { user } = useAuth();
 
   const [editorContent, setEditorContent] = useState(course.description);
@@ -63,7 +80,7 @@ export const CourseComponent = ({
   const saveNewDescription = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/update-course/${course.id}`,
+        `${import.meta.env.VITE_URL}/update-course/${course.id}`,
         {
           method: "POST", // Change this to POST
           headers: {
@@ -85,13 +102,17 @@ export const CourseComponent = ({
   const navigate = useNavigate();
 
   const deleteCourse = async () => {
-    if (!window.confirm("Haluatko varmasti poistaa kurssin?")) {
+    if (
+      !window.confirm(
+        "Poistettua kurssia ei voida palauttaa. Haluatko varmasti poistaa kurssin?"
+      )
+    ) {
       return;
     }
 
     try {
       const response = await fetch(
-        `http://localhost:3000/delete-course/${course.id}`,
+        `${import.meta.env.VITE_URL}/delete-course/${course.id}`,
         {
           method: "DELETE",
           headers: {
@@ -178,28 +199,38 @@ export const CourseComponent = ({
           </div>
 
           <div className="file-section">
-            <h3>Tiedostot</h3>
+            <h3>Kurssin liitetiedostot</h3>
             <div className="course-files">
               {courseFiles.length > 0 ? (
                 <ul>
-                  {courseFiles.map((file) => (
-                    <li key={file.id}>
-                      <FileIcon
-                        style={{ scale: "0.5" }}
-                        extension={file.filename.split(".").pop()}
-                      />
-                      <a href={`http://localhost:3000/${file.path}`} download>
-                        {file.filename.length > 5
-                          ? `${file.filename.substring(0, 7)}...`
-                          : file.filename}
-                      </a>
-                      {user?.role === "teacher" && (
-                        <button onClick={() => deleteCourseFile(file.id)}>
-                          Poista
-                        </button>
-                      )}
-                    </li>
-                  ))}
+                  {courseFiles.map((file) => {
+                    const extension =
+                      file.filename.split(".").pop()?.toLowerCase() || "";
+                    const style =
+                      defaultStyles[extension as keyof typeof defaultStyles] ||
+                      {};
+
+                    return (
+                      <li key={file.id}>
+                        <FileIcon extension={extension} {...style} />
+
+                        <a
+                          href={`${import.meta.env.VITE_URL}/${file.path}`}
+                          download
+                        >
+                          {file.filename.length > 5
+                            ? `${file.filename.substring(0, 7)}...`
+                            : file.filename}
+                        </a>
+
+                        {user?.role === "teacher" && (
+                          <button onClick={() => deleteCourseFile(file.id)}>
+                            Poista
+                          </button>
+                        )}
+                      </li>
+                    );
+                  })}
                 </ul>
               ) : (
                 <p>Ei tiedostoja</p>
@@ -235,12 +266,64 @@ export const CourseComponent = ({
         {assignments.map((assignment) => (
           <li key={assignment.id}>
             <div className="assignment">
-              <h3>
-                <strong>{assignment.title}</strong>
-              </h3>
-              <p>
-                <strong>{assignment.description}</strong>
-              </p>
+              <div className="assignment-info">
+                <h2>
+                  <strong>{assignment.title}</strong>
+                </h2>
+                <p>
+                  <strong>{assignment.description}</strong>
+                </p>
+              </div>
+
+              <div className="assignment-files">
+                {assignmentFiles[assignment.id]?.length > 0 && (
+                  <h3>Tehtävän liitetiedostot</h3>
+                )}
+                <ul>
+                  {(assignmentFiles[assignment.id] || []).map((file) => {
+                    const extension = file.filename.split(".").pop() as string;
+                    const style =
+                      defaultStyles[extension as keyof typeof defaultStyles] ||
+                      {};
+
+                    return (
+                      <li key={file.id}>
+                        <FileIcon extension={extension} {...style} />
+                        <a
+                          href={`${import.meta.env.VITE_URL}/${file.path}`}
+                          download
+                        >
+                          {file.filename.length > 5
+                            ? `${file.filename.substring(0, 7)}...`
+                            : file.filename}
+                        </a>
+                        {user?.role === "teacher" && (
+                          <button
+                            type="button"
+                            onClick={() => deleteAssignmentFile(file.id)}
+                          >
+                            Poista
+                          </button>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+              {user?.role === "teacher" && (
+                <form
+                  className="assignment-file-form"
+                  onSubmit={(event) =>
+                    addFileToAssignment(assignment.id, event)
+                  }
+                >
+                  <label>
+                    <h4>Lisää tiedosto tehtävään</h4>
+                    <input type="file" name="file" required />
+                    <button type="submit">Lähetä</button>
+                  </label>
+                </form>
+              )}
             </div>
           </li>
         ))}

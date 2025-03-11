@@ -149,6 +149,86 @@ export const Course = () => {
     }
   };
 
+  const addFileToAssignment = async (
+    assignmentId: number,
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/upload/assignment/${assignmentId}`,
+        {
+          method: "POST",
+          body: formData,
+          credentials: "include", // Ensures session cookies are sent
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      alert("Tiedosto lähetetty onnistuneesti!");
+      console.log(data);
+    } catch (error) {
+      console.error("Error uploading file", error);
+      alert("Tiedoston lähetys epäonnistui!");
+    }
+  };
+
+  const [assignmentFiles, setAssignmentFiles] = useState<{
+    [key: number]: any[];
+  }>({});
+
+  const getAssignmentFiles = async (assignmentId: number) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/files/assignment/${assignmentId}`
+      );
+      const data = await response.json();
+      console.log("Fetched files for assignment", assignmentId, data);
+
+      setAssignmentFiles((prev) => ({
+        ...prev,
+        [assignmentId]: data, // Store files under assignmentId
+      }));
+    } catch (error) {
+      console.error("Error fetching assignment files", error);
+    }
+  };
+
+  useEffect(() => {
+    assignments.forEach((assignment) => {
+      getAssignmentFiles(assignment.id);
+    });
+    console.log("assignmentFiles: ", assignmentFiles);
+  }, [assignments]);
+
+  const deleteAssignmentFile = async (fileId: number) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/delete-file/${fileId}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+      alert("Tiedosto poistettu onnistuneesti!");
+      getCourseFiles(id!);
+    } catch (error) {
+      console.error("Error deleting file", error);
+      alert("Tiedoston poisto epäonnistui!");
+    }
+  };
+
   return (
     <>
       <div className="container">
@@ -164,6 +244,9 @@ export const Course = () => {
           onFileSubmit={onFileSubmit}
           courseFiles={courseFiles}
           deleteCourseFile={deleteCourseFile}
+          addFileToAssignment={addFileToAssignment}
+          assignmentFiles={assignmentFiles}
+          deleteAssignmentFile={deleteAssignmentFile}
         />
 
         {assignmentBox && (

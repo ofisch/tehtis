@@ -122,6 +122,8 @@ h3 {
   list-style-type: none;
   padding: 0;
   margin: 0;
+  padding-top: 1em;
+  padding-bottom: 1em;
 }
 
 .search-results ul li {
@@ -136,10 +138,12 @@ h3 {
 
 .search-results ul li:first-child {
   border-top: none;
+  padding-bottom: 1em;
 }
 
 .search-results ul li:last-child {
   border-bottom: none;
+  padding-top: 1em;
 }
 
 .search-results ul li button {
@@ -193,6 +197,8 @@ h3 {
   justify-content: space-between;
   align-items: center;
   gap: 1em;
+  padding-top: 1em;
+  padding-bottom: 1em;
   padding-left: 1em;
   padding-right: 1em;
   border-top: 2px solid var(--black);
@@ -377,15 +383,18 @@ button:hover {
   padding-left: 1em;
   padding-right: 1em;
   border-top: 2px solid var(--black);
+  border-bottom: 2px solid var(--black);
   color: var(--black);
 }
 
 .remove-members-list li:nth-child(2) {
   border-bottom: none;
+  border-top: none;
 }
 
 .remove-members-list li:last-child {
   border-bottom: none;
+  border-top: none;
 }
 
 .remove-member-button {

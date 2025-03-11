@@ -90,11 +90,6 @@ export const AssignmentForm: React.FC<AssignmentFormProps> = ({
               spellCheck="false"
             />
           </label>
-          <label>
-            <span>Tiedostot</span>
-            <input type="file" name="file" />
-            <p>ei vielä tukea tiedostoille</p>
-          </label>
           <div className="buttons">
             <button className="cancel-button" onClick={toggleAssignmentBox}>
               Peruuta

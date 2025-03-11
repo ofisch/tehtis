@@ -136,6 +136,8 @@ header {
 }
 
 .courses {
+  padding-top: 1em;
+  padding-bottom: 2em;
 }
 
 .course-list {
@@ -166,7 +168,7 @@ header {
   color: var(--black);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   transition: 0.3s;
-  overflow: auto;
+  overflow: hidden;
 }
 
 ::-webkit-scrollbar {

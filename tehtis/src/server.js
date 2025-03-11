@@ -294,6 +294,58 @@ app.post("/add-assignment", (req, res) => {
   res.json({ success: result.changes > 0 });
 });
 
+// ladataan tiedosto tehtävään
+app.post(
+  "/upload/assignment/:assignmentId",
+  upload.single("file"),
+  (req, res) => {
+    const { assignmentId } = req.params;
+    const userId = req.session.userId; // Ensure user is logged in
+
+    if (!req.file) {
+      return res.status(400).json({ error: "No file uploaded" });
+    }
+
+    const filename = req.file.filename;
+    const filepath = `uploads/${filename}`;
+
+    db.prepare(
+      "INSERT INTO files (filename, path, uploadedBy, assignmentId) VALUES (?, ?, ?, ?)"
+    ).run(filename, filepath, userId, assignmentId);
+
+    res.json({ message: "File uploaded successfully", filepath });
+  }
+);
+
+// haetaan tehtävät tiedostot
+app.get("/files/assignment/:assignmentId", (req, res) => {
+  const { assignmentId } = req.params;
+  const files = db
+    .prepare("SELECT * FROM files WHERE assignmentId = ?")
+    .all(assignmentId);
+
+  res.json(files);
+});
+
+// poistetaan tehtävän tiedosto
+app.delete("/delete-file/:fileId", (req, res) => {
+  const { fileId } = req.params;
+  const file = db.prepare("SELECT * FROM files WHERE id = ?").get(fileId);
+
+  if (!file) {
+    return res.status(404).json({ error: "File not found" });
+  }
+
+  fs.unlink(file.path, (err) => {
+    if (err) {
+      return res.status(500).json({ error: "Failed to delete file" });
+    }
+
+    db.prepare("DELETE FROM files WHERE id = ?").run(fileId);
+    res.json({ message: "File deleted successfully" });
+  });
+});
+
 // haetaan yksittäinen kurssi
 app.get("/course-info/:id", (req, res) => {
   const { id } = req.params;

@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="fi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Onni Fischer</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Platypi:ital,wght@0,300..800;1,300..800&family=Sedan:ital@0;1&display=swap");
+
+      :root {
+        --darkWhite: #f2e8cf;
+        --lightGreen: #a7c957;
+        --darkGreen: #386641;
+        --asparagus: #6a994e;
+        --red: #bc4749;
+        /*marginaalit ja täytteet*/
+        --left-margin: 4rem;
+        --right-margin: 4rem;
+        --top-padding: 4rem;
+        --bottom-padding: 4rem;
+        /*teksti*/
+        --big-title: 5rem;
+        --title: 1.5rem;
+        --big-text: 2.5rem;
+        --text: 1.2rem;
+        /*tekstimarginaalit*/
+        --big-title-margin: 1rem 0 1rem;
+      }
+
+      @media screen and (max-width: 1025px) {
+        :root {
+          --big-title: 6rem;
+        }
+      }
+
+      @media screen and (max-width: 768px) {
+        :root {
+          --big-title: 3rem;
+          --text: 1.2rem;
+          --left-margin: 2rem;
+          --right-margin: 2rem;
+        }
+      }
+
+      @media screen and (min-width: 2100px) {
+        :root {
+          --left-margin: 35rem;
+          --right-margin: 35rem;
+        }
+      }
+
+      @media screen and (min-width: 2560px) {
+        :root {
+          --left-margin: 55rem;
+          --right-margin: 55rem;
+        }
+      }
+
+      @media screen and (min-width: 3840px) {
+        :root {
+          --left-margin: 60rem;
+          --right-margin: 60rem;
+        }
+      }
+
+      html,
+      body {
+        height: 100%; /* Ensure the entire page takes the full height of the viewport */
+        margin: 0;
+        padding: 0;
+        font-family: "Platypi", sans-serif;
+      }
+
+      .container {
+        height: 100vh; /* Full screen height */
+        display: flex;
+        flex-direction: column;
+      }
+      p {
+        font-size: var(--text);
+      }
+
+      .banner {
+        background-color: var(--lightGreen);
+        width: 100%;
+        height: 100%;
+      }
+
+      .banner h1 {
+        font-size: var(--big-title);
+      }
+
+      .banner h2 {
+        max-width: 75%;
+      }
+
+      @media screen and (max-width: 768px) {
+        .banner h2 {
+          max-width: 100%;
+        }
+      }
+
+      .banner-content {
+        display: flex;
+        align-items: center;
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+      }
+
+      .header {
+        margin-left: var(--left-margin);
+        margin-right: var(--right-margin);
+        width: 100%;
+        display: flex;
+      }
+
+      .header-left {
+        width: 30%;
+        display: flex;
+        align-content: center;
+        justify-content: center;
+      }
+
+      .header-right {
+        width: 70%;
+      }
+
+      .header-text {
+        max-width: 55em;
+      }
+
+      .header-text p {
+        font-size: 1.4em;
+      }
+
+      @media screen and (max-width: 768px) {
+        .header {
+          width: 100%;
+          margin-right: var(--right-margin);
+        }
+      }
+
+      .header h1 {
+        margin: 0;
+      }
+
+      .header-image {
+        display: none;
+        border-radius: 50%;
+        border: 3px solid black;
+        min-width: 20rem;
+        height: 20rem;
+        object-fit: cover;
+        object-position: center;
+      }
+
+      @media screen and (max-width: 768px) {
+        .header-image {
+          min-width: 20rem;
+          height: 20rem;
+        }
+      }
+
+      .header-circle {
+        display: none;
+        background-color: var(--darkGreen);
+        width: 10rem;
+        height: 10rem;
+        border-radius: 50%;
+        position: absolute;
+        margin-top: -8rem;
+        margin-left: 19rem;
+        border: 3px solid black;
+      }
+
+      .github-left-circle {
+        display: none;
+        background-color: var(--asparagus);
+        width: 6rem;
+        height: 6rem;
+        border-radius: 50%;
+        position: absolute;
+        margin-top: -7rem;
+        margin-left: 0rem;
+        border: 3px solid black;
+      }
+
+      .github-left-circle:hover {
+        background-color: var(--darkGreen);
+        scale: 1.2;
+      }
+
+      .linkedin-left-circle {
+        display: none;
+        background-color: var(--lightGreen);
+        width: 6rem;
+        height: 6rem;
+        border-radius: 50%;
+        position: absolute;
+        margin-top: -26rem;
+        margin-left: 2rem;
+        border: 3px solid black;
+      }
+
+      .linkedin-left-circle:hover {
+        background-color: var(--asparagus);
+        scale: 1.2;
+      }
+
+      @media screen and (max-width: 1025px) {
+        .header-image {
+          display: block;
+        }
+
+        .header-circle {
+          display: block;
+        }
+
+        .github-left-circle {
+          display: block;
+        }
+
+        .linkedin-left-circle {
+          display: block;
+        }
+      }
+
+      @media screen and (max-width: 768px) {
+        .header-circle {
+          width: 6rem;
+          height: 6rem;
+          margin-left: 14rem;
+          margin-top: -5rem;
+        }
+
+        .github-left-circle {
+          width: 5rem;
+          height: 5rem;
+          margin-top: -4rem;
+          margin-left: 0rem;
+          cursor: pointer;
+        }
+
+        .linkedin-left-circle {
+          width: 5rem;
+          height: 5rem;
+          margin-top: -20rem;
+          margin-left: -1rem;
+          cursor: pointer;
+        }
+      }
+
+      .header h2 span {
+        color: var(--darkWhite);
+        background: -webkit-linear-gradient(var(--darkWhite), var(--darkWhite));
+
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .header h2 span:hover {
+        background: -webkit-linear-gradient(
+          45deg,
+          var(--darkGreen),
+          var(--asparagus)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .header h2 a {
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      .header button {
+        background-color: var(--darkGreen);
+        color: white;
+        border: 3px solid black;
+        box-shadow: black 3px 3px;
+        padding: 1rem 2rem;
+        font-size: var(--text);
+        cursor: pointer;
+        font-family: "Platypi", sans-serif;
+      }
+
+      .header button:hover {
+        background-color: var(--lightGreen);
+        color: black;
+        box-shadow: black 6px 6px;
+      }
+
+      .banner-right {
+        margin-right: var(--right-margin);
+        width: 40%;
+      }
+
+      .banner-image {
+        border-radius: 50%;
+        border: 3px solid black;
+        min-width: 20rem;
+        height: 20rem;
+        object-fit: cover;
+        object-position: center;
+      }
+
+      @media screen and (max-width: 1025px) {
+        .banner-right {
+          display: none;
+        }
+      }
+
+      @media screen and (max-width: 1200px) {
+        .banner-image {
+          min-width: 100%;
+          height: 20rem;
+        }
+      }
+
+      .github-circle {
+        background-color: var(--asparagus);
+        width: 6rem;
+        height: 6rem;
+        border-radius: 50%;
+        position: absolute;
+        margin-top: -1rem;
+        margin-left: -29rem;
+        border: 3px solid black;
+        cursor: pointer;
+      }
+
+      .github-circle:hover {
+        background-color: var(--darkGreen);
+        scale: 1.2;
+      }
+
+      @media screen and (max-width: 1200px) {
+        .github-circle {
+          width: 5rem;
+          height: 5rem;
+          margin-top: -1rem;
+          margin-left: -24rem;
+        }
+      }
+
+      .github-logo {
+        background-image: url(https://cdn-icons-png.flaticon.com/512/25/25231.png);
+        width: 100%;
+        scale: 0.6;
+        height: 100%;
+        object-fit: cover;
+        margin: auto;
+        margin-top: auto;
+        margin-bottom: auto;
+        background-position: center;
+        background-size: contain;
+        align-content: flex-end;
+        justify-content: space-evenly;
+        align-items: stretch;
+      }
+
+      .linkedin-circle {
+        background-color: var(--lightGreen);
+        width: 6rem;
+        height: 6rem;
+        border-radius: 50%;
+        position: absolute;
+        margin-top: 25rem;
+        margin-left: -28rem;
+        border: 3px solid black;
+        cursor: pointer;
+      }
+
+      @media screen and (max-width: 1200px) {
+        .linkedin-circle {
+          width: 5rem;
+          height: 5rem;
+          margin-top: 20rem;
+          margin-left: -24rem;
+        }
+      }
+
+      .linkedin-circle:hover {
+        background-color: var(--asparagus);
+        scale: 1.2;
+      }
+
+      .linkedin-logo {
+        background-image: url(https://cdn-icons-png.flaticon.com/512/174/174857.png);
+        width: 100%;
+        height: 100%;
+        scale: 0.6;
+        object-fit: cover;
+        margin: auto;
+        margin-top: auto;
+        margin-bottom: auto;
+        background-position: center;
+        background-size: contain;
+      }
+
+      .circle {
+        background-color: var(--darkGreen);
+        width: 10rem;
+        height: 10rem;
+        border-radius: 50%;
+        position: absolute;
+        margin-top: 22rem;
+        margin-left: -9rem;
+        border: 3px solid black;
+      }
+
+      @media screen and (max-width: 1200px) {
+        .circle {
+          width: 8rem;
+          height: 8rem;
+          margin-top: 18rem;
+          margin-left: -7rem;
+        }
+      }
+
+      .circle:hover {
+        background-color: var(--asparagus);
+        scale: 1.2;
+      }
+
+      .projects {
+        background-color: var(--darkGreen);
+      }
+
+      .wave {
+        min-height: 100px;
+        height: 10vh;
+        background-color: var(--lightGreen);
+
+        --mask: radial-gradient(
+              36.62px at 50% calc(100% - 51px),
+              #000 99%,
+              #0000 101%
+            )
+            calc(50% - 60px) 0 / 120px 100%,
+          radial-gradient(
+              36.62px at 50% calc(100% + 21px),
+              #0000 99%,
+              #000 101%
+            )
+            50% calc(100% - 30px) / 120px 100% repeat-x;
+        -webkit-mask: var(--mask);
+        mask: var(--mask);
+      }
+
+      .projects-content {
+        padding: var(--top-padding) 0;
+        margin-left: var(--left-margin);
+        margin-right: var(--right-margin);
+      }
+
+      .projects-content h1 {
+        font-size: var(--big-title);
+        margin: var(--big-title-margin);
+        color: var(--darkWhite);
+      }
+
+      .project-card-container {
+        display: flex;
+        gap: 2rem;
+        margin-top: 2rem;
+      }
+
+      @media screen and (max-device-width: 1600px) and (-webkit-min-device-pixel-ratio: 1) {
+        .project-card-container {
+          flex-direction: column;
+        }
+      }
+
+      .project-card {
+        display: flex;
+        background-color: var(--darkWhite);
+        border-radius: 15px;
+        border: 2px solid black;
+        box-shadow: var(--lightGreen) 5px 5px;
+        width: 100%;
+        resize: vertical;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .project-card h2 {
+        font-size: var(--title);
+        border-bottom: 2px solid black;
+        padding: 1rem;
+        margin: 0;
+      }
+
+      .project-card p {
+        padding: 1rem;
+        margin: 0;
+        font-size: var(--text);
+      }
+
+      .project-tech-tags {
+        display: flex;
+        gap: 1rem;
+        padding: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .project-links {
+        display: flex;
+        gap: 1rem;
+        padding: 1rem;
+      }
+
+      .project-links a {
+        background-color: var(--lightGreen);
+        color: white;
+        border: 2px solid black;
+        box-shadow: var(--darkGreen) 3px 3px;
+        padding: 0.5rem;
+        border-radius: 5px;
+        text-decoration: none;
+        min-width: 20px;
+        min-height: 20px;
+      }
+
+      .project-links a:hover {
+        background-color: var(--darkWhite);
+        color: black;
+        box-shadow: var(--darkGreen) 4px 4px;
+      }
+
+      .project-links a img {
+        width: 20px;
+        height: 20px;
+      }
+
+      .project-tech-tags span {
+        background-color: var(--lightGreen);
+        border: 2px solid black;
+        box-shadow: var(--darkGreen) 3px 3px;
+        color: white;
+        padding: 0.5rem;
+        border-radius: 5px;
+      }
+
+      .project-web-container {
+        width: 100%;
+        height: 300px;
+
+        border: 2px solid black;
+        margin-top: 1rem;
+      }
+
+      .project-web-container iframe {
+        width: 100%;
+        height: 100%;
+        resize: both;
+      }
+
+      .project-image-container {
+        width: 300px;
+        align-self: end;
+        height: 200px;
+        border: 2px solid black;
+        margin-left: 1rem;
+        margin-right: 1rem;
+        margin-bottom: 1rem;
+        box-shadow: var(--lightGreen) 5px 5px;
+      }
+
+      .project-image-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top;
+      }
+
+      .zig-zag {
+        background: linear-gradient(
+          135deg,
+          #1f005c,
+          #5b0060,
+          #870160,
+          #ac255e,
+          #ca485c,
+          #e16b5c,
+          #f39060,
+          #ffb56b
+        );
+        min-height: 250px;
+        height: 40vh;
+        height: round(40vh, 1px);
+        --mask: linear-gradient(#000 0 0) top / 100% calc(100% - 30px) no-repeat,
+          conic-gradient(
+              from -45deg at bottom,
+              #0000,
+              #000 1deg 89deg,
+              #0000 90deg
+            )
+            bottom / 60px 30px repeat-x;
+        -webkit-mask: var(--mask);
+        mask: var(--mask);
+      }
+
+      .wave-hobby {
+        min-height: 100px;
+        height: 5vh;
+        background-color: var(--darkGreen);
+
+        --mask: radial-gradient(
+              36.62px at 50% calc(100% - 51px),
+              #000 99%,
+              #0000 101%
+            )
+            calc(50% - 60px) 0 / 120px 100%,
+          radial-gradient(
+              36.62px at 50% calc(100% + 21px),
+              #0000 99%,
+              #000 101%
+            )
+            50% calc(100% - 30px) / 120px 100% repeat-x;
+        -webkit-mask: var(--mask);
+        mask: var(--mask);
+      }
+
+      .hobbies {
+        background-color: var(--darkWhite);
+      }
+
+      .hobbies-content {
+        padding: var(--top-padding) 0;
+        margin-left: var(--left-margin);
+        margin-right: var(--right-margin);
+      }
+
+      .hobbies-content h1 {
+        font-size: var(--big-title);
+        margin: var(--big-title-margin);
+      }
+
+      .hobbies-content h2 {
+        font-size: var(--big-text);
+      }
+
+      .hobbies-content p {
+        font-size: var(--text);
+        margin: 0;
+        padding: 1rem;
+      }
+
+      .hobbies-container {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .hobby-card-container {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 2rem;
+      }
+
+      @media screen and (max-width: 1025px) {
+        .hobby-card-container {
+          grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+      }
+
+      .hobby-card {
+        background-color: var(--lightGreen);
+        border-radius: 15px;
+        border: 2px solid black;
+        box-shadow: var(--darkGreen) 5px 5px;
+        width: 100%;
+      }
+
+      .hobby-card h2 {
+        font-size: var(--title);
+        border-bottom: 2px solid black;
+        padding: 1rem;
+        margin: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .hobby-card span:hover {
+        scale: 1.6;
+      }
+
+      .star-outside {
+        position: relative;
+        width: 100px;
+        height: 100px;
+        background-color: black;
+        clip-path: polygon(
+          100% 50%,
+          78.98% 57.76%,
+          93.3% 75%,
+          71.21% 71.21%,
+          75% 93.3%,
+          57.76% 78.98%,
+          50% 100%,
+          42.24% 78.98%,
+          25% 93.3%,
+          28.79% 71.21%,
+          6.7% 75%,
+          21.02% 57.76%,
+          0% 50%,
+          21.02% 42.24%,
+          6.7% 25%,
+          28.79% 28.79%,
+          25% 6.7%,
+          42.24% 21.02%,
+          50% 0%,
+          57.76% 21.02%,
+          75% 6.7%,
+          71.21% 28.79%,
+          93.3% 25%,
+          78.98% 42.24%
+        );
+      }
+
+      .star-inside {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+        background-color: var(--red);
+        clip-path: polygon(
+          100% 50%,
+          78.98% 57.76%,
+          93.3% 75%,
+          71.21% 71.21%,
+          75% 93.3%,
+          57.76% 78.98%,
+          50% 100%,
+          42.24% 78.98%,
+          25% 93.3%,
+          28.79% 71.21%,
+          6.7% 75%,
+          21.02% 57.76%,
+          0% 50%,
+          21.02% 42.24%,
+          6.7% 25%,
+          28.79% 28.79%,
+          25% 6.7%,
+          42.24% 21.02%,
+          50% 0%,
+          57.76% 21.02%,
+          75% 6.7%,
+          71.21% 28.79%,
+          93.3% 25%,
+          78.98% 42.24%
+        );
+      }
+
+      .flower-outside {
+        position: relative;
+        height: 100px;
+        aspect-ratio: 1;
+        margin: auto;
+        --g: /30.26% 30.26% radial-gradient(#000 calc(71% - 1px), #0000 71%) no-repeat;
+        mask: radial-gradient(
+              100% 100%,
+              #000 calc(31.417% - 1px),
+              #0000 31.417%
+            )
+            intersect,
+          radial-gradient(#000 0 0) exclude, 100% 50% var(--g),
+          81.174% 89.092% var(--g), 38.874% 98.746% var(--g),
+          4.952% 71.694% var(--g), 4.952% 28.306% var(--g),
+          38.874% 1.254% var(--g), 81.174% 10.908% var(--g);
+        background-color: black;
+      }
+
+      .flower-inside {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+        background-color: var(--asparagus);
+        margin: auto;
+        --g: /30.26% 30.26% radial-gradient(#000 calc(71% - 1px), #0000 71%) no-repeat;
+        mask: radial-gradient(
+              100% 100%,
+              #000 calc(31.417% - 1px),
+              #0000 31.417%
+            )
+            intersect,
+          radial-gradient(#000 0 0) exclude, 100% 50% var(--g),
+          81.174% 89.092% var(--g), 38.874% 98.746% var(--g),
+          4.952% 71.694% var(--g), 4.952% 28.306% var(--g),
+          38.874% 1.254% var(--g), 81.174% 10.908% var(--g);
+      }
+
+      .octagon-outside {
+        position: relative;
+        width: 100px;
+        aspect-ratio: 1;
+        --o: calc(50% * tan(10.5deg));
+        clip-path: polygon(
+          var(--o) 50%,
+          50% var(--o),
+          calc(100% - var(--o)) 50%,
+          50% calc(100% - var(--o))
+        );
+        background: black;
+      }
+
+      .octagon-inside {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+        background: var(--darkGreen);
+        clip-path: polygon(
+          var(--o) 50%,
+          50% var(--o),
+          calc(100% - var(--o)) 50%,
+          50% calc(100% - var(--o))
+        );
+      }
+
+      .music-wave-outside {
+        position: relative;
+        height: 100px;
+        width: 100px;
+        height: round(40vh, 1px);
+        background-color: black;
+        --mask: radial-gradient(34.99px at 48px 50%, #000 99%, #0000 101%) 0
+            calc(50% - 60px) / 100% 120px,
+          radial-gradient(34.99px at -18px 50%, #0000 99%, #000 101%) 30px 50% /
+            100% 120px repeat-y;
+        -webkit-mask: var(--mask);
+        mask: var(--mask);
+      }
+
+      .music-wave-inside {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+        background-color: var(--darkGreen);
+        --mask: radial-gradient(34.99px at 48px 50%, #000 99%, #0000 101%) 0
+            calc(50% - 60px) / 100% 120px,
+          radial-gradient(34.99px at -18px 50%, #0000 99%, #000 101%) 30px 50% /
+            100% 120px repeat-y;
+        -webkit-mask: var(--mask);
+        mask: var(--mask);
+      }
+
+      .contact {
+        background-color: var(--darkGreen);
+      }
+
+      .contact-content {
+        padding: var(--top-padding) 0;
+        margin-left: var(--left-margin);
+        margin-right: var(--right-margin);
+      }
+
+      .contact-content h1 {
+        font-size: 6rem;
+        margin: var(--big-title-margin);
+        color: var(--darkWhite);
+        word-wrap: break-word;
+      }
+
+      .title {
+        display: flex;
+        gap: 2em;
+        padding-left: 3em;
+      }
+
+      .content {
+        background-color: var(--lightGreen);
+        display: flex;
+        padding-left: var(--left-margin);
+        padding-right: var(--right-margin);
+        padding-bottom: 3em;
+      }
+
+      .info {
+        background-color: var(--darkWhite);
+        width: 30%;
+        border: 2px solid black;
+      }
+
+      .info h2 {
+        text-align: center;
+      }
+
+      /* Language progress container */
+      .lang-progress {
+        width: 10em; /* Adjust as needed */
+        height: 1em;
+        background-color: white; /* White background */
+        border: 2px solid black;
+        box-shadow: black 2px 2px;
+        position: relative;
+        overflow: hidden;
+        border-radius: 3em;
+        margin-bottom: 0.5rem; /* Adds space between elements */
+      }
+
+      /* Filled portion inside the progress bar */
+      .lang-progress-fill {
+        height: 100%;
+        background-color: var(--lightGreen);
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      /* Individual language progress fill levels */
+      .fill-100 {
+        width: 100%;
+      }
+
+      .fill-80 {
+        width: 80%;
+      }
+
+      .fill-60 {
+        width: 60%;
+      }
+
+      .experience {
+        width: 70%;
+        border-top: 2px solid black;
+        border-right: 2px solid black;
+        border-bottom: 2px solid black;
+        background-color: var(--asparagus);
+      }
+
+      .experience h2 {
+        text-align: center;
+      }
+
+      .xp-box-container {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        margin-top: 2rem;
+        padding-left: 3em;
+        padding-right: 3em;
+      }
+
+      .xp-box {
+        display: flex;
+        flex-direction: column;
+        background-color: var(--darkWhite);
+        border-radius: 15px;
+        border: 2px solid black;
+        box-shadow: var(--lightGreen) 5px 5px;
+        resize: vertical;
+        justify-content: space-between;
+      }
+
+      .xp-box h2 {
+        font-size: var(--title);
+        text-align: start;
+        border-bottom: 2px solid black;
+        padding: 1rem;
+        margin: 0;
+      }
+
+      .xp-box p {
+        padding: 1rem;
+        margin: 0;
+        font-size: var(--text);
+      }
+
+      .employer {
+        font-size: var(--text);
+        font-weight: bold;
+      }
+
+      .job-desc {
+        font-size: var(--text);
+      }
+
+      .job-time {
+        font-size: var(--text);
+        display: flex;
+        gap: 1rem;
+        padding: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .job-time span {
+        background-color: var(--lightGreen);
+        border: 2px solid black;
+        box-shadow: var(--darkGreen) 3px 3px;
+        color: white;
+        padding: 0.5rem;
+        border-radius: 5px;
+      }
+
+      .education {
+        border-top: 2px dashed black;
+        margin-top: 4em;
+        margin-bottom: 4em;
+      }
+
+      .edu-box-container {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        margin-top: 2rem;
+        padding-left: 3em;
+        padding-right: 3em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="banner">
+        <div class="banner-content">
+          <div class="header">
+            <div class="header-left">
+              <img class="banner-image" src="IMG_3859.JPG" alt="brutal" />
+            </div>
+            <div class="header-right">
+              <div class="title">
+                <div class="header-text">
+                  <h1>Onni Fischer</h1>
+                  <p>
+                    Olen 21-vuotias insinööriopiskelija Espoosta, opiskelen
+                    Metropoliassa Tieto- ja viestintätekniikkaa pääaineena
+                    Web-tekniikat ja digitaalinen media. Olen kiinnostunut
+                    erityisesti frontend-kehityksestä ja käyttöliittymien
+                    suunnittelusta. Viimeisin innostava ja mielenkiintoinen
+                    projekti on ollut tekoälyä hyödyntävän
+                    <a href="https://www.webweave.fi"
+                      ><span>kotisivukoneen</span></a
+                    >
+                    kehittäminen yhdessä opiskelukavereiden kanssa! 🤖
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="info">
+          <h2>Henkilötiedot</h2>
+          <ul>
+            <li>
+              <h3>Osoite</h3>
+              <p>Luuvanpuisto 10</p>
+            </li>
+            <li>
+              <h3>Puhelin</h3>
+              <p>045 264 7313</p>
+            </li>
+            <li>
+              <h3>Sähköposti</h3>
+              <p>onni.fischer@gmail.com</p>
+            </li>
+            <li>
+              <h3>Syntymäaika</h3>
+              <p>12.12.2002</p>
+            </li>
+            <li>
+              <h3>Syntymäpaikka</h3>
+              <p>Espoo</p>
+            </li>
+            <li>
+              <h3>Kansallisuus</h3>
+              <p>suomi</p>
+            </li>
+            <li>
+              <h3>Ajokortti</h3>
+              <p>B</p>
+            </li>
+            <li>
+              <h3>Kotisivut</h3>
+              <a href="https://onni.pro">onni.pro</a>
+            </li>
+          </ul>
+          <h2>Kiinnostuksen kohteet</h2>
+          <ul>
+            <li>
+              <p>Tietokoneet ja teknologia</p>
+            </li>
+            <li>
+              <p>Musiikki</p>
+            </li>
+          </ul>
+          <h2>Kielet</h2>
+          <ul>
+            <li>
+              <p>suomi</p>
+              <div class="lang-progress">
+                <div class="lang-progress-fill fill-100"></div>
+              </div>
+            </li>
+            <li>
+              <p>englanti</p>
+              <div class="lang-progress">
+                <div class="lang-progress-fill fill-80"></div>
+              </div>
+            </li>
+            <li>
+              <p>ruotsi</p>
+              <div class="lang-progress">
+                <div class="lang-progress-fill fill-60"></div>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="experience">
+          <h2>Työkokemus</h2>
+          <div class="xp-box-container">
+            <div class="xp-box">
+              <h2>kesätyöntekijä</h2>
+              <p class="employer">
+                Jääkäripataljoona 27:n perinneyhdistys, Helsinki
+              </p>
+              <p class="job-desc">
+                arkiston sekä esineistön järjestäminen ja luettelointi Exceliin
+              </p>
+              <div class="job-time">
+                <span>heinä 2022 - heinä 2022</span>
+              </div>
+            </div>
+
+            <div class="xp-box">
+              <h2>harjoittelija</h2>
+              <p class="employer">Maanpuolustuskoulutusyhdistys, Helsinki</p>
+              <p class="job-desc">
+                tiedon käsittely: luominen, kokoaminen, tulostuspalvelut,
+                javaohjelmointikielellä toteutettu projekti, jossa pääpaino
+                olio‑ohjelmoinnissa ja graafisessa käyttöliittymässä
+              </p>
+              <div class="job-time">
+                <span>maalis 2020 - touko 2020</span>
+              </div>
+            </div>
+
+            <div class="xp-box">
+              <h2>kesätyöntekijä</h2>
+              <p class="employer">Sellon kirjasto, Espoo</p>
+              <p class="job-desc">
+                kirjastoaineiston järjestely, hyllytys, varatun aineiston haku,
+                asiakaspalvelu
+              </p>
+              <div class="job-time">
+                <span>kesä 2019 - heinä 2019</span>
+              </div>
+            </div>
+
+            <div class="xp-box">
+              <h2>harjoittelija</h2>
+              <p class="employer">Entressen kirjasto, Espoo</p>
+              <p class="job-desc">
+                asiakaspalvelu, opastus laitteiden käytössä, tietoteknisten
+                ongelmien ratkaiseminen sekä laitteiston huolto
+              </p>
+              <div class="job-time">
+                <span>tammi 2019 - maalis 2019</span>
+              </div>
+            </div>
+
+            <div class="xp-box">
+              <h2>kesäharjoittelija</h2>
+              <p class="employer">Prisma Sello, Espoo</p>
+              <p class="job-desc">tuotteiden hyllyttäminen, asiakaspalvelu</p>
+              <div class="job-time">
+                <span>heinä 2018 - heinä 2018</span>
+              </div>
+            </div>
+
+            <div class="xp-box">
+              <h2>harjoittelija</h2>
+              <p class="employer">Prisma Sello, Espoo</p>
+              <p class="job-desc">
+                tuotteiden myyntikunnostus ja esillevienti, myyjän avustavat
+                tehtävät
+              </p>
+              <div class="job-time">
+                <span>marras 2017 - marras 2017</span>
+              </div>
+            </div>
+          </div>
+          <div class="education">
+            <h2>Koulutus</h2>
+            <div class="edu-box-container">
+              <div class="xp-box">
+                <h2>Tieto- ja viestintätekniikan tutkinto-ohjelma</h2>
+                <p class="employer">Metropolia, Espoo</p>
+                <p class="job-desc">
+                  Ammatillisena pääaineena web‑kehitys ja digitaalinen media
+                </p>
+                <div class="job-time">
+                  <span>tammi 2021 - 2025</span>
+                </div>
+              </div>
+              <div class="xp-box">
+                <h2>Tieto- ja viestintätekniikan perustutkinto, Datanomi</h2>
+                <p class="employer">Omnia, Espoo</p>
+                <div class="job-time">
+                  <span>elo 2018 - joulu 2020</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
