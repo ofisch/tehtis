@@ -294,6 +294,19 @@ app.post("/add-assignment", (req, res) => {
   res.json({ success: result.changes > 0 });
 });
 
+// poistetaan tehtävä
+app.delete("/delete-assignment/:id", (req, res) => {
+  const { id } = req.params;
+
+  // poistetaan tehtävän tiedostot
+  db.prepare("DELETE FROM files WHERE assignmentId = ?").run(id);
+
+  // poistetaan tehtävä
+  const result = db.prepare("DELETE FROM assignments WHERE id = ?").run(id);
+
+  res.json({ success: result.changes > 0 });
+});
+
 // ladataan tiedosto tehtävään
 app.post(
   "/upload/assignment/:assignmentId",

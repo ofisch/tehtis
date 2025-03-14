@@ -32,51 +32,64 @@ export const TextEditorComponent: React.FC<TextEditorProps> = ({
       {/* Toolbar */}
       <div className="toolbar">
         <button
+          type="button"
           className={isActive("bold")}
           onClick={() => editor.chain().focus().toggleBold().run()}
         >
           <b>B</b>
         </button>
         <button
+          type="button"
           className={isActive("italic")}
           onClick={() => editor.chain().focus().toggleItalic().run()}
         >
           <i>I</i>
         </button>
         <button
+          type="button"
           className={isActive("strike")}
           onClick={() => editor.chain().focus().toggleStrike().run()}
         >
           <s>S</s>
         </button>
         <button
+          type="button"
           className={isActive("bulletList")}
           onClick={() => editor.chain().focus().toggleBulletList().run()}
         >
           •
         </button>
         <button
+          type="button"
           className={isActive("orderedList")}
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
         >
           1.
         </button>
         <button
+          type="button"
           className={isActive("heading", { level: 2 })}
           onClick={() => editor.chain().focus().setHeading({ level: 2 }).run()}
         >
           H1
         </button>
         <button
+          type="button"
           className={isActive("heading", { level: 3 })}
           onClick={() => editor.chain().focus().setHeading({ level: 3 }).run()}
         >
           H2
         </button>
-        <button onClick={() => editor.chain().focus().undo().run()}>
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().undo().run()}
+        >
           ↩ Undo
         </button>
-        <button onClick={() => editor.chain().focus().redo().run()}>
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().redo().run()}
+        >
           ↪ Redo
         </button>
       </div>

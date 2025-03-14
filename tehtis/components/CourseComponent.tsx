@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { FaPlus } from "react-icons/fa";
 import { FaUserPlus } from "react-icons/fa6";
 import { TiUserDelete } from "react-icons/ti";
+
 import { TextEditorComponent } from "./TextEditorComponent";
 import { useAuth } from "../context/AuthContext";
 import { defaultStyles, FileIcon } from "react-file-icon";
@@ -24,6 +25,7 @@ export const CourseComponent = ({
   addFileToAssignment,
   assignmentFiles,
   deleteAssignmentFile,
+  deleteAssignment,
 }: {
   course: { id: number; name: string; description: string };
   members: {
@@ -44,7 +46,8 @@ export const CourseComponent = ({
     event: React.FormEvent<HTMLFormElement>
   ) => void;
   assignmentFiles: { [key: number]: any[] };
-  deleteAssignmentFile: (id: number) => void;
+  deleteAssignmentFile: (id: number, assignmentId: number) => void;
+  deleteAssignment: (id: number) => void;
 }) => {
   interface ImportMetaEnv {
     readonly VITE_API_URL: string;
@@ -271,7 +274,9 @@ export const CourseComponent = ({
                   <strong>{assignment.title}</strong>
                 </h2>
                 <p>
-                  <strong>{assignment.description}</strong>
+                  <div
+                    dangerouslySetInnerHTML={{ __html: assignment.description }}
+                  />
                 </p>
               </div>
 
@@ -300,7 +305,9 @@ export const CourseComponent = ({
                         {user?.role === "teacher" && (
                           <button
                             type="button"
-                            onClick={() => deleteAssignmentFile(file.id)}
+                            onClick={() =>
+                              deleteAssignmentFile(file.id, assignment.id)
+                            }
                           >
                             Poista
                           </button>
@@ -323,6 +330,23 @@ export const CourseComponent = ({
                     <button type="submit">Lähetä</button>
                   </label>
                 </form>
+              )}
+              {user?.role === "teacher" && (
+                <button
+                  style={{
+                    alignSelf: "end",
+                    padding: "0.5em",
+                    background: "var(--bittersweet)",
+                  }}
+                  type="button"
+                  onClick={() => deleteAssignment(assignment.id)}
+                >
+                  <span>
+                    <MdDeleteForever />
+                  </span>
+
+                  <p>Poista</p>
+                </button>
               )}
             </div>
           </li>

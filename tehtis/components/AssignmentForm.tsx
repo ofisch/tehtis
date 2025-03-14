@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import "../style/root.css";
 import "../style/assignmentform.css";
 import { motion } from "framer-motion";
-import { div, h2 } from "framer-motion/client";
+import { desc, div, h2 } from "framer-motion/client";
+import { toast, ToastContainer } from "react-toastify";
+import { TextEditorComponent } from "./TextEditorComponent";
 interface AssignmentFormProps {
   courseId: number;
   onAssignmentAdded: () => void; // Callback to refresh assignments list
@@ -38,12 +40,26 @@ export const AssignmentForm: React.FC<AssignmentFormProps> = ({
       const result = await response.json();
 
       if (result.success) {
-        alert("Assignment added successfully!");
-        console.log("Assignment added:", result);
-        setTitle("");
-        setDescription("");
-        toggleAssignmentBox(); // suljetaan tehtävänlisäyslomake
-        onAssignmentAdded(); // päivitetään tehtävälista
+        const notify = () =>
+          toast.success("Uusi tehtävä lisätty onnistuneesti!", {
+            position: "bottom-center",
+            autoClose: 2500,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+
+        notify();
+
+        setTimeout(() => {
+          console.log("Assignment added:", result);
+          setTitle("");
+          setDescription("");
+          toggleAssignmentBox(); // suljetaan tehtävänlisäyslomake
+          onAssignmentAdded(); // päivitetään tehtävälista
+        }, 3000);
       } else {
         alert("Failed to add assignment.");
       }
@@ -83,13 +99,13 @@ export const AssignmentForm: React.FC<AssignmentFormProps> = ({
 
           <label>
             <span>Kuvaus:</span>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              required
-              spellCheck="false"
-            />
           </label>
+          <div className="assignment-desc-editor" style={{ height: "20em" }}>
+            <TextEditorComponent
+              content={description}
+              setContent={setDescription}
+            />
+          </div>
           <div className="buttons">
             <button className="cancel-button" onClick={toggleAssignmentBox}>
               Peruuta
@@ -97,6 +113,18 @@ export const AssignmentForm: React.FC<AssignmentFormProps> = ({
             <button type="submit">Lisää tehtävä</button>
           </div>
         </form>
+        <ToastContainer
+          position="top-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick={false}
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
       </div>
     </>
   );
