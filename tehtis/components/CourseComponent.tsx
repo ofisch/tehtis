@@ -195,7 +195,11 @@ export const CourseComponent = ({
                   Tallenna
                 </button>
               ) : (
-                <button onClick={handleEdit} type="button">
+                <button
+                  style={{ marginTop: "1em" }}
+                  onClick={handleEdit}
+                  type="button"
+                >
                   Muokkaa
                 </button>
               ))}
@@ -280,43 +284,47 @@ export const CourseComponent = ({
                 </p>
               </div>
 
-              <div className="assignment-files">
-                {assignmentFiles[assignment.id]?.length > 0 && (
+              {assignmentFiles[assignment.id]?.length > 0 && (
+                <div className="assignment-files">
                   <h3>Tehtävän liitetiedostot</h3>
-                )}
-                <ul>
-                  {(assignmentFiles[assignment.id] || []).map((file) => {
-                    const extension = file.filename.split(".").pop() as string;
-                    const style =
-                      defaultStyles[extension as keyof typeof defaultStyles] ||
-                      {};
+                  <ul>
+                    {(assignmentFiles[assignment.id] || []).map((file) => {
+                      const extension = file.filename
+                        .split(".")
+                        .pop() as string;
+                      const style =
+                        defaultStyles[
+                          extension as keyof typeof defaultStyles
+                        ] || {};
 
-                    return (
-                      <li key={file.id}>
-                        <FileIcon extension={extension} {...style} />
-                        <a
-                          href={`${import.meta.env.VITE_URL}/${file.path}`}
-                          download
-                        >
-                          {file.filename.length > 5
-                            ? `${file.filename.substring(0, 7)}...`
-                            : file.filename}
-                        </a>
-                        {user?.role === "teacher" && (
-                          <button
-                            type="button"
-                            onClick={() =>
-                              deleteAssignmentFile(file.id, assignment.id)
-                            }
+                      return (
+                        <li key={file.id}>
+                          <FileIcon extension={extension} {...style} />
+                          <a
+                            href={`${import.meta.env.VITE_URL}/${file.path}`}
+                            download
                           >
-                            Poista
-                          </button>
-                        )}
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
+                            {file.filename.length > 5
+                              ? `${file.filename.substring(0, 7)}...`
+                              : file.filename}
+                          </a>
+                          {user?.role === "teacher" && (
+                            <button
+                              type="button"
+                              onClick={() =>
+                                deleteAssignmentFile(file.id, assignment.id)
+                              }
+                            >
+                              Poista
+                            </button>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              )}
+
               {user?.role === "teacher" && (
                 <form
                   className="assignment-file-form"

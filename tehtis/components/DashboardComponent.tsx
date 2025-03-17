@@ -36,6 +36,14 @@ export const DashboardComponent: React.FC<DashboardComponentProps> = ({
           kursseista, joihin olet osallistunut.
         </p>
 
+        {user?.role === "admin" && (
+          <div className="admin-panel-link">
+            <h3>
+              Hei admin! Avaa <Link to="/adminpanel">Hallintapaneeli</Link>
+            </h3>
+          </div>
+        )}
+
         <div className="courses">
           <h2>Kurssit</h2>
           {user?.role === "teacher" && (

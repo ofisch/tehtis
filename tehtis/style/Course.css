@@ -180,7 +180,7 @@ body {
   padding-top: 1em;
   border-radius: 15px;
   padding: 1em;
-  max-height: 15em;
+  max-height: 14em;
   overflow: auto;
 }
 
@@ -289,9 +289,8 @@ h4 {
 
 .assignment {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
-  max-height: 20em;
   overflow: auto;
   gap: 1em;
   padding-top: 1em;
@@ -302,8 +301,13 @@ h4 {
 }
 
 .assignment-info {
-  width: 60%;
   overflow: auto;
+}
+
+.assignment-info p {
+  background-color: var(--aliceblue);
+  padding: 0.5em;
+  border-radius: 15px;
 }
 
 .assignment ul svg {
@@ -312,7 +316,7 @@ h4 {
 }
 
 .assignment-files {
-  width: 40%;
+  width: 30%;
 }
 
 .assignment-files h3 {
@@ -328,6 +332,11 @@ h4 {
   display: grid;
   gap: 1em;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  background: var(--aliceblue);
+  border-radius: 15px;
+  padding: 0.5em;
+  max-height: 20em;
+  overflow: auto;
 }
 
 .assignment-files ul li {
@@ -356,6 +365,7 @@ h4 {
 
 .assignment-file-form {
   width: 30%;
+  align-items: start;
 }
 
 .assignment-file-form input {
