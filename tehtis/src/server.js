@@ -34,7 +34,7 @@ app.use(
       secure: false, // vaihdetaan TRUE, jos HTTPS
       httpOnly: true,
       sameSite: "lax", // perehdy TÄHÄN
-      maxAge: 60 * 60 * 1000, // tunti, kunnes sessio vanhenee
+      maxAge: 5 * 60 * 60 * 1000, // 5 tuntia, kunnes sessio vanhenee
     },
   })
 );
@@ -113,6 +113,79 @@ db.prepare(
   )
 `
 ).run();
+
+// luodaan taulu tehtäväpalautuksille
+db.prepare(
+  `
+  CREATE TABLE IF NOT EXISTS submissions (
+    id INTEGER PRIMARY KEY, 
+    description TEXT,
+    state TEXT,
+    studentId INTEGER,
+    firstname TEXT,
+    lastname TEXT,
+    filename TEXT, 
+    path TEXT, 
+    uploadedBy INTEGER, 
+    assignmentId INTEGER,
+    FOREIGN KEY(uploadedBy) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY(assignmentId) REFERENCES assignments(id) ON DELETE CASCADE
+  )
+`
+).run();
+
+// lisätään uusi tehtäväpalautus
+app.post("/submit-assignment", upload.single("file"), (req, res) => {
+  const { assignmentId, description, firstname, lastname, studentId } =
+    req.body;
+  const userId = req.session.userId; // Ensure user is logged in
+
+  let filename = null;
+  let filepath = null;
+
+  if (req.file) {
+    filename = req.file.filename;
+    filepath = `uploads/${filename}`;
+  }
+
+  db.prepare(
+    "INSERT INTO submissions (description, state, firstname, lastname, studentId, filename, path, uploadedBy, assignmentId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+  ).run(
+    description,
+    "submitted",
+    firstname,
+    lastname,
+    studentId,
+    filename,
+    filepath,
+    userId,
+    assignmentId
+  );
+
+  res.json({ message: "Assignment submitted successfully", filepath });
+});
+
+// muokataan olemassa olevaa tehtäväpalautusta
+app.post("/update-submission/:id", (req, res) => {
+  const { id } = req.params;
+  const { description } = req.body;
+
+  const result = db
+    .prepare("UPDATE submissions SET description = ? WHERE id = ?")
+    .run(description, id);
+
+  res.json({ success: result.changes > 0 });
+});
+
+// haetaan tehtävän palautukset
+app.get("/submissions/:assignmentId", (req, res) => {
+  const { assignmentId } = req.params;
+  const submissions = db
+    .prepare("SELECT * FROM submissions WHERE assignmentId = ?")
+    .all(assignmentId);
+
+  res.json(submissions);
+});
 
 // luodaan testikäyttäjä, jos sitä ei ole olemassa
 const testUser = db

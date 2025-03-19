@@ -11,6 +11,17 @@ import { useAuth } from "../context/AuthContext";
 import { defaultStyles, FileIcon } from "react-file-icon";
 import { MdDeleteForever } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import { AddSubmissionForm } from "./AddSubmissionForm";
+import { EditSubmissionForm } from "./EditSubmissionForm";
+import { h3 } from "framer-motion/client";
+
+type Submission = {
+  id: number;
+  studentId: number;
+  firstname: string;
+  lastname: string;
+  description: string;
+};
 
 export const CourseComponent = ({
   course,
@@ -50,7 +61,7 @@ export const CourseComponent = ({
   deleteAssignment: (id: number) => void;
 }) => {
   interface ImportMetaEnv {
-    readonly VITE_API_URL: string;
+    readonly VITE_URL: string;
     // add more env variables here if needed
   }
 
@@ -77,8 +88,6 @@ export const CourseComponent = ({
     setToggleEdit(!toggleEdit);
   };
 
-  console.log("editorContent: ", editorContent);
-
   // tallennetaan uusi muokattu kuvaus
   const saveNewDescription = async () => {
     try {
@@ -96,7 +105,6 @@ export const CourseComponent = ({
         }
       );
       const data = await response.json();
-      console.log("data: ", data);
     } catch (error) {
       console.error("Error updating course description", error);
     }
@@ -124,12 +132,67 @@ export const CourseComponent = ({
         }
       );
       const data = await response.json();
-      console.log("data: ", data);
+
       navigate("/dashboard");
     } catch (error) {
       console.error("Error deleting course", error);
     }
   };
+
+  const [addSumbissionBox, setAddSubmissionBox] = useState(false);
+
+  const toggleAddSubmissionBox = () => {
+    setAddSubmissionBox(!addSumbissionBox);
+  };
+
+  const [currentAssignmentId, setCurrentAssignmentId] = useState(0);
+
+  /*// haetaan tehtävän palautukset
+app.get("/submissions/:assignmentId", (req, res) => {
+  const { assignmentId } = req.params;
+  const submissions = db
+    .prepare("SELECT * FROM submissions WHERE assignmentId = ?")
+    .all(assignmentId);
+
+  res.json(submissions);
+}); */
+
+  const [editBox, setEditBox] = useState(false);
+
+  const toggleEditBox = () => {
+    setEditBox(!editBox);
+  };
+
+  const getSubmissionsForAssignment = async (assignmentId: number) => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_URL}/submissions/${assignmentId}`
+      );
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error getting submissions for assignment", error);
+    }
+  };
+
+  const [submissions, setSubmissions] = useState<
+    { id: number; submissions: Submission[] }[]
+  >([]);
+
+  useEffect(() => {
+    const fetchSubmissions = async () => {
+      const submissionsData = await Promise.all(
+        assignments.map(async (assignment) => {
+          const data = await getSubmissionsForAssignment(assignment.id);
+
+          return { id: assignment.id, submissions: data };
+        })
+      );
+      setSubmissions(submissionsData);
+    };
+
+    fetchSubmissions();
+  }, [assignments]);
 
   return (
     <motion.div
@@ -179,7 +242,11 @@ export const CourseComponent = ({
               {/* näytetään editorilla kirjoitettu sisältö */}
               {!toggleEdit && (
                 <div className="saved-content">
-                  <div dangerouslySetInnerHTML={{ __html: editorContent }} />
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: editorContent,
+                    }}
+                  />
                 </div>
               )}
             </div>
@@ -277,11 +344,13 @@ export const CourseComponent = ({
                 <h2>
                   <strong>{assignment.title}</strong>
                 </h2>
-                <p>
+                <div className="assignment-desc">
                   <div
-                    dangerouslySetInnerHTML={{ __html: assignment.description }}
+                    dangerouslySetInnerHTML={{
+                      __html: assignment.description,
+                    }}
                   />
-                </p>
+                </div>
               </div>
 
               {assignmentFiles[assignment.id]?.length > 0 && (
@@ -356,10 +425,131 @@ export const CourseComponent = ({
                   <p>Poista</p>
                 </button>
               )}
+              {(user?.role === "teacher" || user?.role === "student") &&
+                submissions.length > 0 && (
+                  <>
+                    {(submissions.find((item) => item.id === assignment.id)
+                      ?.submissions.length || 0) > 0 && (
+                      <h3>
+                        {user?.role === "teacher"
+                          ? "Palautukset"
+                          : "Oma palautus"}
+                      </h3>
+                    )}
+                    <ul style={{ listStyle: "none", padding: 0 }}>
+                      {(
+                        submissions.find((item) => item.id === assignment.id)
+                          ?.submissions || []
+                      )
+                        .filter((submission) => {
+                          // If user is a student, show only their submission
+                          if (user?.role === "student") {
+                            return submission.studentId === user.id;
+                          }
+                          // If teacher, show all submissions
+                          return true;
+                        })
+                        .map((submission) => (
+                          <li key={submission.id}>
+                            <h3>
+                              <span
+                                style={{
+                                  fontStyle: "italic",
+                                  paddingLeft: "0.1em",
+                                }}
+                              >
+                                {submission.firstname} {submission.lastname}
+                              </span>
+                            </h3>
+                            <div
+                              style={{
+                                background: "var(--aliceblue)",
+                                padding: "0.5em",
+                                borderRadius: "15px",
+                              }}
+                              dangerouslySetInnerHTML={{
+                                __html: submission.description,
+                              }}
+                            />
+                            <div></div>
+                          </li>
+                        ))}
+                    </ul>
+                  </>
+                )}
+
+              {user?.role === "student" &&
+                (() => {
+                  const assignmentSubmissions =
+                    submissions.find((item) => item.id === assignment.id)
+                      ?.submissions || [];
+
+                  const hasSubmitted = assignmentSubmissions.some(
+                    (submission) => submission.studentId === user.id
+                  );
+
+                  return !hasSubmitted ? (
+                    <button
+                      style={{
+                        alignSelf: "start",
+                        padding: "0.5em",
+                        background: "var(--lightgreen)",
+                      }}
+                      type="button"
+                      onClick={() => {
+                        toggleAddSubmissionBox();
+                        setCurrentAssignmentId(assignment.id);
+                      }}
+                    >
+                      <p>Lisää palautus</p>
+                    </button>
+                  ) : (
+                    <button
+                      style={{
+                        alignSelf: "start",
+                        padding: "0.5em",
+                        background: "var(--lightgreen)",
+                      }}
+                      type="button"
+                      onClick={() => {
+                        toggleEditBox();
+                        setCurrentAssignmentId(assignment.id);
+                      }}
+                    >
+                      <p>Muokkaa palautusta</p>
+                    </button>
+                  );
+                })()}
             </div>
           </li>
         ))}
       </ul>
+
+      {addSumbissionBox && (
+        <AddSubmissionForm
+          assignmentId={currentAssignmentId}
+          toggleSubmissionBox={toggleAddSubmissionBox}
+        />
+      )}
+
+      {editBox &&
+        (() => {
+          const submission = submissions
+            .find((item) => item.id === currentAssignmentId)
+            ?.submissions.find(
+              (submission) => submission.studentId === user?.id
+            );
+
+          if (!submission?.id) return null;
+
+          return (
+            <EditSubmissionForm
+              submissionId={submission.id}
+              description={submission.description || ""}
+              toggleEditBox={toggleEditBox}
+            />
+          );
+        })()}
     </motion.div>
   );
 };

@@ -2,6 +2,7 @@ import React from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Heading from "@tiptap/extension-heading";
+import Placeholder from "@tiptap/extension-placeholder";
 import "../style/TextEditor.css";
 
 interface TextEditorProps {
@@ -14,7 +15,11 @@ export const TextEditorComponent: React.FC<TextEditorProps> = ({
   setContent,
 }) => {
   const editor = useEditor({
-    extensions: [StarterKit, Heading.configure({ levels: [1, 2, 3] })],
+    extensions: [
+      StarterKit,
+      Heading.configure({ levels: [1, 2, 3] }),
+      Placeholder.configure({ placeholder: "Kirjoita tähän..." }),
+    ],
     content: content, // Initialize with saved content
     onUpdate: ({ editor }) => {
       setContent(editor.getHTML()); // Save content in state
@@ -84,13 +89,13 @@ export const TextEditorComponent: React.FC<TextEditorProps> = ({
           type="button"
           onClick={() => editor.chain().focus().undo().run()}
         >
-          ↩ Undo
+          ↩
         </button>
         <button
           type="button"
           onClick={() => editor.chain().focus().redo().run()}
         >
-          ↪ Redo
+          ↪
         </button>
       </div>
 

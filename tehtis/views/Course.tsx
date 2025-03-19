@@ -21,7 +21,7 @@ export const Course = () => {
     try {
       const response = await fetch(`http://localhost:3000/course-info/${id}`);
       const data = await response.json();
-      console.log(data);
+
       setCourse(data);
     } catch (error) {
       console.error("Error fetching course info", error);
@@ -34,9 +34,8 @@ export const Course = () => {
         `http://localhost:3000/course-members/${id}`
       );
       const data = await response.json();
-      console.log("testii: ", data);
+
       setMembers(data);
-      console.log("members: ", members);
     } catch (error) {
       console.error("Error fetching course members", error);
     }
@@ -102,7 +101,6 @@ export const Course = () => {
       const data = await response.json();
       alert("Tiedosto lähetetty onnistuneesti!");
       getCourseFiles(id!);
-      console.log(data);
     } catch (error) {
       console.error("Error uploading file", error);
       alert("Tiedoston lähetys epäonnistui!");
@@ -116,7 +114,6 @@ export const Course = () => {
       const response = await fetch(`http://localhost:3000/files/course/${id}`);
       const data = await response.json();
       setCourseFiles(data);
-      console.log(data);
     } catch (error) {
       console.error("Error fetching course files", error);
     }
@@ -159,7 +156,6 @@ export const Course = () => {
         `http://localhost:3000/files/assignment/${assignmentId}`
       );
       const data = await response.json();
-      console.log("Fetched files for assignment", assignmentId, data);
 
       setAssignmentFiles((prev) => ({
         ...prev,
@@ -174,7 +170,6 @@ export const Course = () => {
     assignments.forEach((assignment) => {
       getAssignmentFiles(assignment.id);
     });
-    console.log("assignmentFiles: ", assignmentFiles);
   }, [assignments]);
 
   const addFileToAssignment = async (
@@ -200,7 +195,7 @@ export const Course = () => {
       }
 
       const data = await response.json();
-      console.log(data);
+
       getAssignmentFiles(assignmentId);
       alert("Tiedosto lähetetty onnistuneesti!");
     } catch (error) {
