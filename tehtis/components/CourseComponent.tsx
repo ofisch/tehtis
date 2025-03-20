@@ -184,7 +184,7 @@ app.get("/submissions/:assignmentId", (req, res) => {
       const submissionsData = await Promise.all(
         assignments.map(async (assignment) => {
           const data = await getSubmissionsForAssignment(assignment.id);
-
+          console.log(`submissions for assignment ${assignment.title}`, data);
           return { id: assignment.id, submissions: data };
         })
       );
@@ -193,6 +193,69 @@ app.get("/submissions/:assignmentId", (req, res) => {
 
     fetchSubmissions();
   }, [assignments]);
+
+  const getSubmissionFiles = async (submissionId: number) => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_URL}/files/submission/${submissionId}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch files");
+      }
+
+      const data = await response.json();
+      console.log("Files for submission", submissionId, data);
+      return data;
+    } catch (error) {
+      console.error("Error getting submission files", error);
+      return []; // return an empty array or appropriate fallback
+    }
+  };
+
+  const [submissionFiles, setSubmissionFiles] = useState<{
+    [submissionId: number]: any[];
+  }>({});
+
+  useEffect(() => {
+    if (!submissions || submissions.length === 0) return;
+
+    const fetchSubmissionFiles = async () => {
+      try {
+        const filesArray = await Promise.all(
+          submissions
+            .map((item) => item.submissions)
+            .flat()
+            .map(async (submission) => {
+              const files = await getSubmissionFiles(submission.id);
+              return { [submission.id]: files };
+            })
+        );
+
+        // Merge array of objects into a single object
+        const filesObject = filesArray.reduce((acc, curr) => {
+          return { ...acc, ...curr };
+        }, {});
+
+        setSubmissionFiles(filesObject);
+
+        console.log("Submission files object", filesObject);
+      } catch (error) {
+        console.error("Error fetching submission files", error);
+      }
+    };
+
+    fetchSubmissionFiles();
+  }, [submissions]);
+
+  const [openSubmissionIds, setOpenSubmissionIds] = useState<number[]>([]);
+
+  const toggleSubmission = (submissionId: number) => {
+    setOpenSubmissionIds((prev) =>
+      prev.includes(submissionId)
+        ? prev.filter((id) => id !== submissionId)
+        : [...prev, submissionId]
+    );
+  };
 
   return (
     <motion.div
@@ -436,7 +499,15 @@ app.get("/submissions/:assignmentId", (req, res) => {
                           : "Oma palautus"}
                       </h3>
                     )}
-                    <ul style={{ listStyle: "none", padding: 0 }}>
+                    <ul
+                      style={{
+                        listStyle: "none",
+                        padding: 0,
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "1em",
+                      }}
+                    >
                       {(
                         submissions.find((item) => item.id === assignment.id)
                           ?.submissions || []
@@ -449,31 +520,123 @@ app.get("/submissions/:assignmentId", (req, res) => {
                           // If teacher, show all submissions
                           return true;
                         })
-                        .map((submission) => (
-                          <li key={submission.id}>
-                            <h3>
-                              <span
-                                style={{
-                                  fontStyle: "italic",
-                                  paddingLeft: "0.1em",
-                                }}
-                              >
-                                {submission.firstname} {submission.lastname}
-                              </span>
-                            </h3>
-                            <div
+                        .map((submission) => {
+                          const isOpen = openSubmissionIds.includes(
+                            submission.id
+                          );
+                          return (
+                            <li
+                              key={submission.id}
+                              className={`submission-item ${
+                                isOpen ? "open" : "closed"
+                              }`}
                               style={{
                                 background: "var(--aliceblue)",
                                 padding: "0.5em",
                                 borderRadius: "15px",
+                                width: "fit-content",
                               }}
-                              dangerouslySetInnerHTML={{
-                                __html: submission.description,
-                              }}
-                            />
-                            <div></div>
-                          </li>
-                        ))}
+                            >
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                  alignItems: "center",
+                                  width: "fit-content",
+                                  cursor: "pointer",
+                                }}
+                                onClick={() => toggleSubmission(submission.id)}
+                              >
+                                <h3 style={{ margin: 0 }}>
+                                  {submission.firstname} {submission.lastname}
+                                </h3>
+                                <span
+                                  style={{
+                                    transform: isOpen
+                                      ? "rotate(90deg)"
+                                      : "rotate(0deg)",
+                                    transition: "transform 0.2s ease",
+                                    paddingLeft: ".5em",
+                                    scale: 1.3,
+                                    color: "var(--black)",
+                                  }}
+                                >
+                                  ➤
+                                </span>
+                              </div>
+
+                              {isOpen && (
+                                <div
+                                  className="submission-content"
+                                  style={{
+                                    marginTop: "1em",
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      background: "white",
+                                      borderRadius: "15px",
+                                      padding: "1em",
+                                      boxShadow: " 0 0 5px rgba(0, 0, 0, 0.1)",
+                                    }}
+                                    dangerouslySetInnerHTML={{
+                                      __html: submission.description,
+                                    }}
+                                  />
+
+                                  <div>
+                                    <h4
+                                      style={{
+                                        paddingLeft: ".2em",
+                                        paddingTop: ".5em",
+                                      }}
+                                    >
+                                      Palautuksen liitetiedostot
+                                    </h4>
+                                    <ul className="submission-files">
+                                      {submissionFiles[submission.id]?.map(
+                                        (file) => {
+                                          const extension = file.filename
+                                            .split(".")
+                                            .pop() as string;
+                                          const style =
+                                            defaultStyles[
+                                              extension as keyof typeof defaultStyles
+                                            ] || {};
+
+                                          return (
+                                            <li
+                                              className="submission-file"
+                                              key={file.id}
+                                            >
+                                              <FileIcon
+                                                extension={extension}
+                                                {...style}
+                                              />
+                                              <a
+                                                href={`${
+                                                  import.meta.env.VITE_URL
+                                                }/${file.path}`}
+                                                download
+                                              >
+                                                {file.filename.length > 5
+                                                  ? `${file.filename.substring(
+                                                      0,
+                                                      7
+                                                    )}...`
+                                                  : file.filename}
+                                              </a>
+                                            </li>
+                                          );
+                                        }
+                                      )}
+                                    </ul>
+                                  </div>
+                                </div>
+                              )}
+                            </li>
+                          );
+                        })}
                     </ul>
                   </>
                 )}

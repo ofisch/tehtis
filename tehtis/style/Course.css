@@ -308,6 +308,7 @@ h4 {
   background-color: var(--aliceblue);
   padding: 0.5em;
   border-radius: 15px;
+  width: fit-content;
 }
 
 .assignment ul svg {
@@ -381,4 +382,17 @@ h4 {
   padding: 1em;
   font-size: 1em;
   cursor: pointer;
+}
+
+.submission-files {
+  display: flex;
+  list-style: none;
+  padding: 0;
+}
+
+.submission-file {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5em;
 }

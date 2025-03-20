@@ -124,45 +124,60 @@ db.prepare(
     studentId INTEGER,
     firstname TEXT,
     lastname TEXT,
-    filename TEXT, 
-    path TEXT, 
-    uploadedBy INTEGER, 
     assignmentId INTEGER,
-    FOREIGN KEY(uploadedBy) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY(assignmentId) REFERENCES assignments(id) ON DELETE CASCADE
   )
 `
 ).run();
 
+// luodaan taulu tehtäväpalautusten tiedostoille
+db.prepare(
+  `
+  CREATE TABLE IF NOT EXISTS submission_files (
+    id INTEGER PRIMARY KEY, 
+    filename TEXT, 
+    path TEXT, 
+    uploadedBy INTEGER, 
+    submissionId INTEGER,
+    FOREIGN KEY(uploadedBy) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY(submissionId) REFERENCES submissions(id) ON DELETE CASCADE
+  )
+`
+).run();
+
 // lisätään uusi tehtäväpalautus
-app.post("/submit-assignment", upload.single("file"), (req, res) => {
+app.post("/submit-assignment", upload.none(), (req, res) => {
   const { assignmentId, description, firstname, lastname, studentId } =
     req.body;
-  const userId = req.session.userId; // Ensure user is logged in
 
-  let filename = null;
-  let filepath = null;
-
-  if (req.file) {
-    filename = req.file.filename;
-    filepath = `uploads/${filename}`;
-  }
-
-  db.prepare(
-    "INSERT INTO submissions (description, state, firstname, lastname, studentId, filename, path, uploadedBy, assignmentId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
-  ).run(
+  console.log({
+    assignmentId,
     description,
-    "submitted",
     firstname,
     lastname,
     studentId,
-    filename,
-    filepath,
-    userId,
-    assignmentId
-  );
+  });
 
-  res.json({ message: "Assignment submitted successfully", filepath });
+  const result = db
+    .prepare(
+      `
+    INSERT INTO submissions (description, state, firstname, lastname, studentId, assignmentId)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `
+    )
+    .run(
+      description,
+      "submitted",
+      firstname,
+      lastname,
+      studentId,
+      assignmentId
+    );
+
+  res.json({
+    message: "Submission added",
+    submissionId: result.lastInsertRowid,
+  });
 });
 
 // muokataan olemassa olevaa tehtäväpalautusta
@@ -185,6 +200,39 @@ app.get("/submissions/:assignmentId", (req, res) => {
     .all(assignmentId);
 
   res.json(submissions);
+});
+
+// lisätään tiedosto tehtäväpalautukselle
+app.post(
+  "/upload/submission/:submissionId",
+  upload.single("file"),
+  (req, res) => {
+    const { submissionId } = req.params;
+    const userId = req.session.userId; // Ensure user is logged in
+
+    if (!req.file) {
+      return res.status(400).json({ error: "No file uploaded" });
+    }
+
+    const filename = req.file.filename;
+    const filepath = `uploads/${filename}`;
+
+    db.prepare(
+      "INSERT INTO submission_files (filename, path, uploadedBy, submissionId) VALUES (?, ?, ?, ?)"
+    ).run(filename, filepath, userId, submissionId);
+
+    res.json({ message: "File uploaded successfully", filepath });
+  }
+);
+
+// haetaan tehtäväpalautuksen tiedostot
+app.get("/files/submission/:submissionId", (req, res) => {
+  const { submissionId } = req.params;
+  const files = db
+    .prepare("SELECT * FROM submission_files WHERE submissionId = ?")
+    .all(submissionId);
+
+  res.json(files);
 });
 
 // luodaan testikäyttäjä, jos sitä ei ole olemassa

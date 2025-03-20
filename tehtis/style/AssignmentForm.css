@@ -459,3 +459,55 @@ button:hover {
   background: var(--emerald) !important;
   font-style: bold !important;
 }
+
+.submissionform {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  align-self: flex-start;
+  padding: 2em;
+  gap: 1em;
+  width: 25em;
+  background: var(--white);
+  border-radius: 10px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+}
+
+.file-container {
+  margin-top: 6em;
+  border-radius: 15px;
+  background-color: var(--aliceblue);
+}
+
+.file-container ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1em;
+  padding: 1em;
+}
+
+.file-container ul li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.file-container ul li button {
+  background-color: var(--bittersweet);
+}
+
+.file-container svg {
+  width: 45px;
+  height: 45px;
+}
+
+.file-label {
+  padding: 0;
+}
