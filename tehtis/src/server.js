@@ -225,6 +225,27 @@ app.post(
   }
 );
 
+// poistetaan tiedosto tehtäväpalautuksesta
+app.delete("/delete-submission-file/:fileId", (req, res) => {
+  const { fileId } = req.params;
+  const file = db
+    .prepare("SELECT * FROM submission_files WHERE id = ?")
+    .get(fileId);
+
+  if (!file) {
+    return res.status(404).json({ error: "File not found" });
+  }
+
+  fs.unlink(file.path, (err) => {
+    if (err) {
+      return res.status(500).json({ error: "Failed to delete file" });
+    }
+
+    db.prepare("DELETE FROM submission_files WHERE id = ?").run(fileId);
+    res.json({ message: "File deleted successfully" });
+  });
+});
+
 // haetaan tehtäväpalautuksen tiedostot
 app.get("/files/submission/:submissionId", (req, res) => {
   const { submissionId } = req.params;

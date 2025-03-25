@@ -396,3 +396,12 @@ h4 {
   align-items: center;
   padding: 0.5em;
 }
+
+.submission-file-form {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  gap: 1em;
+  margin-top: 1em;
+  align-items: flex-start;
+}

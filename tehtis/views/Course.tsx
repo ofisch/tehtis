@@ -99,7 +99,6 @@ export const Course = () => {
       }
 
       const data = await response.json();
-      alert("Tiedosto lähetetty onnistuneesti!");
       getCourseFiles(id!);
     } catch (error) {
       console.error("Error uploading file", error);
@@ -138,7 +137,7 @@ export const Course = () => {
       if (!response.ok) {
         throw new Error(`Error: ${response.status} ${response.statusText}`);
       }
-      alert("Tiedosto poistettu onnistuneesti!");
+
       getCourseFiles(id!);
     } catch (error) {
       console.error("Error deleting file", error);

@@ -257,6 +257,68 @@ app.get("/submissions/:assignmentId", (req, res) => {
     );
   };
 
+  const uploadFile = async (submissionId: number) => {
+    const fileInput = document.querySelector('input[type="file"]');
+    if (!fileInput) return;
+
+    const file = (fileInput as HTMLInputElement).files?.[0];
+    if (!file) return;
+
+    const fileData = new FormData();
+    fileData.append("file", file);
+
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_URL}/upload/submission/${submissionId}`,
+        {
+          method: "POST",
+          body: fileData,
+        }
+      );
+
+      const result = await response.json();
+
+      if (result.error) {
+        throw new Error(result.error);
+      }
+
+      console.log(`File ${file.name} uploaded successfully`);
+
+      const files = await getSubmissionFiles(submissionId);
+      setSubmissionFiles((prev) => ({
+        ...prev,
+        [submissionId]: files,
+      }));
+    } catch (error) {
+      console.error(`Error uploading file ${file.name}:`, error);
+      alert(`Tiedoston ${file.name} lataus epäonnistui!`);
+    }
+  };
+
+  const deleteSubmissionFile = async (fileId: number, submissionId: number) => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_URL}/delete-submission-file/${fileId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+
+      const files = await getSubmissionFiles(submissionId);
+      setSubmissionFiles((prev) => ({
+        ...prev,
+        [submissionId]: files,
+      }));
+    } catch (error) {
+      console.error("Error deleting file", error);
+      alert("Tiedoston poisto epäonnistui!");
+    }
+  };
+
   return (
     <motion.div
       className="course-content"
@@ -374,7 +436,11 @@ app.get("/submissions/:assignmentId", (req, res) => {
               )}
             </div>
             {user?.role === "teacher" && (
-              <form className="file-form" onSubmit={onFileSubmit}>
+              <form
+                style={{ padding: "1em" }}
+                className="file-form"
+                onSubmit={onFileSubmit}
+              >
                 <label className="file-label">
                   <h3>Lisää tiedosto kursille</h3>
                   <input type="file" name="file" required />
@@ -387,10 +453,12 @@ app.get("/submissions/:assignmentId", (req, res) => {
             <ul className="course-members">
               <h3>Osallistujat</h3>
               {members.map((member) => (
-                <li className="member" key={member.id}>
+                <li style={{ gap: "0" }} className="member" key={member.id}>
                   <h4 className="member-name">{`${member.firstname} ${member.lastname}`}</h4>
 
-                  <p className="member-email">{member.email}</p>
+                  <p style={{ marginBottom: "0" }} className="member-email">
+                    {member.email}
+                  </p>
                 </li>
               ))}
             </ul>
@@ -471,23 +539,7 @@ app.get("/submissions/:assignmentId", (req, res) => {
                   </label>
                 </form>
               )}
-              {user?.role === "teacher" && (
-                <button
-                  style={{
-                    alignSelf: "end",
-                    padding: "0.5em",
-                    background: "var(--bittersweet)",
-                  }}
-                  type="button"
-                  onClick={() => deleteAssignment(assignment.id)}
-                >
-                  <span>
-                    <MdDeleteForever />
-                  </span>
 
-                  <p>Poista</p>
-                </button>
-              )}
               {(user?.role === "teacher" || user?.role === "student") &&
                 submissions.length > 0 && (
                   <>
@@ -585,52 +637,101 @@ app.get("/submissions/:assignmentId", (req, res) => {
                                   />
 
                                   <div>
-                                    <h4
-                                      style={{
-                                        paddingLeft: ".2em",
-                                        paddingTop: ".5em",
-                                      }}
-                                    >
-                                      Palautuksen liitetiedostot
-                                    </h4>
-                                    <ul className="submission-files">
-                                      {submissionFiles[submission.id]?.map(
-                                        (file) => {
-                                          const extension = file.filename
-                                            .split(".")
-                                            .pop() as string;
-                                          const style =
-                                            defaultStyles[
-                                              extension as keyof typeof defaultStyles
-                                            ] || {};
+                                    {submissionFiles[submission.id]?.length >
+                                      0 && (
+                                      <h4
+                                        style={{
+                                          paddingLeft: ".2em",
+                                          paddingTop: ".5em",
+                                        }}
+                                      >
+                                        Palautuksen liitetiedostot
+                                      </h4>
+                                    )}
 
-                                          return (
-                                            <li
-                                              className="submission-file"
-                                              key={file.id}
-                                            >
-                                              <FileIcon
-                                                extension={extension}
-                                                {...style}
-                                              />
-                                              <a
-                                                href={`${
-                                                  import.meta.env.VITE_URL
-                                                }/${file.path}`}
-                                                download
+                                    <ul className="submission-files">
+                                      {submissionFiles[submission.id] &&
+                                        submissionFiles[submission.id].map(
+                                          (file) => {
+                                            if (!file || !file.filename)
+                                              return null;
+
+                                            const extension =
+                                              file.filename
+                                                .split(".")
+                                                .pop()
+                                                ?.toLowerCase() || "";
+                                            const style =
+                                              defaultStyles[
+                                                extension as keyof typeof defaultStyles
+                                              ] || {};
+
+                                            return (
+                                              <li
+                                                className="submission-file"
+                                                key={file.id}
                                               >
-                                                {file.filename.length > 5
-                                                  ? `${file.filename.substring(
-                                                      0,
-                                                      7
-                                                    )}...`
-                                                  : file.filename}
-                                              </a>
-                                            </li>
-                                          );
-                                        }
-                                      )}
+                                                <FileIcon
+                                                  extension={extension}
+                                                  {...style}
+                                                />
+                                                <a
+                                                  href={`${
+                                                    import.meta.env.VITE_URL
+                                                  }/${file.path}`}
+                                                  download
+                                                >
+                                                  {file.filename.length > 5
+                                                    ? `${file.filename.substring(
+                                                        0,
+                                                        7
+                                                      )}...`
+                                                    : file.filename}
+                                                </a>
+                                                {user?.role === "student" && (
+                                                  <button
+                                                    onClick={() =>
+                                                      deleteSubmissionFile(
+                                                        file.id,
+                                                        submission.id
+                                                      )
+                                                    }
+                                                    style={{
+                                                      backgroundColor:
+                                                        "var(--bittersweet)",
+                                                      padding: "0.5em",
+                                                    }}
+                                                  >
+                                                    Poista
+                                                  </button>
+                                                )}
+                                              </li>
+                                            );
+                                          }
+                                        )}
                                     </ul>
+                                    {user?.role === "student" && (
+                                      <div className="submission-file-form">
+                                        <form
+                                          onSubmit={(event) => {
+                                            event.preventDefault();
+                                            uploadFile(submission.id);
+                                          }}
+                                        >
+                                          <label>
+                                            <h4>Liitä tiedosto palautukseen</h4>
+                                            <input
+                                              type="file"
+                                              name="file"
+                                              required
+                                            />
+                                            <button type="submit">
+                                              Lähetä
+                                            </button>
+                                          </label>
+                                        </form>
+                                      </div>
+                                    )}
                                   </div>
                                 </div>
                               )}
@@ -638,6 +739,23 @@ app.get("/submissions/:assignmentId", (req, res) => {
                           );
                         })}
                     </ul>
+                    {user?.role === "teacher" && (
+                      <button
+                        style={{
+                          alignSelf: "end",
+                          padding: "0.5em",
+                          background: "var(--bittersweet)",
+                        }}
+                        type="button"
+                        onClick={() => deleteAssignment(assignment.id)}
+                      >
+                        <span>
+                          <MdDeleteForever />
+                        </span>
+
+                        <p>Poista tehtävä</p>
+                      </button>
+                    )}
                   </>
                 )}
 
@@ -708,6 +826,7 @@ app.get("/submissions/:assignmentId", (req, res) => {
           return (
             <EditSubmissionForm
               submissionId={submission.id}
+              submissionFiles={submissionFiles[submission.id] || []}
               description={submission.description || ""}
               toggleEditBox={toggleEditBox}
             />

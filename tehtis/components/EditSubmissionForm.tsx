@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { TextEditorComponent } from "./TextEditorComponent";
+import { FormTextEditorComponent } from "./FormTextEditorComponent";
+import { defaultStyles, FileIcon } from "react-file-icon";
+import { h4, li } from "framer-motion/client";
+import "../style/EditSubmissionForm.css";
 
 interface EditSubmissionFormProps {
   submissionId: number;
@@ -50,16 +53,16 @@ export const EditSubmissionForm = ({
   return (
     <>
       <div className="back-shadow">
-        <form onSubmit={handleSubmit} className="assignmentform">
+        <form onSubmit={handleSubmit} className="edit-submission-form">
           <h2>Muokkaa palautusta</h2>
 
-          <label>Kuvaus</label>
-          <div className="" style={{ height: "20em" }}>
-            <TextEditorComponent
+          <div className="" style={{ height: "15em" }}>
+            <FormTextEditorComponent
               content={newDescription}
               setContent={setNewDescription}
             />
           </div>
+
           <div className="buttons">
             <button
               className="cancel-button"
