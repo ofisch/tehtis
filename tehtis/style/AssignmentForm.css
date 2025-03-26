@@ -471,16 +471,14 @@ button:hover {
   align-self: flex-start;
   padding: 2em;
   gap: 1em;
-  width: 25em;
+  width: 35em;
   background: var(--white);
   border-radius: 10px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
 }
 
 .file-container {
-  margin-top: 6em;
-  border-radius: 15px;
-  background-color: var(--aliceblue);
+  margin-top: 11em;
 }
 
 .file-container ul {
@@ -489,8 +487,9 @@ button:hover {
   margin: 0;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1em;
-  padding: 1em;
+  max-height: 10em;
+  gap: 2em;
+  overflow-y: auto;
 }
 
 .file-container ul li {
@@ -510,4 +509,15 @@ button:hover {
 
 .file-label {
   padding: 0;
+}
+
+.submission-file-manager {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+}
+
+.add-submission-file-delete-icon {
+  width: 25px !important;
+  height: 25px !important;
 }

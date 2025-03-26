@@ -565,11 +565,11 @@ app.get("/submissions/:assignmentId", (req, res) => {
                           ?.submissions || []
                       )
                         .filter((submission) => {
-                          // If user is a student, show only their submission
+                          // jos käyttäjä on oppilas, näytetään vain omat palautukset
                           if (user?.role === "student") {
                             return submission.studentId === user.id;
                           }
-                          // If teacher, show all submissions
+                          // jos opettaja, näytetään kaikki palautukset
                           return true;
                         })
                         .map((submission) => {

@@ -5,6 +5,7 @@ import "../style/assignmentform.css";
 import { useAuth } from "../context/AuthContext";
 import { form } from "framer-motion/client";
 import { defaultStyles, FileIcon } from "react-file-icon";
+import { MdDeleteForever } from "react-icons/md";
 
 interface AddSubmissionFormProps {
   assignmentId: number;
@@ -108,76 +109,81 @@ export const AddSubmissionForm = ({
             Palautusta voi muokata lisäämisen jälkeen.
           </p>
 
-          <div style={{ maxHeight: "5em" }}>
+          <div style={{ maxHeight: "10em" }}>
             <FormTextEditorComponent
               content={description}
               setContent={setDescription}
             />
           </div>
 
-          {files.length > 0 && (
-            <div className="file-container">
-              <ul>
-                {files.length > 0 &&
-                  files.map((file, index) => {
-                    const extension = file.name.split(".").pop();
-                    const style =
-                      defaultStyles[extension as keyof typeof defaultStyles] ||
-                      {};
+          <div className="submission-file-manager">
+            {files.length > 0 ? (
+              <form className="file-form">
+                <label className="file-label">
+                  <h3>Liitä tiedosto palautukseen</h3>
+                  <input type="file" name="file" required />
+                  <button
+                    type="button"
+                    style={{ padding: "0.5em" }}
+                    onClick={addNewFile}
+                  >
+                    Lähetä
+                  </button>
+                </label>
+              </form>
+            ) : (
+              <form style={{ marginTop: "11em" }} className="file-form">
+                <label className="file-label">
+                  <h3>Liitä tiedosto palautukseen</h3>
+                  <input type="file" name="file" required />
+                  <button
+                    type="button"
+                    style={{ padding: "0.5em" }}
+                    onClick={addNewFile}
+                  >
+                    Lähetä
+                  </button>
+                </label>
+              </form>
+            )}
 
-                    return (
-                      <li>
-                        <FileIcon extension={extension} {...style} />
-                        <p>
-                          {" "}
-                          {file.name.length > 5
-                            ? `${file.name.substring(0, 7)}...`
-                            : file.name}
-                        </p>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setFiles(files.filter((_, i) => i !== index));
-                          }}
-                        >
-                          Poista
-                        </button>
-                      </li>
-                    );
-                  })}
-              </ul>
-            </div>
-          )}
+            {files.length > 0 && (
+              <div className="file-container">
+                <h4>Liitetiedostot</h4>
+                <ul>
+                  {files.length > 0 &&
+                    files.map((file, index) => {
+                      const extension = file.name.split(".").pop();
+                      const style =
+                        defaultStyles[
+                          extension as keyof typeof defaultStyles
+                        ] || {};
 
-          {files.length > 0 ? (
-            <form className="file-form">
-              <label className="file-label">
-                <h3>Liitä tiedosto palautukseen</h3>
-                <input type="file" name="file" required />
-                <button
-                  type="button"
-                  style={{ padding: "0.5em" }}
-                  onClick={addNewFile}
-                >
-                  Lähetä
-                </button>
-              </label>
-            </form>
-          ) : (
-            <form style={{ marginTop: "6em" }} className="file-form">
-              <label className="file-label">
-                <h3>Liitä tiedosto palautukseen</h3>
-                <input type="file" name="file" required />
-                <button
-                  type="button"
-                  style={{ padding: "0.5em" }}
-                  onClick={addNewFile}
-                >
-                  Lähetä
-                </button>
-              </label>
-            </form>
-          )}
+                      return (
+                        <li>
+                          <FileIcon extension={extension} {...style} />
+                          <p>
+                            {" "}
+                            {file.name.length > 5
+                              ? `${file.name.substring(0, 7)}...`
+                              : file.name}
+                          </p>
+                          <button
+                            type="button"
+                            style={{ padding: "0.5em" }}
+                            onClick={() => {
+                              setFiles(files.filter((_, i) => i !== index));
+                            }}
+                          >
+                            <MdDeleteForever className="add-submission-file-delete-icon" />
+                          </button>
+                        </li>
+                      );
+                    })}
+                </ul>
+              </div>
+            )}
+          </div>
 
           <div className="buttons">
             <button
