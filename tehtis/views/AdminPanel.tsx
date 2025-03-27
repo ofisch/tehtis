@@ -23,7 +23,9 @@ export const AdminPanel = () => {
     const searchForUsers = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/search-users/${encodeURIComponent(searchTerm)}`
+          `${import.meta.env.VITE_URL}/search-users/${encodeURIComponent(
+            searchTerm
+          )}`
         );
 
         if (!response.ok) {
@@ -44,7 +46,7 @@ export const AdminPanel = () => {
   const handleRoleChange = async (userId: string, newRole: string) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/update-role/${userId}`,
+        `${import.meta.env.VITE_URL}/update-role/${userId}`,
         {
           method: "POST",
           headers: {

@@ -9,12 +9,16 @@ interface EditSubmissionFormProps {
   submissionId: number;
   description: string;
   toggleEditBox: () => void;
+  submissionFiles: any[];
+  updateSubmissions: () => void;
 }
 
 export const EditSubmissionForm = ({
   submissionId,
   description,
   toggleEditBox,
+  submissionFiles,
+  updateSubmissions,
 }: EditSubmissionFormProps) => {
   const { user } = useAuth();
   const [newDescription, setNewDescription] = useState(description);
@@ -24,7 +28,7 @@ export const EditSubmissionForm = ({
 
     try {
       const response = await fetch(
-        `http://localhost:3000/update-submission/${submissionId}`,
+        `${import.meta.env.VITE_URL}/update-submission/${submissionId}`,
         {
           method: "POST",
           headers: {
@@ -42,7 +46,7 @@ export const EditSubmissionForm = ({
         throw new Error(result.error);
       }
 
-      alert("Palautus päivitetty onnistuneesti!");
+      updateSubmissions();
       toggleEditBox();
     } catch (error) {
       console.error("Error updating submission", error);
@@ -56,7 +60,7 @@ export const EditSubmissionForm = ({
         <form onSubmit={handleSubmit} className="edit-submission-form">
           <h2>Muokkaa palautusta</h2>
 
-          <div className="" style={{ height: "15em" }}>
+          <div className="" style={{ height: "15em", width: "100%" }}>
             <FormTextEditorComponent
               content={newDescription}
               setContent={setNewDescription}

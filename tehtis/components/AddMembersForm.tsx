@@ -41,7 +41,7 @@ export const AddMembersForm: React.FC<AddMembersFormProps> = ({
     const fetchMembers = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/course-members/${course.id}`
+          `${import.meta.env.VITE_URL}/course-members/${course.id}`
         );
 
         if (!response.ok) {
@@ -65,7 +65,9 @@ export const AddMembersForm: React.FC<AddMembersFormProps> = ({
     const searchForUsers = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/search-users/${encodeURIComponent(searchTerm)}`
+          `${import.meta.env.VITE_URL}/search-users/${encodeURIComponent(
+            searchTerm
+          )}`
         );
 
         if (!response.ok) {
@@ -103,7 +105,7 @@ export const AddMembersForm: React.FC<AddMembersFormProps> = ({
 
     try {
       const response = await fetch(
-        "http://localhost:3000/add-member-to-course",
+        `${import.meta.env.VITE_URL}/add-member-to-course`,
         {
           method: "POST",
           headers: {

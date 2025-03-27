@@ -13,7 +13,8 @@ import { MdDeleteForever } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { AddSubmissionForm } from "./AddSubmissionForm";
 import { EditSubmissionForm } from "./EditSubmissionForm";
-import { h3 } from "framer-motion/client";
+import { MdOutlineDone } from "react-icons/md";
+import { h3, p } from "framer-motion/client";
 
 type Submission = {
   id: number;
@@ -21,6 +22,7 @@ type Submission = {
   firstname: string;
   lastname: string;
   description: string;
+  state: string;
 };
 
 export const CourseComponent = ({
@@ -194,6 +196,17 @@ app.get("/submissions/:assignmentId", (req, res) => {
     fetchSubmissions();
   }, [assignments]);
 
+  const updateSubmissions = async () => {
+    const submissionsData = await Promise.all(
+      assignments.map(async (assignment) => {
+        const data = await getSubmissionsForAssignment(assignment.id);
+        console.log(`submissions for assignment ${assignment.title}`, data);
+        return { id: assignment.id, submissions: data };
+      })
+    );
+    setSubmissions(submissionsData);
+  };
+
   const getSubmissionFiles = async (submissionId: number) => {
     try {
       const response = await fetch(
@@ -226,6 +239,7 @@ app.get("/submissions/:assignmentId", (req, res) => {
             .map((item) => item.submissions)
             .flat()
             .map(async (submission) => {
+              if (!submission) return {};
               const files = await getSubmissionFiles(submission.id);
               return { [submission.id]: files };
             })
@@ -319,6 +333,33 @@ app.get("/submissions/:assignmentId", (req, res) => {
     }
   };
 
+  // vaihdetaan palautuksen tilaa
+  const handleSubmissionStateChange = async (
+    submissionId: number,
+    newState: string
+  ) => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_URL}/update-submission-state/${submissionId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ state: newState }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update submission state");
+      }
+
+      updateSubmissions();
+    } catch (error) {
+      console.error("Error updating submission state", error);
+    }
+  };
+
   return (
     <motion.div
       className="course-content"
@@ -355,7 +396,10 @@ app.get("/submissions/:assignmentId", (req, res) => {
         )}
 
         <div className="course-subheader">
-          <div className="course-description">
+          <div
+            className="course-description"
+            style={user?.role === "student" ? { width: "70%" } : undefined}
+          >
             {/* tekstieditori */}
             {toggleEdit && (
               <TextEditorComponent
@@ -541,10 +585,10 @@ app.get("/submissions/:assignmentId", (req, res) => {
               )}
 
               {(user?.role === "teacher" || user?.role === "student") &&
-                submissions.length > 0 && (
+                (submissions ?? []).length > 0 && (
                   <>
                     {(submissions.find((item) => item.id === assignment.id)
-                      ?.submissions.length || 0) > 0 && (
+                      ?.submissions?.length || 0) > 0 && (
                       <h3>
                         {user?.role === "teacher"
                           ? "Palautukset"
@@ -602,6 +646,7 @@ app.get("/submissions/:assignmentId", (req, res) => {
                                 <h3 style={{ margin: 0 }}>
                                   {submission.firstname} {submission.lastname}
                                 </h3>
+
                                 <span
                                   style={{
                                     transform: isOpen
@@ -616,7 +661,83 @@ app.get("/submissions/:assignmentId", (req, res) => {
                                   ➤
                                 </span>
                               </div>
+                              {user?.role === "teacher" && (
+                                <>
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      flexDirection: "row",
+                                      justifyContent: "space-between",
+                                      alignItems: "center",
+                                      gap: ".5em",
+                                    }}
+                                  >
+                                    <p>Palautuksen tila: </p>
 
+                                    <select
+                                      style={{
+                                        fontSize: "1em",
+
+                                        padding: ".5em",
+
+                                        borderRadius: "15px",
+                                        border: "2px solid black",
+
+                                        width: "fit-content",
+                                        backgroundColor:
+                                          submission.state === "accepted"
+                                            ? "var(--lightgreen)"
+                                            : "var(--white)",
+                                        color:
+                                          submission.state === "accepted"
+                                            ? "var(--black)"
+                                            : "var(--black)",
+                                      }}
+                                      value={submission.state}
+                                      onChange={(event) =>
+                                        handleSubmissionStateChange(
+                                          submission.id,
+                                          event.target.value
+                                        )
+                                      }
+                                    >
+                                      <option value="submitted">
+                                        Palautettu
+                                      </option>
+                                      <option value="accepted">
+                                        Suoritettu
+                                      </option>
+                                    </select>
+                                  </div>
+                                </>
+                              )}
+                              {user?.role === "student" && (
+                                <p>
+                                  {submission.state === "accepted" ? (
+                                    <span
+                                      style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        fontSize: "1.1em",
+                                        background: "aliceblue",
+                                        padding: ".5em",
+                                        borderRadius: "15px",
+                                        fontWeight: "bold",
+                                        marginTop: ".5em",
+                                        width: "fit-content",
+                                      }}
+                                    >
+                                      <MdOutlineDone
+                                        style={{
+                                          scale: 0.7,
+                                          color: "var(--emerald)",
+                                        }}
+                                      />
+                                      Suoritettu
+                                    </span>
+                                  ) : null}
+                                </p>
+                              )}
                               {isOpen && (
                                 <div
                                   className="submission-content"
@@ -810,6 +931,7 @@ app.get("/submissions/:assignmentId", (req, res) => {
         <AddSubmissionForm
           assignmentId={currentAssignmentId}
           toggleSubmissionBox={toggleAddSubmissionBox}
+          updateSubmissions={updateSubmissions}
         />
       )}
 
@@ -829,6 +951,7 @@ app.get("/submissions/:assignmentId", (req, res) => {
               submissionFiles={submissionFiles[submission.id] || []}
               description={submission.description || ""}
               toggleEditBox={toggleEditBox}
+              updateSubmissions={updateSubmissions}
             />
           );
         })()}

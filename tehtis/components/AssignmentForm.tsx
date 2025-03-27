@@ -31,11 +31,14 @@ export const AssignmentForm: React.FC<AssignmentFormProps> = ({
     };
 
     try {
-      const response = await fetch("http://localhost:3000/add-assignment", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newAssignment),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_URL}/add-assignment`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newAssignment),
+        }
+      );
 
       const result = await response.json();
 

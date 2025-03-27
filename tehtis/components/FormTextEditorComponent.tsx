@@ -24,6 +24,11 @@ export const FormTextEditorComponent: React.FC<FormTextEditorProps> = ({
     onUpdate: ({ editor }) => {
       setContent(editor.getHTML()); // Save content in state
     },
+    editorProps: {
+      attributes: {
+        spellcheck: "false", // Disable spellcheck
+      },
+    },
   });
 
   if (!editor) return null;

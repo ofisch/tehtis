@@ -23,7 +23,7 @@ export const Login = () => {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const response = await fetch("http://localhost:3000/session", {
+        const response = await fetch(`${import.meta.env.VITE_URL}/session`, {
           method: "GET",
           credentials: "include",
         });
@@ -51,7 +51,7 @@ export const Login = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch("http://localhost:3000/users", {
+        const response = await fetch(`${import.meta.env.VITE_URL}/users`, {
           method: "GET",
           credentials: "include",
         });
@@ -82,7 +82,7 @@ export const Login = () => {
     e.preventDefault();
     startTransition(async () => {
       try {
-        const response = await fetch("http://localhost:3000/login", {
+        const response = await fetch(`${import.meta.env.VITE_URL}/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -121,7 +121,7 @@ export const Login = () => {
         const capitalize = (s: string) =>
           s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
 
-        const response = await fetch("http://localhost:3000/register", {
+        const response = await fetch(`${import.meta.env.VITE_URL}/register`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

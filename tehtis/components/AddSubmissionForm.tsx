@@ -10,11 +10,13 @@ import { MdDeleteForever } from "react-icons/md";
 interface AddSubmissionFormProps {
   assignmentId: number;
   toggleSubmissionBox: () => void;
+  updateSubmissions: () => void;
 }
 
 export const AddSubmissionForm = ({
   assignmentId,
   toggleSubmissionBox,
+  updateSubmissions,
 }: AddSubmissionFormProps) => {
   const { user } = useAuth();
   const [description, setDescription] = useState("");
@@ -43,7 +45,7 @@ export const AddSubmissionForm = ({
 
       try {
         const response = await fetch(
-          `http://localhost:3000/upload/submission/${submissionId}`,
+          `${import.meta.env.VITE_URL}/upload/submission/${submissionId}`,
           {
             method: "POST",
             body: fileData,
@@ -75,10 +77,13 @@ export const AddSubmissionForm = ({
     formData.append("studentId", user?.id?.toString() || "");
 
     try {
-      const response = await fetch("http://localhost:3000/submit-assignment", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_URL}/submit-assignment`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       const result = await response.json();
 
@@ -86,12 +91,13 @@ export const AddSubmissionForm = ({
         throw new Error(result.error);
       }
 
-      const submissionId = result.submissionId; // ✅ You'll need this!
+      const submissionId = result.submissionId; // tallennetaan submissionId muuttujaan
 
-      // Now upload the files after successful submission
+      // ladataan tiedostot palvelimelle
       await uploadFiles(submissionId);
 
-      alert("Palautus lisätty onnistuneesti!");
+      console.log("assignmentId", assignmentId);
+      updateSubmissions();
       toggleSubmissionBox();
     } catch (error) {
       console.error("Error adding submission", error);
@@ -109,7 +115,7 @@ export const AddSubmissionForm = ({
             Palautusta voi muokata lisäämisen jälkeen.
           </p>
 
-          <div style={{ maxHeight: "10em" }}>
+          <div style={{ maxHeight: "10em", width: "100%" }}>
             <FormTextEditorComponent
               content={description}
               setContent={setDescription}
@@ -150,7 +156,9 @@ export const AddSubmissionForm = ({
             {files.length > 0 && (
               <div className="file-container">
                 <h4>Liitetiedostot</h4>
-                <ul>
+                <ul
+                  style={files.length > 3 ? { overflowY: "scroll" } : undefined}
+                >
                   {files.length > 0 &&
                     files.map((file, index) => {
                       const extension = file.name.split(".").pop();

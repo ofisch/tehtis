@@ -19,7 +19,7 @@ export const RemoveMembersForm: React.FC<RemoveMembersFormProps> = ({
   const getCourseMembers = async (id: string) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/course-members/${id}`
+        `${import.meta.env.VITE_URL}/course-members/${id}`
       );
       const data = await response.json();
       console.log("testii: ", data);
@@ -51,7 +51,7 @@ export const RemoveMembersForm: React.FC<RemoveMembersFormProps> = ({
 
     try {
       const response = await fetch(
-        "http://localhost:3000/remove-member-from-course",
+        `${import.meta.env.VITE_URL}/remove-member-from-course`,
         {
           method: "POST",
           headers: {

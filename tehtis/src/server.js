@@ -256,6 +256,18 @@ app.get("/files/submission/:submissionId", (req, res) => {
   res.json(files);
 });
 
+// päivitetään palautuksen tilaa
+app.post("/update-submission-state/:id", (req, res) => {
+  const { id } = req.params;
+  const { state } = req.body;
+
+  const result = db
+    .prepare("UPDATE submissions SET state = ? WHERE id = ?")
+    .run(state, id);
+
+  res.json({ success: result.changes > 0 });
+});
+
 // luodaan testikäyttäjä, jos sitä ei ole olemassa
 const testUser = db
   .prepare("SELECT * FROM users WHERE email = ?")

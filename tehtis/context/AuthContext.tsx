@@ -35,7 +35,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const response = await fetch("http://localhost:3000/session", {
+        const response = await fetch(`${import.meta.env.VITE_URL}/session`, {
           method: "GET",
           credentials: "include",
         });
@@ -70,7 +70,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logout = async () => {
-    await fetch("http://localhost:3000/logout", {
+    await fetch(`${import.meta.env.VITE_URL}/logout`, {
       method: "POST",
       credentials: "include",
     });

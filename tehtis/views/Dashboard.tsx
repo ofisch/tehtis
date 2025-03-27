@@ -27,7 +27,7 @@ export const Dashboard = () => {
 
   const getCourses = async () => {
     try {
-      const response = await fetch("http://localhost:3000/courses");
+      const response = await fetch(`${import.meta.env.VITE_URL}/courses`);
       const data = await response.json();
       console.log(data);
     } catch (error) {
@@ -37,7 +37,7 @@ export const Dashboard = () => {
 
   const getMyCourses = async () => {
     try {
-      const response = await fetch("http://localhost:3000/my-courses", {
+      const response = await fetch(`${import.meta.env.VITE_URL}/my-courses`, {
         credentials: "include", // Important for session-based authentication
       });
       const data = await response.json();
@@ -50,7 +50,7 @@ export const Dashboard = () => {
 
   const joinCourse = async (courseId: number) => {
     try {
-      const response = await fetch("http://localhost:3000/join-course", {
+      const response = await fetch("${import.meta.env.VITE_URL}/join-course", {
         credentials: "include",
         method: "POST",
         headers: {

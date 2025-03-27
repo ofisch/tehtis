@@ -15,7 +15,7 @@ export const NavComponent = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://localhost:3000/logout", {
+      const response = await fetch(`${import.meta.env.VITE_URL}/logout`, {
         method: "POST",
       });
 

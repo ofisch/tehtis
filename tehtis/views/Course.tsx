@@ -19,7 +19,9 @@ export const Course = () => {
 
   const getCourseInfo = async (id: string) => {
     try {
-      const response = await fetch(`http://localhost:3000/course-info/${id}`);
+      const response = await fetch(
+        `${import.meta.env.VITE_URL}/course-info/${id}`
+      );
       const data = await response.json();
 
       setCourse(data);
@@ -31,7 +33,7 @@ export const Course = () => {
   const getCourseMembers = async (id: string) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/course-members/${id}`
+        `${import.meta.env.VITE_URL}/course-members/${id}`
       );
       const data = await response.json();
 
@@ -44,7 +46,7 @@ export const Course = () => {
   const getCourseAssignments = async (id: string) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/course-assignments/${id}`
+        `${import.meta.env.VITE_URL}/course-assignments/${id}`
       );
       const data = await response.json();
       setAssignments(data);
@@ -86,7 +88,7 @@ export const Course = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/upload/course/${id}`,
+        `${import.meta.env.VITE_URL}/upload/course/${id}`,
         {
           method: "POST",
           body: formData,
@@ -110,7 +112,9 @@ export const Course = () => {
 
   const getCourseFiles = async (id: string) => {
     try {
-      const response = await fetch(`http://localhost:3000/files/course/${id}`);
+      const response = await fetch(
+        `${import.meta.env.VITE_URL}/files/course/${id}`
+      );
       const data = await response.json();
       setCourseFiles(data);
     } catch (error) {
@@ -127,7 +131,7 @@ export const Course = () => {
   const deleteCourseFile = async (fileId: number) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/delete-file/${fileId}`,
+        `${import.meta.env.VITE_URL}/delete-file/${fileId}`,
         {
           method: "DELETE",
           credentials: "include",
@@ -152,7 +156,7 @@ export const Course = () => {
   const getAssignmentFiles = async (assignmentId: number) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/files/assignment/${assignmentId}`
+        `${import.meta.env.VITE_URL}/files/assignment/${assignmentId}`
       );
       const data = await response.json();
 
@@ -181,7 +185,7 @@ export const Course = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/upload/assignment/${assignmentId}`,
+        `${import.meta.env.VITE_URL}/upload/assignment/${assignmentId}`,
         {
           method: "POST",
           body: formData,
@@ -196,7 +200,6 @@ export const Course = () => {
       const data = await response.json();
 
       getAssignmentFiles(assignmentId);
-      alert("Tiedosto lähetetty onnistuneesti!");
     } catch (error) {
       console.error("Error uploading file", error);
       alert("Tiedoston lähetys epäonnistui!");
@@ -206,7 +209,7 @@ export const Course = () => {
   const deleteAssignmentFile = async (fileId: number, assignmentId: number) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/delete-file/${fileId}`,
+        `${import.meta.env.VITE_URL}/delete-file/${fileId}`,
         {
           method: "DELETE",
           credentials: "include",
@@ -216,7 +219,6 @@ export const Course = () => {
       if (!response.ok) {
         throw new Error(`Error: ${response.status} ${response.statusText}`);
       }
-      alert("Tiedosto poistettu onnistuneesti!");
       getAssignmentFiles(assignmentId);
     } catch (error) {
       console.error("Error deleting file", error);
@@ -232,7 +234,7 @@ export const Course = () => {
         )
       ) {
         const response = await fetch(
-          `http://localhost:3000/delete-assignment/${assignmentId}`,
+          `${import.meta.env.VITE_URL}/delete-assignment/${assignmentId}`,
           {
             method: "DELETE",
             credentials: "include",

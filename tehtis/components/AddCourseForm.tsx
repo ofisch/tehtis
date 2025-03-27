@@ -21,7 +21,7 @@ export const AddCourseForm: React.FC<AddCourseFormProps> = ({
     event.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:3000/add-course", {
+      const response = await fetch(`${import.meta.env.VITE_URL}/add-course`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
