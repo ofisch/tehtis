@@ -667,7 +667,7 @@ app.get("/submissions/:assignmentId", (req, res) => {
                                     style={{
                                       display: "flex",
                                       flexDirection: "row",
-                                      justifyContent: "space-between",
+                                      justifyContent: "start",
                                       alignItems: "center",
                                       gap: ".5em",
                                     }}
