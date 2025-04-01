@@ -3,17 +3,20 @@ import { useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { useAuth } from "../context/AuthContext";
 import "../style/RemoveMembersForm.css";
+import { get } from "http";
 
 interface RemoveMembersFormProps {
   toggleRemoveMembersBox: () => void;
   course: { name: string };
   onMembersRemoved: () => void;
+  courseAssignments: any[];
 }
 
 export const RemoveMembersForm: React.FC<RemoveMembersFormProps> = ({
   toggleRemoveMembersBox,
   course,
   onMembersRemoved,
+  courseAssignments,
 }) => {
   const { id } = useParams(); // haetaan kurssin ID osoitteesta
   const [members, setMembers] = useState<any[]>([]);
@@ -42,9 +45,39 @@ export const RemoveMembersForm: React.FC<RemoveMembersFormProps> = ({
 
   const [membersToRemove, setMembersToRemove] = useState<any[]>([]);
 
+  const [submissionsToRemove, setSubmissionsToRemove] = useState<any[]>([]);
+
+  const getSubmissionsOfUser = async (
+    assignmentId: string,
+    memberId: string
+  ) => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_URL}/submissions/${assignmentId}`
+      );
+      const data = await response.json();
+      const submissions = data.filter(
+        (submission: any) => submission.studentId === memberId
+      );
+
+      setSubmissionsToRemove((prev) => [...prev, ...submissions]);
+    } catch (error) {
+      console.log("Error fetching submissions", error);
+    }
+  };
+
+  useEffect(() => {
+    console.log("Updated submissionsToRemove: ", submissionsToRemove);
+  }, [submissionsToRemove]);
+
   const handleRemoveMember = (member: any) => {
+    // lisätään poistettava jäsen membersToRemove-taulukkoon
     if (!membersToRemove.some((m) => m.id === member.id)) {
       setMembersToRemove([...membersToRemove, member]);
+    }
+    // haetaan oppilaan palautukset kaikilta kurssin tehtäviltä
+    for (const assignment of courseAssignments) {
+      getSubmissionsOfUser(assignment.id, member.id);
     }
   };
 
@@ -77,14 +110,37 @@ export const RemoveMembersForm: React.FC<RemoveMembersFormProps> = ({
     }
   };
 
+  const deleteSubmission = async (submissionId: string) => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_URL}/delete-submission/${submissionId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      } else {
+        console.log(`submission ${submissionId} deleted successfully`);
+      }
+    } catch (error) {
+      console.error("Error deleting submission", error);
+    }
+  };
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
     const memberIds = membersToRemove.map((m) => m.id);
 
-    // poistetaan oppilaan palautukset kurssilta
-    for (const member of membersToRemove) {
-      await deleteSubmissionsFromCourse(id!, member.id);
+    // Poistetaan palautukset, jos niitä on
+    if (submissionsToRemove.length > 0) {
+      for (const submission of submissionsToRemove) {
+        await deleteSubmission(submission.id);
+      }
     }
 
     try {
@@ -196,6 +252,7 @@ export const RemoveMembersForm: React.FC<RemoveMembersFormProps> = ({
               )}
             </div>
           </div>
+          <div></div>
           <div className="buttons">
             <button className="cancel-button" onClick={toggleRemoveMembersBox}>
               Peruuta

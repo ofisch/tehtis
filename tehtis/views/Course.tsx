@@ -294,6 +294,7 @@ export const Course = () => {
           <RemoveMembersForm
             toggleRemoveMembersBox={toggleRemoveMembersBox}
             course={course}
+            courseAssignments={assignments}
             onMembersRemoved={() => getCourseMembers(id!)}
           />
         )}

@@ -205,6 +205,18 @@ app.delete("/delete-submission/:id", (req, res) => {
   res.json({ success: result.changes > 0 });
 });
 
+// poistetaan kaikki tehtäväpalautukset tietyltä oppilaalta tietyllä kurssilla
+app.delete("/delete-submissions/:studentId/:assignmentId", (req, res) => {
+  const { studentId, assignmentId } = req.params;
+
+  // poistetaan palautukset
+  const result = db
+    .prepare("DELETE FROM submissions WHERE studentId = ? AND assignmentId = ?")
+    .run(studentId, assignmentId);
+
+  res.json({ success: result.changes > 0 });
+});
+
 // haetaan tehtävän palautukset
 app.get("/submissions/:assignmentId", (req, res) => {
   const { assignmentId } = req.params;
