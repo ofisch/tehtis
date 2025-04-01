@@ -1,4 +1,4 @@
-# Tehtis - Helppökäyttöinen kurssiseuranta- ja arviointityökalu
+# Tehtis - Helppokäyttöinen kurssiseuranta- ja arviointityökalu
 
 <img width="1115" alt="tehtisKuva" src="https://github.com/user-attachments/assets/4f2e7da4-aeae-4d0f-8602-d4a92809fdbc" />
 
