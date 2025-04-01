@@ -13,11 +13,21 @@ const fs = require("fs");
 const app = express();
 const db = new Database("database.db");
 
-// määritellään CORS-asetukset
+const allowedOrigins = [
+  "http://localhost:5173", // Local development
+  "https://tehtis-test.ew.r.appspot.com", // App Engine frontend
+];
+
 app.use(
   cors({
-    origin: "http://localhost:5173", // annetaan frontendin osoite yhdistämistä varten
-    credentials: true, // sallitaan evästeiden käyttö
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
   })
 );
 
