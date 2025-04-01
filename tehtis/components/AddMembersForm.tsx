@@ -254,9 +254,17 @@ export const AddMembersForm: React.FC<AddMembersFormProps> = ({
           <button className="cancel-button" onClick={toggleAddMembersBox}>
             Peruuta
           </button>
-          <button type="submit">
-            {usersToAdd.length > 1 ? "Lisää osallistujat" : "Lisää osallistuja"}
-          </button>
+          {usersToAdd.length === 0 ? (
+            <button type="button" className="disabled-button" disabled>
+              Lisää osallistuja
+            </button>
+          ) : (
+            <button type="submit">
+              {usersToAdd.length > 1
+                ? "Lisää osallistujat"
+                : "Lisää osallistuja"}
+            </button>
+          )}
         </div>
       </form>
       <ToastContainer

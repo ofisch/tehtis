@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../style/root.css";
 import "../style/assignmentform.css";
 import { motion } from "framer-motion";
-import { desc, div, h2 } from "framer-motion/client";
+import { button, desc, div, h2 } from "framer-motion/client";
 import { toast, ToastContainer } from "react-toastify";
 import { TextEditorComponent } from "./TextEditorComponent";
 interface AssignmentFormProps {
@@ -113,7 +113,13 @@ export const AssignmentForm: React.FC<AssignmentFormProps> = ({
             <button className="cancel-button" onClick={toggleAssignmentBox}>
               Peruuta
             </button>
-            <button type="submit">Lisää tehtävä</button>
+            {title.length === 0 ? (
+              <button className="disabled-button" disabled>
+                Lisää tehtävä
+              </button>
+            ) : (
+              <button type="submit">Lisää tehtävä</button>
+            )}
           </div>
         </form>
         <ToastContainer

@@ -738,6 +738,7 @@ app.get("/submissions/:assignmentId", (req, res) => {
                                   ) : null}
                                 </p>
                               )}
+
                               {isOpen && (
                                 <div
                                   className="submission-content"

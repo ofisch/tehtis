@@ -161,6 +161,34 @@ export const Login = () => {
     setPassword("");
   };
 
+  // näytetään tietosuojaseloste
+
+  useEffect(() => {
+    const privacyPolicyContent = document.querySelector(
+      ".privacy-policy-content"
+    ) as HTMLSpanElement;
+
+    privacyPolicyContent.classList.add("hidden");
+  }, []);
+
+  const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
+
+  const togglePrivacyPolicy = () => {
+    setShowPrivacyPolicy(!showPrivacyPolicy);
+
+    const privacyPolicyContent = document.querySelector(
+      ".privacy-policy-content"
+    ) as HTMLSpanElement;
+
+    if (showPrivacyPolicy) {
+      privacyPolicyContent.classList.remove("hidden");
+      privacyPolicyContent.innerHTML = `${import.meta.env.VITE_PRIVACY_POLICY}`;
+    } else {
+      privacyPolicyContent.innerHTML = "";
+      privacyPolicyContent.classList.add("hidden");
+    }
+  };
+
   return (
     <>
       <div className="container">
@@ -204,6 +232,10 @@ export const Login = () => {
             pauseOnHover
             theme="light"
           />
+        </div>
+        <div className="privacy-policy">
+          <h3 onClick={togglePrivacyPolicy}>Tietosuojaseloste</h3>
+          <span className="privacy-policy-content"></span>
         </div>
       </div>
     </>

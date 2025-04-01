@@ -192,6 +192,19 @@ app.post("/update-submission/:id", (req, res) => {
   res.json({ success: result.changes > 0 });
 });
 
+// poistetaan tehtäväpalautus
+app.delete("/delete-submission/:id", (req, res) => {
+  const { id } = req.params;
+
+  // poistetaan palautuksen tiedostot
+  db.prepare("DELETE FROM submission_files WHERE submissionId = ?").run(id);
+
+  // poistetaan palautus
+  const result = db.prepare("DELETE FROM submissions WHERE id = ?").run(id);
+
+  res.json({ success: result.changes > 0 });
+});
+
 // haetaan tehtävän palautukset
 app.get("/submissions/:assignmentId", (req, res) => {
   const { assignmentId } = req.params;
@@ -565,6 +578,8 @@ app.post("/join-course", (req, res) => {
   }
 });
 
+// ADMIN / JÄRJESTELMÄNVALVOJA
+
 // vaihdetaan käyttäjän rooli
 app.post("/update-role/:userid", (req, res) => {
   const { role } = req.body; // Get only the role from body
@@ -576,6 +591,20 @@ app.post("/update-role/:userid", (req, res) => {
 
   res.json({ success: result.changes > 0 });
 });
+
+// vaihdetaan käyttäjän salasana
+app.post("/update-password/:userid", (req, res) => {
+  const { password } = req.body; // Get only the password from body
+  const userId = req.params.userid; // Get userId from URL param
+
+  const result = db
+    .prepare("UPDATE users SET password = ? WHERE id = ?")
+    .run(password, userId);
+
+  res.json({ success: result.changes > 0 });
+});
+
+// OPETTAJA
 
 // opettaja liittää käyttäjän tai käyttäjiä kurssille
 app.post("/add-member-to-course", (req, res) => {
@@ -664,6 +693,8 @@ app.post("/add", (req, res) => {
   const info = stmt.run(firstname, lastname, email, password);
   res.json(info);
 });
+
+// KIRJAUTUMINEN
 
 // sisäänkirjautuminen
 app.post("/login", (req, res) => {

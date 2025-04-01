@@ -63,13 +63,19 @@ export const DashboardComponent: React.FC<DashboardComponentProps> = ({
                 .map((course) => (
                   <Link to={`/course/${course.id}`} key={course.id}>
                     <div className="course">
-                      <h2>{course.name}</h2>
+                      <h3>
+                        {course.name.length > 80
+                          ? `${course.name.slice(0, 80)}...`
+                          : course.name}
+                      </h3>
                       <div
                         style={{
                           whiteSpace: "pre-wrap",
-                          backgroundColor: "aliceblue",
+                          backgroundColor: "var(--aliceblue)",
                           borderRadius: "5px",
                           padding: "5px",
+                          marginBottom: "1em",
+                          overflow: "hidden",
                         }}
                         dangerouslySetInnerHTML={{
                           __html: course.description,

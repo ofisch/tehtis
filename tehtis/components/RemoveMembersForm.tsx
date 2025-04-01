@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import { useAuth } from "../context/AuthContext";
+import "../style/RemoveMembersForm.css";
 
 interface RemoveMembersFormProps {
   toggleRemoveMembersBox: () => void;
@@ -16,13 +18,15 @@ export const RemoveMembersForm: React.FC<RemoveMembersFormProps> = ({
   const { id } = useParams(); // haetaan kurssin ID osoitteesta
   const [members, setMembers] = useState<any[]>([]);
 
+  const { user } = useAuth();
+
   const getCourseMembers = async (id: string) => {
     try {
       const response = await fetch(
         `${import.meta.env.VITE_URL}/course-members/${id}`
       );
       const data = await response.json();
-      console.log("testii: ", data);
+
       setMembers(data);
       console.log("members: ", members);
     } catch (error) {
@@ -44,10 +48,44 @@ export const RemoveMembersForm: React.FC<RemoveMembersFormProps> = ({
     }
   };
 
+  const deleteSubmissionsFromCourse = async (
+    courseId: string,
+    userId: string
+  ) => {
+    try {
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_URL
+        }/delete-submissions-from-course/${courseId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId }),
+        }
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      } else {
+        console.log(
+          `submissions from user ${userId} deleted successfully in course ${courseId}`
+        );
+      }
+    } catch (error) {
+      console.error("Error deleting submissions", error);
+    }
+  };
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
     const memberIds = membersToRemove.map((m) => m.id);
+
+    // poistetaan oppilaan palautukset kurssilta
+    for (const member of membersToRemove) {
+      await deleteSubmissionsFromCourse(id!, member.id);
+    }
 
     try {
       const response = await fetch(
@@ -101,34 +139,36 @@ export const RemoveMembersForm: React.FC<RemoveMembersFormProps> = ({
                 <li>
                   <h3>Osallistujat</h3>
                 </li>
-                {members.map((member: any) => {
-                  return (
-                    <li className="member" key={member.id}>
-                      <h4 className="member-name">
-                        {`${member.firstname} ${member.lastname}`}
-                      </h4>
+                {members
+                  .filter((member: any) => member.id !== user?.id) // ei sisällytetä nykyistä käyttäjää (eli opettaja ei voi poistaa itseään kurssilta)
+                  .map((member: any) => {
+                    return (
+                      <li className="member" key={member.id}>
+                        <h4 className="member-name">
+                          {`${member.firstname} ${member.lastname}`}
+                        </h4>
 
-                      {membersToRemove.some((m) => m.id === member.id) ? (
-                        <button
-                          type="button"
-                          className="removed-button"
-                          disabled
-                          onClick={() => handleRemoveMember(member)}
-                        >
-                          Poistettu
-                        </button>
-                      ) : (
-                        <button
-                          type="button"
-                          className="remove-member-button"
-                          onClick={() => handleRemoveMember(member)}
-                        >
-                          Poista
-                        </button>
-                      )}
-                    </li>
-                  );
-                })}
+                        {membersToRemove.some((m) => m.id === member.id) ? (
+                          <button
+                            type="button"
+                            className="removed-button"
+                            disabled
+                            onClick={() => handleRemoveMember(member)}
+                          >
+                            Poistettu
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            className="remove-member-button"
+                            onClick={() => handleRemoveMember(member)}
+                          >
+                            Poista
+                          </button>
+                        )}
+                      </li>
+                    );
+                  })}
               </ul>
             </div>
             <div>
@@ -162,6 +202,10 @@ export const RemoveMembersForm: React.FC<RemoveMembersFormProps> = ({
             </button>
             {membersToRemove.length > 1 ? (
               <button type="submit">Poista osallistujat</button>
+            ) : membersToRemove.length === 0 ? (
+              <button type="submit" className="disabled-button" disabled>
+                Poista osallistuja
+              </button>
             ) : (
               <button type="submit">Poista osallistuja</button>
             )}
