@@ -13,21 +13,11 @@ const fs = require("fs");
 const app = express();
 const db = new Database("database.db");
 
-const allowedOrigins = [
-  "http://localhost:5173", // Local development
-  "https://tehtis-test.ew.r.appspot.com", // App Engine frontend
-];
-
+// määritellään CORS-asetukset
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
+    origin: "https://tehtis-test.ew.r.appspot.com", // annetaan frontendin osoite yhdistämistä varten
+    credentials: true, // sallitaan evästeiden käyttö
   })
 );
 
@@ -42,7 +32,7 @@ app.get("*", (req, res) => {
 });
 
 // Set port dynamically for App Engine
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 
 // käytetään SQLiteStorea sessioiden tallentamiseen
 app.use(
@@ -52,7 +42,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: false, // vaihdetaan TRUE, jos HTTPS
+      secure: true, // TRUE, jos HTTPS
       httpOnly: true,
       sameSite: "lax", // perehdy TÄHÄN
       maxAge: 5 * 60 * 60 * 1000, // 5 tuntia, kunnes sessio vanhenee
