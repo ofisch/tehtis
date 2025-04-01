@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "../style/root.css";
 import "../style/courseform.css";
-import { desc } from "framer-motion/client";
+
 import { toast, ToastContainer } from "react-toastify";
 
 interface AddCourseFormProps {

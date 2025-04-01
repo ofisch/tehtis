@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../style/root.css";
 import "../style/assignmentform.css";
-import { motion } from "framer-motion";
-import { button, desc, div, h2 } from "framer-motion/client";
+
 import { toast, ToastContainer } from "react-toastify";
 import { TextEditorComponent } from "./TextEditorComponent";
 interface AssignmentFormProps {

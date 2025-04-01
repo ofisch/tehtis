@@ -5,11 +5,6 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
 import { FaPlusCircle } from "react-icons/fa";
 
-interface Course {
-  name: string;
-  description: string;
-}
-
 interface DashboardComponentProps {
   courses: any[];
   user: { id: number; role: string; firstname: string; email: string } | null;

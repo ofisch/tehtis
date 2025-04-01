@@ -3,7 +3,7 @@ import "../style/root.css";
 import "../style/assignmentform.css";
 import { FaPlus, FaCheck } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
-import { FaQuestion } from "react-icons/fa";
+
 import { FaQuestionCircle } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 import { motion } from "framer-motion";

@@ -3,7 +3,6 @@ import { FormTextEditorComponent } from "./FormTextEditorComponent";
 import "../style/root.css";
 import "../style/assignmentform.css";
 import { useAuth } from "../context/AuthContext";
-import { form } from "framer-motion/client";
 import { defaultStyles, FileIcon } from "react-file-icon";
 import { MdDeleteForever } from "react-icons/md";
 

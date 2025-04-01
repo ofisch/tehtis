@@ -14,7 +14,6 @@ import { useNavigate } from "react-router-dom";
 import { AddSubmissionForm } from "./AddSubmissionForm";
 import { EditSubmissionForm } from "./EditSubmissionForm";
 import { MdOutlineDone } from "react-icons/md";
-import { h3, p } from "framer-motion/client";
 
 type Submission = {
   id: number;
@@ -62,15 +61,6 @@ export const CourseComponent = ({
   deleteAssignmentFile: (id: number, assignmentId: number) => void;
   deleteAssignment: (id: number) => void;
 }) => {
-  interface ImportMetaEnv {
-    readonly VITE_URL: string;
-    // add more env variables here if needed
-  }
-
-  interface ImportMeta {
-    readonly env: ImportMetaEnv;
-  }
-
   const { user } = useAuth();
 
   const [editorContent, setEditorContent] = useState(course.description);
@@ -106,7 +96,9 @@ export const CourseComponent = ({
           }), // Include 'name' if required
         }
       );
-      const data = await response.json();
+      if (!response.ok) {
+        throw new Error("Failed to update course description");
+      }
     } catch (error) {
       console.error("Error updating course description", error);
     }
@@ -133,7 +125,10 @@ export const CourseComponent = ({
           },
         }
       );
-      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error("Failed to delete course");
+      }
 
       navigate("/dashboard");
     } catch (error) {
@@ -949,7 +944,6 @@ app.get("/submissions/:assignmentId", (req, res) => {
           return (
             <EditSubmissionForm
               submissionId={submission.id}
-              submissionFiles={submissionFiles[submission.id] || []}
               description={submission.description || ""}
               toggleEditBox={toggleEditBox}
               updateSubmissions={updateSubmissions}

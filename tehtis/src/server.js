@@ -23,6 +23,17 @@ app.use(
 
 app.use(bodyParser.json());
 
+// Serve static files
+app.use(express.static(path.join(__dirname, "dist")));
+
+// Handle all other routes by serving index.html
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
+
+// Set port dynamically for App Engine
+const PORT = process.env.PORT || 3000;
+
 // käytetään SQLiteStorea sessioiden tallentamiseen
 app.use(
   session({
@@ -782,6 +793,6 @@ app.get("/users", (req, res) => {
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
+app.listen(PORT, () => {
+  console.log("Server is running on port ", PORT);
 });

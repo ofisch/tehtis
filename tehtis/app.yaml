@@ -1,0 +1,16 @@
+runtime: nodejs18 # Use Node.js 18 runtime
+env: standard # Standard environment (auto-scaling)
+instance_class: F1 # Smallest instance size
+
+handlers:
+  # Serve static files from the React build
+  - url: /static
+    static_dir: dist/static
+
+  # Serve index.html for all other routes (SPA behavior)
+  - url: /.*
+    static_files: dist/index.html
+    upload: dist/index.html
+
+env_variables:
+  NODE_ENV: "production"

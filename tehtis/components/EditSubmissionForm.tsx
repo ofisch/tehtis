@@ -1,15 +1,11 @@
 import React, { useState } from "react";
-import { useAuth } from "../context/AuthContext";
 import { FormTextEditorComponent } from "./FormTextEditorComponent";
-import { defaultStyles, FileIcon } from "react-file-icon";
-import { h4, li } from "framer-motion/client";
 import "../style/EditSubmissionForm.css";
 
 interface EditSubmissionFormProps {
   submissionId: number;
   description: string;
   toggleEditBox: () => void;
-  submissionFiles: any[];
   updateSubmissions: () => void;
 }
 
@@ -17,10 +13,8 @@ export const EditSubmissionForm = ({
   submissionId,
   description,
   toggleEditBox,
-  submissionFiles,
   updateSubmissions,
 }: EditSubmissionFormProps) => {
-  const { user } = useAuth();
   const [newDescription, setNewDescription] = useState(description);
 
   const handleSubmit = async (event: React.FormEvent) => {

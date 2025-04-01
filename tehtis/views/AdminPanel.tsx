@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "../style/root.css";
 import "../style/AdminPanel.css";
 import { NavComponent } from "../components/NavComponent";

@@ -1,4 +1,3 @@
-import React from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
@@ -20,6 +19,10 @@ export const NavComponent = () => {
       });
 
       const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || "Logout failed");
+      }
+
       if (response.ok) {
         logout(); // Clear the authentication state
         navigate("/login"); // Redirect to login page

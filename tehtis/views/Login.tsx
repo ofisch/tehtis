@@ -58,6 +58,7 @@ export const Login = () => {
         const data = await response.json();
         console.log("Fetched users:", data);
         setUsers(data);
+        console.log("Users:", users);
       } catch (error) {
         console.error("Error fetching users:", error);
       }
@@ -102,6 +103,7 @@ export const Login = () => {
           });
 
           setLoggedIn(true);
+          console.log("loggedIn", loggedIn);
           navigate("/dashboard");
         } else {
           alert(data.error || "Invalid credentials");
@@ -174,6 +176,8 @@ export const Login = () => {
   }, []);
 
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
+
+  console.log("showPrivacyPolicy", showPrivacyPolicy);
 
   const togglePrivacyPolicy = () => {
     setShowPrivacyPolicy((prev) => {

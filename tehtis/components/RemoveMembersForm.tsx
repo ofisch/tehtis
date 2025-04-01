@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { useAuth } from "../context/AuthContext";
 import "../style/RemoveMembersForm.css";
-import { get } from "http";
 
 interface RemoveMembersFormProps {
   toggleRemoveMembersBox: () => void;
@@ -78,35 +77,6 @@ export const RemoveMembersForm: React.FC<RemoveMembersFormProps> = ({
     // haetaan oppilaan palautukset kaikilta kurssin tehtäviltä
     for (const assignment of courseAssignments) {
       getSubmissionsOfUser(assignment.id, member.id);
-    }
-  };
-
-  const deleteSubmissionsFromCourse = async (
-    courseId: string,
-    userId: string
-  ) => {
-    try {
-      const response = await fetch(
-        `${
-          import.meta.env.VITE_URL
-        }/delete-submissions-from-course/${courseId}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ userId }),
-        }
-      );
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      } else {
-        console.log(
-          `submissions from user ${userId} deleted successfully in course ${courseId}`
-        );
-      }
-    } catch (error) {
-      console.error("Error deleting submissions", error);
     }
   };
 

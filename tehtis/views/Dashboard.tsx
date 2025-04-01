@@ -7,7 +7,6 @@ import { NavComponent } from "../components/NavComponent";
 import { AddCourseForm } from "../components/AddCourseForm";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { join } from "path";
 
 export const Dashboard = () => {
   const { loggedIn, user } = useAuth();
@@ -21,20 +20,6 @@ export const Dashboard = () => {
 
   const [courses, setCourses] = React.useState<any[]>([]);
 
-  function timeout(delay: number) {
-    return new Promise((res) => setTimeout(res, delay));
-  }
-
-  const getCourses = async () => {
-    try {
-      const response = await fetch(`${import.meta.env.VITE_URL}/courses`);
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error("Error fetching courses", error);
-    }
-  };
-
   const getMyCourses = async () => {
     try {
       const response = await fetch(`${import.meta.env.VITE_URL}/my-courses`, {
@@ -45,23 +30,6 @@ export const Dashboard = () => {
       setCourses(data);
     } catch (error) {
       console.error("Error fetching my courses", error);
-    }
-  };
-
-  const joinCourse = async (courseId: number) => {
-    try {
-      const response = await fetch("${import.meta.env.VITE_URL}/join-course", {
-        credentials: "include",
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ courseId }),
-      });
-      const data = await response.json();
-      console.log("join course: ", data);
-    } catch (error) {
-      console.error("Error joining course", error);
     }
   };
 
