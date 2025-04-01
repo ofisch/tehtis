@@ -168,25 +168,29 @@ export const Login = () => {
       ".privacy-policy-content"
     ) as HTMLSpanElement;
 
+    privacyPolicyContent.innerHTML = `${import.meta.env.VITE_PRIVACY_POLICY}`;
+
     privacyPolicyContent.classList.add("hidden");
   }, []);
 
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
 
   const togglePrivacyPolicy = () => {
-    setShowPrivacyPolicy(!showPrivacyPolicy);
+    setShowPrivacyPolicy((prev) => {
+      const newState = !prev;
 
-    const privacyPolicyContent = document.querySelector(
-      ".privacy-policy-content"
-    ) as HTMLSpanElement;
+      const privacyPolicyContent = document.querySelector(
+        ".privacy-policy-content"
+      ) as HTMLSpanElement;
 
-    if (showPrivacyPolicy) {
-      privacyPolicyContent.classList.remove("hidden");
-      privacyPolicyContent.innerHTML = `${import.meta.env.VITE_PRIVACY_POLICY}`;
-    } else {
-      privacyPolicyContent.innerHTML = "";
-      privacyPolicyContent.classList.add("hidden");
-    }
+      if (newState) {
+        privacyPolicyContent.classList.remove("hidden");
+      } else {
+        privacyPolicyContent.classList.add("hidden");
+      }
+
+      return newState;
+    });
   };
 
   return (
