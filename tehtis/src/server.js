@@ -32,7 +32,7 @@ app.get("*", (req, res) => {
 });
 
 // Set port dynamically for App Engine
-const PORT = 3000;
+const PORT = process.env.PORT || 8080;
 
 // käytetään SQLiteStorea sessioiden tallentamiseen
 app.use(
