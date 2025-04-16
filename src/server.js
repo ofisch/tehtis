@@ -21,6 +21,8 @@ app.use(
   })
 );
 
+// testi
+
 app.use(express.static("dist")); // palvellaan staattisia tiedostoja dist-kansiosta
 
 app.use(bodyParser.json());
