@@ -16,7 +16,7 @@ const db = new Database("database.db");
 // määritellään CORS-asetukset
 app.use(
   cors({
-    origin: "http://localhost:5173", // annetaan frontendin osoite yhdistämistä varten
+    origin: process.env.ORIGIN, // annetaan frontendin osoite yhdistämistä varten
     credentials: true, // sallitaan evästeiden käyttö
   })
 );
