@@ -16,23 +16,14 @@ const db = new Database("database.db");
 // määritellään CORS-asetukset
 app.use(
   cors({
-    origin: "https://tehtis-test.ew.r.appspot.com", // annetaan frontendin osoite yhdistämistä varten
+    origin: "http://localhost:5173", // annetaan frontendin osoite yhdistämistä varten
     credentials: true, // sallitaan evästeiden käyttö
   })
 );
 
+app.use(express.static("dist")); // palvellaan staattisia tiedostoja dist-kansiosta
+
 app.use(bodyParser.json());
-
-// Serve static files
-app.use(express.static(path.join(__dirname, "dist")));
-
-// Handle all other routes by serving index.html
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "dist", "index.html"));
-});
-
-// Set port dynamically for App Engine
-const PORT = 3000;
 
 // käytetään SQLiteStorea sessioiden tallentamiseen
 app.use(
@@ -42,7 +33,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: true, // TRUE, jos HTTPS
+      secure: false, // vaihdetaan TRUE, jos HTTPS
       httpOnly: true,
       sameSite: "lax", // perehdy TÄHÄN
       maxAge: 5 * 60 * 60 * 1000, // 5 tuntia, kunnes sessio vanhenee
@@ -793,6 +784,6 @@ app.get("/users", (req, res) => {
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-app.listen(PORT, () => {
-  console.log("Server is running on port ", PORT);
+app.listen(3000, () => {
+  console.log("Server is running on port 3000");
 });

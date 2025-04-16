@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
+    "start": "node src/server.js",
     "dev": "vite",
     "server": "ts-node server.ts",
     "build": "tsc -b && vite build",
