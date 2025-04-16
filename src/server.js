@@ -1,3 +1,4 @@
+require("dotenv").config(); // ladataan ympäristömuuttujat .env-tiedostosta
 const express = require("express");
 const Database = require("better-sqlite3");
 const bodyParser = require("body-parser");
