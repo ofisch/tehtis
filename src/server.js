@@ -786,7 +786,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // api-reittien jälkeen
 app.use(express.static("dist"));
 
-app.get("*", (req, res) => {
+app.get("/*", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 
