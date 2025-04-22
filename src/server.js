@@ -22,6 +22,8 @@ app.use(
   })
 );
 
+app.use(express.static("dist"));
+
 app.use(bodyParser.json());
 
 // käytetään SQLiteStorea sessioiden tallentamiseen
@@ -782,9 +784,6 @@ app.get("/users", (req, res) => {
 });
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
-// api-reittien jälkeen
-app.use(express.static("dist"));
 
 app.get("/*", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
