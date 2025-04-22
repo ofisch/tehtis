@@ -22,15 +22,6 @@ app.use(
   })
 );
 
-app.use(express.static("dist")); // palvellaan staattisia tiedostoja dist-kansiosta
-
-app.get("/*", (req, res) => {
-  res.sendFile(path.join(__dirname, "dist", "index.html"), (err) => {
-    if (err) {
-      res.status(500).send("Error loading the page.");
-    }
-  });
-});
 app.use(bodyParser.json());
 
 // käytetään SQLiteStorea sessioiden tallentamiseen
@@ -791,6 +782,13 @@ app.get("/users", (req, res) => {
 });
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// api-reittien jälkeen
+app.use(express.static("dist"));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
 
 app.listen(process.env.PORT, () => {
   console.log("Server is running on port: " + process.env.PORT);
