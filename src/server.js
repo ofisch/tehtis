@@ -22,8 +22,6 @@ app.use(
   })
 );
 
-app.use(express.static("dist"));
-
 app.use(bodyParser.json());
 
 // käytetään SQLiteStorea sessioiden tallentamiseen
@@ -785,9 +783,16 @@ app.get("/users", (req, res) => {
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-app.get("/*", (req, res) => {
-  res.sendFile(path.join(__dirname, "dist", "index.html"));
+// polku dist-kansioon
+const pathToDist = path.join(__dirname, "..", "dist");
+
+console.log(pathToDist);
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(pathToDist, "index.html"));
 });
+
+app.use(express.static(pathToDist));
 
 app.listen(process.env.PORT, () => {
   console.log("Server is running on port: " + process.env.PORT);
